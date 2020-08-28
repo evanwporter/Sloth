@@ -4,6 +4,6 @@ Aimed to be a faster pandas, by being a *thin* wrapper for numpy. Keep in mind t
 
 Currently only indexing and resampling is supported.
 
-Benchmarks between
+Benchmarks between Sloth and Pandas coming soon.
 
 This program is fast like [Flash](https://www.youtube.com/watch?v=dM-li2Cn5Pw).
