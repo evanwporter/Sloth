@@ -1,17 +1,21 @@
 # cython: profile=True
 
 cimport numpy as np
+import numpy as np
+
+from copy import copy
+
 from index cimport DateTimeIndex
-# from cpython cimport list, dict, str
+from cpython cimport  str
 from frame cimport Frame, Series, DataFrame
 
 
 cdef class Indexer:
     
     def __init__(self, Frame frame):
-        # self.frame = frame
-        self.values = frame.values
+        self.frame = frame
         self.index = frame.index
+        self.values = frame.values_
         
         self.reference = frame.reference
         
@@ -23,19 +27,20 @@ cdef class Indexer:
 cdef class IntegerLocation(Indexer):
     
     def __getitem__(self, arg):
-        index = self.index.keys[arg]
-
-        values = self.values[arg]
+        cdef int FD = self.index.FD
+        cdef int start
+        cdef int stop
 
         if isinstance(arg, int):
-            return Series(values, index=self.columns, name=index)
+            arg = FD + arg
+            return Series(self.values[arg], index=self.columns, name=self.index.keys[arg])            
 
-        # Checks to see if arg is something like [5:6] in which case 
-        # an array with only one item is returned
-        if len(index) == 1:
-            return Series(values[0], index=self.columns, name=index[0])
+        if arg.start is not None:
+            start = arg.start + FD
+        if arg.stop is not None:
+            stop = arg.stop + FD
 
-        return DataFrame(values=values, index=index, columns=self.columns)
+        return self.frame.fast_init("I", (start, stop))
         # if isinstance(arg, int):
             
         #     # 1d
@@ -58,29 +63,33 @@ cdef class IntegerLocation(Indexer):
 cdef class Location(Indexer):
 
     def __getitem__(self, arg):
-        if isinstance(arg, str):
-            return self._handle_str(arg, self.index[arg])
+        # if isinstance(arg, np.ndarray):
+        #     return self._handle_array(arg)
             
-        elif isinstance(arg, slice):
+        if isinstance(arg, slice):
             return self._handle_slice(arg)
 
-        # Tuples to be handled
-
-    cdef Series _handle_str(self, arg, int index):
+        else:
+            return self._handle_str(arg, self.index.get_item(arg))
+                
+    cdef inline Series _handle_str(self, arg, int index):
         return Series(
             values=self.values[index], 
             index=self.columns, 
             name=arg
         )
     
-    cdef Frame _handle_slice(self, slice arg):
-        start = self.index[arg.start] # int
-        stop = self.index[arg.stop]
-        step = arg.step
+    cdef inline Frame _handle_slice(self, slice arg):
+        if arg.start is not None:
+            start = self.index.get_item(arg.start)
+        if arg.stop is not None:
+            stop = self.index.get_item(arg.stop)
         
-        index = self.index.keys[start:stop:step]
-        
-        if len(index) == 1:
-            return self._handle_str(start, index[0])
+        return self.frame.fast_init("I", (start, stop))
 
-        return DataFrame(self.values[start:stop:step], index=index, columns=self.columns)
+    # cdef inline Frame _handle_array(self, arg):
+    #     cdef str i
+    #     cdef np.int64_t[:] args = np.zeros_like(arg, dtype=np.int64)
+    #     for i in arg:
+    #         args[i] = self.index.get_item(i)
+    #     return DataFrame(self.values[args], columns=self.columns, index=arg)

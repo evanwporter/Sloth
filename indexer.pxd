@@ -1,11 +1,12 @@
 cimport numpy as np
-from cpython cimport list, dict, str
+from cpython cimport str
 from index cimport DateTimeIndex, ObjectIndex, _Index
 from frame cimport Frame, Series, DataFrame
 
 
 cdef class Indexer:
     cdef:
+        Frame frame
         _Index index, 
         np.ndarray values
 
@@ -18,6 +19,9 @@ cdef class IntegerLocation(Indexer):
     #     dict columns
 
 cdef class Location(Indexer):
-    cdef Series _handle_str(self, arg, int column)
 
-    cdef Frame _handle_slice(self, slice arg)
+    cdef inline Series _handle_str(self, arg, int column)
+
+    cdef inline Frame _handle_slice(self, slice arg)
+
+    # cdef inline Frame _handle_array(self, arg)
