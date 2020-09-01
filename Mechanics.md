@@ -2,6 +2,9 @@
 The main reason why someone would use a dataframe instead of a 2d numpy array is because a dataframe allows for indexing (not to mention the many other features that come with having an index (ie: resampling). The problem with pandas is that is is incredibly slow at most things but especially indexing.
 
 # How it works
+
+## Indexing
+
 When given a index, columns and values:
 	Index: [A, B, C, D, E...Z]
 	Columns: [A, B, C, D, E...Z]
@@ -46,3 +49,7 @@ Now when one performs an operation like iloc[0:2] the dataframe adds the FD to `
 **NOT YET IMPLEMENTED**
 
 The creation of PeriodIndex which takes parameters `interval` and `start`. Given an index that increases continuosly at a predefined interval. Given query the index location can be found using the formula `((query - start) / interval)`.
+
+## Resampling
+
+Uses [`np.searchsorted`](https://numpy.org/doc/stable/reference/generated/numpy.searchsorted.html) to find the correct index.
