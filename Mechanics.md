@@ -36,10 +36,13 @@ Slicing works in a similar way. Given the command `loc[A:D]`, the example datafr
 The main bottleneck in the program is that the entire index must be hashed to a range of numbers at the program start. There are several possible solutions as outlined below.
 
 (1)
+
 Operations like loc[B:D] means that a new hashmap must be created for values B through D. While this isn't as much a problem for small indexes like this one it gets to be a problem when you get into tens of thousands of rows. The solution is to create a new hashmap every time the dataframe is indexed, rather simply to keep track of the frontal displacement (FD) and back displacement (BD). When a dataframe is initialized it sets `FD` to 0 and `BD` to the length of the index. When an operation like loc[B:Y] is done, a copy of the original dataframe is created and the FD is changed to 1, and the BD is changed to 24. Nothing else is changed, meaning the index, the columns and the values all remain the same.
 
 Now when one performs an operation like iloc[0:2] the dataframe adds the FD to `0` and to `2` to get the index positions (`1` and `3`) in the row. When one wants to access the values (for example to perform some computation or to convert to pandas), `values[FD: BD]` is returned. While the BD is not currently used at this moment it will be used in the feauture so that negative indexing can be done.
 
 (2)
-*NOT YET IMPLEMENTED*
+
+**NOT YET IMPLEMENTED**
+
 The creation of PeriodIndex which takes parameters `interval` and `start`. Given an index that increases continuosly at a predefined interval. Given query the index location can be found using the formula `((query - start) / interval)`.
