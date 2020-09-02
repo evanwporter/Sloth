@@ -1,7 +1,8 @@
 # Motivation
-The main reason why someone would use a dataframe instead of a 2d numpy array is because a dataframe allows for indexing (not to mention the many other features that come with having an index (ie: resampling). The problem with pandas is that is is incredibly slow at most things but especially indexing.
+The main reason why someone would use a dataframe instead of a 2d numpy array is because a dataframe allows for indexing (not to mention the many other features that come with having an index (ie: resampling). The problem with pandas is that is is incredibly slow at most things but especially indexing. If pandas is a one size fits all then sloth is a one size. Pandas has tons of features that I have no intention of implementing, simply becuase I do not need these things. If you want to implement these [be my guest](https://github.com/amuon/Sloth/pulls).
 
 # How it works
+I'm pretty bad at documenting my code so I wrote this.
 
 ## Indexing
 
