@@ -45,6 +45,14 @@ cdef class Frame:
         return Resampler(self, freq)
 
     def fast_init(self, location: str, displacement: tuple):
+        """
+        Backdoor of sorts. Allows for a quicker initialization.
+
+        Parameters
+        ----------
+        location : str
+            'C' for columns, or 'I' for index
+        """
         frame = self.__new__(self.__class__)
         frame.values_ = self.values_
         frame.reference = self.reference
@@ -52,7 +60,7 @@ cdef class Frame:
             frame.columns = self.columns.fast_init(displacement)
             frame.index = self.index
         else:
-            frame.index = self.index.fast_init(displacement)
+            frame.index = self.index.fast_init(displacement=displacement)
             frame.columns = self.columns
         return frame
 
@@ -77,6 +85,8 @@ cdef class DataFrame(Frame):
 
         self.reference = "D"
 
+        # Because columns is a list of strings,
+        # it is a ObjectIndex
         if isinstance(columns, ObjectIndex):
             self.columns = columns
         else:
@@ -88,13 +98,38 @@ cdef class DataFrame(Frame):
     
     @classmethod
     def from_pandas(cls, dataframe):
+        """Class method to convert pandas dataframe to a sloth frame
+
+        Parameters
+        ----------
+        dataframe : pd.DataFrame
+            pd.DataFrame to convert into a sloth DataFrame
+
+        Returns
+        -------
+        sloth.DataFrame
+            The sloth dataframe
+        """
+        # TODO: Make error handling
         return cls(dataframe.to_numpy(), dataframe.index, dataframe.columns)
     
     def to_pandas(self):
+
         return pd.DataFrame(self.values, index=self.index.keys_, columns=self.columns.keys_)
     
     def __getitem__(self, arg):
+        """
+        For handling column calls
+
+        Parameters
+        ----------
+        arg : str or array of strings
+            str means that it is a single column name
+            array means that it is a list of column names
+        """
         if isinstance(arg, str):
+            # str means that arg is a column name,
+            # thus a series will be returned
             return self._handle_str(arg)
             
         # elif isinstance(arg, slice):
@@ -108,6 +143,7 @@ cdef class DataFrame(Frame):
     
     cdef inline Series _handle_str(self, arg):
         return Series(
+            # A 1d numpy array
             values=self.values[:, self.columns.get_item(arg)], 
             index=self.index, 
             name=arg
@@ -128,6 +164,17 @@ cdef class DataFrame(Frame):
         # return self.new(self.values[:, start:stop:step], self.index, columns)
     
     cdef inline DataFrame _handle_array(self, arg):
+        """
+        Parameters
+        ----------
+        arg : array of strs
+            list of column names
+
+        Returns
+        -------
+        DataFrame
+            A modified DataFrame with the selected columns
+        """
         cdef np.int64_t length = len(arg)
         cdef np.int64_t[:] args = np.zeros(length, dtype=np.int64)
         cdef np.int64_t i

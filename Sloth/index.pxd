@@ -8,6 +8,7 @@ from util cimport datetime64, indice
 cdef class _Index:
     cdef public:
         indice FD, BD
+        
 cdef class ObjectIndex(_Index):
     cdef public:
         object keys

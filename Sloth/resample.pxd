@@ -12,4 +12,3 @@ cdef class Resampler:
         np.int64_t[:] groups
         
     cdef timedelta64 timedelta_to_ns(self, interval)
-

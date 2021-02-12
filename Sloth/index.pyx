@@ -13,7 +13,7 @@ from util cimport datetime64, indice
 cdef class _Index:
     @property
     def keys_(self):
-        return np.asarray(self.keys)
+        return np.asarray(self.keys)[self.FD, self.BD]
 
     def fast_init(self, displacement):
         index = self.__new__(self.__class__)
@@ -47,13 +47,19 @@ cdef class ObjectIndex(_Index):
         self.FD = 0
         self.BD = length
 
-        # Use int64
+        # Because the index is a bunch of python objects
+        # it will be stored in a python dictionary
         self.index = {}
+
+        # TODO: Might be faster if we ditch cython here
+        # and use the standard map function
         for i in range(length):
             self.index[self.keys[i]] = i
 
     def get_item(self, arg):
+        # Grabs the exact index location of arg
         ret = self.index[arg]
+
         if self.FD <= ret and ret <= self.BD:
             return ret
         raise KeyError("Invalid key: %s" % arg)

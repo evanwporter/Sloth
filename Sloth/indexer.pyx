@@ -35,12 +35,14 @@ cdef class IntegerLocation(Indexer):
             arg = FD + arg
             return Series(self.values[arg], index=self.columns, name=self.index.keys[arg])            
 
+        # If its not an integer, then is assumes that it is a slice
         if arg.start is not None:
             start = arg.start + FD
         if arg.stop is not None:
             stop = arg.stop + FD
 
-        return self.frame.fast_init("I", (start, stop))
+        return self.frame.fast_init(location="I", displacement=(start, stop))
+
         # if isinstance(arg, int):
             
         #     # 1d
