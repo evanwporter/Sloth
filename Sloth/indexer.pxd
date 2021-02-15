@@ -20,8 +20,6 @@ cdef class IntegerLocation(Indexer):
 
 cdef class Location(Indexer):
 
-    cdef inline Series _handle_str(self, arg, int column)
-
     cdef inline Frame _handle_slice(self, slice arg)
 
     # cdef inline Frame _handle_array(self, arg)

@@ -12,6 +12,8 @@ cdef class Frame:
         Location loc
         str reference
         int i
+        dict extras
+        bint extra
         
 
 cdef class DataFrame(Frame):
@@ -33,3 +35,4 @@ cdef class DataFrame(Frame):
 cdef class Series(Frame):
     cdef public:
         str name
+        object values

@@ -6,17 +6,34 @@ from indexer cimport IntegerLocation, Location
 from index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
-from resample cimport Resampler
+# from resample cimport Resampler
 
 import pandas as pd
 
+"""
+Public Variables
+(Displacement Compliant)
+------------------------
+  * values
+"""
 
 cdef class Frame:
         
     def __init__(self, np.ndarray values, index, index_type=None):
+        """
+        Parameters
+        ----------
+        values : np.ndarray
+            Values to fill up the dataframe with. The dimensions of "values" must be 
+            equal to len(columns) x len(index)
+        index : array-like
+            Index that of values. len(index) must be equal to values.shape[1]
+        """
         self.values_ = values.view()
         
         if isinstance(index, _Index):
+            # Fast track for creating and index. Allows dataframe to skip over the lengthy
+            # process of creating a new index
             self.index = index
         elif index_type == "datetime" or np.issubdtype(index.dtype, np.datetime64):
             self.index = DateTimeIndex(index)
@@ -41,8 +58,8 @@ cdef class Frame:
     def to_numpy(self):
         return self.values
     
-    def resample(self, freq):
-        return Resampler(self, freq)
+    # def resample(self, freq):
+    #     return Resampler(self, freq)
 
     def fast_init(self, location: str, displacement: tuple):
         """
@@ -54,14 +71,11 @@ cdef class Frame:
             'C' for columns, or 'I' for index
         """
         frame = self.__new__(self.__class__)
-        frame.values_ = self.values_
+        frame.values_ = self.values_[displacement[0]: displacement[1]]
         frame.reference = self.reference
-        if location == "C":
-            frame.columns = self.columns.fast_init(displacement)
-            frame.index = self.index
-        else:
-            frame.index = self.index.fast_init(displacement=displacement)
-            frame.columns = self.columns
+
+        frame.index = self.index.fast_init(displacement)
+        frame.columns = self.columns
         return frame
 
 
@@ -71,11 +85,29 @@ cdef class Series(Frame):
         self.reference = "S"
 
         self.name = str(name)
-
+        self.values = values
         super().__init__(values, index, index_type)
     
     def to_pandas(self):
-        return pd.Series(self.values_, index=self.index.keys_, name=self.name)
+        return pd.Series(self.values_, index=self.index.keys, name=self.name)
+
+    """
+    MATH
+    """
+    def __mul__(self, other):
+        return self.values * other
+
+    def __div__(self, other):
+        return self.values / other
+
+    def __add__(self, other):
+        return self.values + other
+
+    def __sub__(self, other):
+        return self.values - other
+    
+    def __array__(self):
+        return self.values
 
 cdef class DataFrame(Frame):
         
@@ -93,12 +125,15 @@ cdef class DataFrame(Frame):
             self.columns = ObjectIndex(columns)
                 
         super().__init__(values, index, index_type)
+
+        self.extras = {}
                 
 #         self.loc = Location(self.values, self.index, self.columns)
     
     @classmethod
     def from_pandas(cls, dataframe):
-        """Class method to convert pandas dataframe to a sloth frame
+        """
+        Class method to convert pandas dataframe to a sloth frame
 
         Parameters
         ----------
@@ -110,12 +145,12 @@ cdef class DataFrame(Frame):
         sloth.DataFrame
             The sloth dataframe
         """
-        # TODO: Make error handling
+        # TODO: Error handling
         return cls(dataframe.to_numpy(), dataframe.index, dataframe.columns)
     
     def to_pandas(self):
 
-        return pd.DataFrame(self.values, index=self.index.keys_, columns=self.columns.keys_)
+        return pd.DataFrame(self.values, index=self.index.keys, columns=self.columns.keys)
     
     def __getitem__(self, arg):
         """
@@ -183,12 +218,43 @@ cdef class DataFrame(Frame):
             args[i] = self.columns.get_item(arg[i])
 
         return DataFrame(self.values[:, args], index=self.index, columns=arg)
-
     
     @property
     def values(self):
-        return self.values_[self.index.FD: self.index.BD]
+        values = self.values_#[self.index.FD: self.index.BD]
+        # if self.extra:
+        #     for v in self.extras.values():
+        #         np.concatenate((values, v.T), axis=1)
+        return values
+
+    def __setitem__(self, arg, value):
+        # You can only set columns
+        if arg in self.columns.keys:
+            self.values_[:, self.columns.get_item(arg)] = value
+        else: # column does not exist, thus a new one must be created
+            index = np.append(self.columns.keys, arg)
+            self.columns = ObjectIndex(index)
+            self.values_ = np.concatenate((self.values, np.transpose([value])), axis=1)
+        
+
 
     # cdef _handle_tuple(self, tuple arg):
     #     cdef int i
     #     for i in range(len(arg)):
+
+    # def reindex(self):
+    #     return _reindex()
+
+    # cdef _reindex(self, index):
+    #     cdef np.ndarray reindexed_values = np.zeros(
+    #         (
+    #             # Dataframe width
+    #             self.columns.BD - self.columns.FD, 
+    #             # Dataframe length
+    #             len(index)
+    #         )
+    #     )
+
+    #     for target_index in range(len(index)):
+    #         for original_index in range(len(self.index.keys)):
+    #             if index[]

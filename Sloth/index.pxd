@@ -11,7 +11,7 @@ cdef class _Index:
         
 cdef class ObjectIndex(_Index):
     cdef public:
-        object keys
+        object keys_
         dict index
         reference
 
@@ -21,7 +21,7 @@ cdef class ObjectIndex(_Index):
 
 cdef class DateTimeIndex(_Index):
     cdef public:
-        datetime64[:] keys
+        datetime64[:] keys_
         Int64to64Map index
         str reference
 
