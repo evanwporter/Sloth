@@ -6,7 +6,7 @@ cimport cython
 
 cdef class Frame:
     cdef public:
-        np.ndarray values_
+        np.ndarray values
         _Index index
         IntegerLocation iloc
         Location loc
@@ -31,8 +31,8 @@ cdef class DataFrame(Frame):
     
     cdef inline DataFrame _handle_array(self, arg)
 
-
 cdef class Series(Frame):
     cdef public:
         str name
-        object values
+
+    # cdef Series _quick_init(self, values)

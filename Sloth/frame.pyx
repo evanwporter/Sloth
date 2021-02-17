@@ -29,7 +29,7 @@ cdef class Frame:
         index : array-like
             Index that of values. len(index) must be equal to values.shape[1]
         """
-        self.values_ = values.view()
+        self.values = values.view()
         
         if isinstance(index, _Index):
             # Fast track for creating and index. Allows dataframe to skip over the lengthy
@@ -49,14 +49,27 @@ cdef class Frame:
     def __array__(self):
         return self.values
     
+    def __len__(self):
+        return len(self.values)
+    
     def astype(self, type_):
-        self.values_ = self.values_.astype(type_)
+        self.values = self.values.astype(type_)     
     
     def iterrows(self):
         return self.values
     
     def to_numpy(self):
         return self.values
+
+    @property
+    def dtype(self):
+        return self.values.dtype
+
+    def __setattr__(self, arg, value):
+        if arg == "values":
+            raise AttributeError("Attribute 'values' cannot be modified")
+        else:
+            setattr(self, arg, value)
     
     # def resample(self, freq):
     #     return Resampler(self, freq)
@@ -71,7 +84,7 @@ cdef class Frame:
             'C' for columns, or 'I' for index
         """
         frame = self.__new__(self.__class__)
-        frame.values_ = self.values_[displacement[0]: displacement[1]]
+        frame.values = self.values[displacement[0]: displacement[1]]
         frame.reference = self.reference
 
         frame.index = self.index.fast_init(displacement)
@@ -81,33 +94,41 @@ cdef class Frame:
 
 cdef class Series(Frame):
         
-    def __init__(self, np.ndarray values, index, name, index_type=None):
+    def __init__(self, np.ndarray values, index, name=None, index_type=None):
         self.reference = "S"
 
-        self.name = str(name)
-        self.values = values
+        if name is not None:
+            self.name = str(name)
+
         super().__init__(values, index, index_type)
     
     def to_pandas(self):
-        return pd.Series(self.values_, index=self.index.keys, name=self.name)
+        return pd.Series(self.values, index=self.index.to_pandas(), name=self.name, dtype=self.dtype)
 
     """
     MATH
     """
+
+    def _quick_init(self, values):
+        return Series(values=values, index=self.index)
+
     def __mul__(self, other):
-        return self.values * other
+        return self._quick_init(self.values * other)
 
     def __div__(self, other):
-        return self.values / other
+        return self._quick_init(self.values / other)
+
+    def __rdiv__(self, other):
+        return self._quick_init(other / self.values)
 
     def __add__(self, other):
-        return self.values + other
+        return self._quick_init(self.values + other)
 
     def __sub__(self, other):
-        return self.values - other
+        return self._quick_init(self.values - other)
     
-    def __array__(self):
-        return self.values
+    def __rsub__(self, other):
+        return self._quick_init(other - self.values)
 
 cdef class DataFrame(Frame):
         
@@ -150,7 +171,11 @@ cdef class DataFrame(Frame):
     
     def to_pandas(self):
 
-        return pd.DataFrame(self.values, index=self.index.keys, columns=self.columns.keys)
+        return pd.DataFrame(
+            self.values, 
+            index=self.index.to_pandas(), 
+            columns=self.columns.to_pandas()
+        )
     
     def __getitem__(self, arg):
         """
@@ -175,6 +200,17 @@ cdef class DataFrame(Frame):
         elif isinstance(arg, (list, np.ndarray)):
             return self._handle_array(arg)
 
+    def __getattr__(self, arg):
+        """
+        Similar to '__getitem__' but allows for fancy stuff like
+        DataFrame.<column> instead of DataFrame["<column>"]
+
+        Parameters
+        ----------
+        arg : str
+            single column name
+        """
+        return self._handle_str(arg)
     
     cdef inline Series _handle_str(self, arg):
         return Series(
@@ -218,23 +254,22 @@ cdef class DataFrame(Frame):
             args[i] = self.columns.get_item(arg[i])
 
         return DataFrame(self.values[:, args], index=self.index, columns=arg)
-    
-    @property
-    def values(self):
-        values = self.values_#[self.index.FD: self.index.BD]
-        # if self.extra:
-        #     for v in self.extras.values():
-        #         np.concatenate((values, v.T), axis=1)
-        return values
 
     def __setitem__(self, arg, value):
+        if isinstance(value, Series):
+            value = value.values
+
         # You can only set columns
-        if arg in self.columns.keys:
-            self.values_[:, self.columns.get_item(arg)] = value
+        if arg in self.columns:
+            self.values[:, self.columns.get_item(arg)] = value
         else: # column does not exist, thus a new one must be created
             index = np.append(self.columns.keys, arg)
             self.columns = ObjectIndex(index)
-            self.values_ = np.concatenate((self.values, np.transpose([value])), axis=1)
+            self.values = np.concatenate((self.values, np.transpose([value])), axis=1)
+    
+    # def __setattr__(self, arg, value):
+    #     import warnings
+    #     warning.warn("Sloth doesn't allow columns to be created via a new attribute name")
         
 
 
@@ -242,19 +277,24 @@ cdef class DataFrame(Frame):
     #     cdef int i
     #     for i in range(len(arg)):
 
-    # def reindex(self):
-    #     return _reindex()
+    def reindex(self):
+        return _reindex()
 
-    # cdef _reindex(self, index):
-    #     cdef np.ndarray reindexed_values = np.zeros(
-    #         (
-    #             # Dataframe width
-    #             self.columns.BD - self.columns.FD, 
-    #             # Dataframe length
-    #             len(index)
-    #         )
-    #     )
+    cdef _reindex(self, index):
+        cdef np.ndarray[:, :] reindexed_values = np.zeros(
+            (
+                # Dataframe width
+                len(columns.keys)
+                # Dataframe length
+                len(index)
+            )
+        )
 
-    #     for target_index in range(len(index)):
-    #         for original_index in range(len(self.index.keys)):
-    #             if index[]
+        cdef int target_index, original_index
+
+        for target_index in range(len(index)):
+            for original_index in range(len(self.index.keys)):
+                if index[target_index] == self.index.keys[original_index]:
+                    reindexed_values[target_index] = self.values[original_index]
+        
+        

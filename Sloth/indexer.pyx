@@ -38,7 +38,7 @@ cdef class Indexer:
     def __init__(self, Frame frame):
         self.frame = frame
         self.index = frame.index
-        self.values = frame.values_
+        self.values = frame.values
         
         self.reference = frame.reference
         

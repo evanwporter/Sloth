@@ -10,6 +10,8 @@ from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
 from util cimport datetime64, indice
 
+import pandas as pd
+
 """
 Public Variables
 (Displacement Compliant)
@@ -31,6 +33,14 @@ cdef class _Index:
         index.BD = displacement[1]
 
         return index
+    
+    def __setattr__(self, arg, value):
+        if arg == "FD":
+            raise AttributeError("Attribute 'FD' cannot be modified")
+        if arg == "BD":
+            raise AttributeError("Attribute 'BD' cannot be modified")
+        setattr(self, arg, value)
+
 
     # def __iter__(self):
         # return 
@@ -72,6 +82,11 @@ cdef class ObjectIndex(_Index):
         raise KeyError("Invalid key: %s" % arg)
 
     # def set_item(self, arg, value):
+    def to_pandas(self):
+        return pd.Index(data=self.keys)
+    
+    def __contains__(self, item):
+        return item in self.keys
 
 
 cdef class DateTimeIndex(_Index):
@@ -116,26 +131,36 @@ cdef class DateTimeIndex(_Index):
     # def keys(self):
     #     return super().keys.astype("datetime64[ns]")
 
-# cdef class IntervalIndex(_Index):
-#     """
-#     Using the equation:
-#         x = (y - b) / m
-#         where:
-#             x: index 
-#             y: index label
-#             b: starting index value
-#             m: interval
-#     We can figure out the index of the row without having to go through
-#     the lengthy process of looking up the key in a dictionary/hash table
-#     """
-#     def __init__(self, index=None, startIndex=None, interval=None):
-#         if index is None and startIndex is None and interval is None:
-#             raise TypeError("IntervalIndex needs at least one parameter to be given")
+cdef class RangeIndex(_Index):
+    """
+    Using the equation:
+        x = (y - b) / m
+        where:
+            x: desired index location 
+            y: index label (arg)
+            b: starting index value (start)
+            m: interval (step)
+    We can figure out the index of the row without having to go through
+    the lengthy process of looking up the key in a dictionary/hash table
+    """
+
+    def __init__(self, start=0, stop=1, step=1):
+        """
+        Parameters
+        ----------
+        start : int
+        stop : int
+            'stop' is not used at all. The only reason that it is a parameter is 
+            for symbolic reasons 
+        """
+        self.start = start
+        self.stop = stop
+        self.step = step
         
-#         if startIndex is None:
-#             self.startIndex = index[0]
-#         if interval is None:
-#             self.interval = index[1] - index[0]
-    
-#     def get_item(self, arg):
+        
+    def get_item(self, arg):
+        return (arg - self.start) / self.step
+
+    def to_pandas(self):
+        return pd.RangeIndex(start=self.start, step=self.step)
 

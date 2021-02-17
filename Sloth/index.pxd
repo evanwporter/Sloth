@@ -29,3 +29,6 @@ cdef class DateTimeIndex(_Index):
         # cdef int i
 
     # cdef int get_item(self, item)
+
+cdef class RangeIndex(_Index):
+    cdef int start, stop, step

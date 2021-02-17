@@ -1843,6 +1843,7 @@ struct __pyx_obj_7cykhash_9khashmaps_PyObjectMapIterator;
 struct __pyx_obj_5index__Index;
 struct __pyx_obj_5index_ObjectIndex;
 struct __pyx_obj_5index_DateTimeIndex;
+struct __pyx_obj_5index_RangeIndex;
 struct __pyx_obj_5frame_Frame;
 struct __pyx_obj_5frame_DataFrame;
 struct __pyx_obj_5frame_Series;
@@ -2164,16 +2165,30 @@ struct __pyx_obj_5index_DateTimeIndex {
 };
 
 
+/* "index.pxd":33
+ *     # cdef int get_item(self, item)
+ * 
+ * cdef class RangeIndex(_Index):             # <<<<<<<<<<<<<<
+ *     cdef int start, stop, step
+ */
+struct __pyx_obj_5index_RangeIndex {
+  struct __pyx_obj_5index__Index __pyx_base;
+  int start;
+  int stop;
+  int step;
+};
+
+
 /* "frame.pxd":7
  * cimport cython
  * 
  * cdef class Frame:             # <<<<<<<<<<<<<<
  *     cdef public:
- *         np.ndarray values_
+ *         np.ndarray values
  */
 struct __pyx_obj_5frame_Frame {
   PyObject_HEAD
-  PyArrayObject *values_;
+  PyArrayObject *values;
   struct __pyx_obj_5index__Index *index;
   struct __pyx_obj_7indexer_IntegerLocation *iloc;
   struct __pyx_obj_7indexer_Location *loc;
@@ -2198,8 +2213,8 @@ struct __pyx_obj_5frame_DataFrame {
 };
 
 
-/* "frame.pxd":35
- * 
+/* "frame.pxd":34
+ *     cdef inline DataFrame _handle_array(self, arg)
  * 
  * cdef class Series(Frame):             # <<<<<<<<<<<<<<
  *     cdef public:
@@ -2208,7 +2223,6 @@ struct __pyx_obj_5frame_DataFrame {
 struct __pyx_obj_5frame_Series {
   struct __pyx_obj_5frame_Frame __pyx_base;
   PyObject *name;
-  PyObject *values;
 };
 
 
@@ -3662,6 +3676,7 @@ static PyTypeObject *__pyx_ptype_7cykhash_9khashmaps_PyObjectMapIterator = 0;
 static PyTypeObject *__pyx_ptype_5index__Index = 0;
 static PyTypeObject *__pyx_ptype_5index_ObjectIndex = 0;
 static PyTypeObject *__pyx_ptype_5index_DateTimeIndex = 0;
+static PyTypeObject *__pyx_ptype_5index_RangeIndex = 0;
 
 /* Module declarations from 'frame' */
 static PyTypeObject *__pyx_ptype_5frame_Frame = 0;
@@ -4141,7 +4156,7 @@ static int __pyx_pf_7indexer_7Indexer___init__(struct __pyx_obj_7indexer_Indexer
  *     def __init__(self, Frame frame):
  *         self.frame = frame             # <<<<<<<<<<<<<<
  *         self.index = frame.index
- *         self.values = frame.values_
+ *         self.values = frame.values
  */
   __Pyx_INCREF(((PyObject *)__pyx_v_frame));
   __Pyx_GIVEREF(((PyObject *)__pyx_v_frame));
@@ -4153,7 +4168,7 @@ static int __pyx_pf_7indexer_7Indexer___init__(struct __pyx_obj_7indexer_Indexer
  *     def __init__(self, Frame frame):
  *         self.frame = frame
  *         self.index = frame.index             # <<<<<<<<<<<<<<
- *         self.values = frame.values_
+ *         self.values = frame.values
  * 
  */
   __pyx_t_1 = ((PyObject *)__pyx_v_frame->index);
@@ -4167,11 +4182,11 @@ static int __pyx_pf_7indexer_7Indexer___init__(struct __pyx_obj_7indexer_Indexer
   /* "indexer.pyx":41
  *         self.frame = frame
  *         self.index = frame.index
- *         self.values = frame.values_             # <<<<<<<<<<<<<<
+ *         self.values = frame.values             # <<<<<<<<<<<<<<
  * 
  *         self.reference = frame.reference
  */
-  __pyx_t_1 = ((PyObject *)__pyx_v_frame->values_);
+  __pyx_t_1 = ((PyObject *)__pyx_v_frame->values);
   __Pyx_INCREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __Pyx_GOTREF(__pyx_v_self->values);
@@ -4180,7 +4195,7 @@ static int __pyx_pf_7indexer_7Indexer___init__(struct __pyx_obj_7indexer_Indexer
   __pyx_t_1 = 0;
 
   /* "indexer.pyx":43
- *         self.values = frame.values_
+ *         self.values = frame.values
  * 
  *         self.reference = frame.reference             # <<<<<<<<<<<<<<
  * 
@@ -23734,6 +23749,8 @@ static int __Pyx_modinit_type_import_code(void) {
   __pyx_ptype_5index_DateTimeIndex = __Pyx_ImportType(__pyx_t_1, "index", "DateTimeIndex", sizeof(struct __pyx_obj_5index_DateTimeIndex), __Pyx_ImportType_CheckSize_Warn);
    if (!__pyx_ptype_5index_DateTimeIndex) __PYX_ERR(11, 22, __pyx_L1_error)
   __pyx_vtabptr_5index_DateTimeIndex = (struct __pyx_vtabstruct_5index_DateTimeIndex*)__Pyx_GetVtable(__pyx_ptype_5index_DateTimeIndex->tp_dict); if (unlikely(!__pyx_vtabptr_5index_DateTimeIndex)) __PYX_ERR(11, 22, __pyx_L1_error)
+  __pyx_ptype_5index_RangeIndex = __Pyx_ImportType(__pyx_t_1, "index", "RangeIndex", sizeof(struct __pyx_obj_5index_RangeIndex), __Pyx_ImportType_CheckSize_Warn);
+   if (!__pyx_ptype_5index_RangeIndex) __PYX_ERR(11, 33, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_1 = PyImport_ImportModule("frame"); if (unlikely(!__pyx_t_1)) __PYX_ERR(12, 7, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -23743,7 +23760,7 @@ static int __Pyx_modinit_type_import_code(void) {
    if (!__pyx_ptype_5frame_DataFrame) __PYX_ERR(12, 19, __pyx_L1_error)
   __pyx_vtabptr_5frame_DataFrame = (struct __pyx_vtabstruct_5frame_DataFrame*)__Pyx_GetVtable(__pyx_ptype_5frame_DataFrame->tp_dict); if (unlikely(!__pyx_vtabptr_5frame_DataFrame)) __PYX_ERR(12, 19, __pyx_L1_error)
   __pyx_ptype_5frame_Series = __Pyx_ImportType(__pyx_t_1, "frame", "Series", sizeof(struct __pyx_obj_5frame_Series), __Pyx_ImportType_CheckSize_Warn);
-   if (!__pyx_ptype_5frame_Series) __PYX_ERR(12, 35, __pyx_L1_error)
+   if (!__pyx_ptype_5frame_Series) __PYX_ERR(12, 34, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_RefNannyFinishContext();
   return 0;
