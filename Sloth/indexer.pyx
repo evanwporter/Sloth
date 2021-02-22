@@ -66,33 +66,28 @@ cdef class IntegerLocation(Indexer):
 
         length = len(self.values)
 
+        y1 = arg.start
+        y2 = arg.stop
+
+        if arg.start >= arg.stop: 
+            raise ValueError("%d cannot be greater than %d" % (y1, y2))
+
+        # Less than zero
+        if arg.start < 0: y1 = length - arg.start
+        if arg.stop < 0: y2 = length - arg.start
+
+        currentFD = self.index.FD
+        newFD = currentFD + y1
+        newBD = currentFD + y2 + 1
+
         # If its not an integer, then it assumes that it is a slice
 
-        # TODO: Make it so that something like [:-4] is valid
-        if arg.start is None:
-            arg.start = 0
-            
-        if arg.stop is None:
-            arg.stop = 0
-        
-        FD = self.index.FD
-        BD = self.index.BD
-
-        # Calculate BD first before FD changes from self.index.FD
-        # to something else
-        if arg.stop >= 0:
-            BD = FD + arg.stop
-        else:
-            BD = FD + (length + arg.stop)
-
-        if arg.start >= 0:
-            FD = FD + arg.start
-        else:
-            FD = FD + (length + arg.start)
-
-
         # TODO: Allow arg.step to be used
-        return self.frame.fast_init(location="I", displacement=(FD, BD))
+        return self.frame.fast_init(
+            location="I", 
+            displacement=(newFD, newBD), 
+            coordinates=(y1, y2)
+        )
 
         # if isinstance(arg, int):
             
@@ -120,6 +115,7 @@ cdef class Location(Indexer):
         #     return self._handle_array(arg)
             
         if isinstance(arg, slice):
+            print("get")
             return self._handle_slice(arg)
         else:
             return Series(
@@ -129,12 +125,22 @@ cdef class Location(Indexer):
             )
     
     cdef inline Frame _handle_slice(self, slice arg):
+        A = arg.start
+        B = arg.stop
+
+        print(A, B)
+        FD = self.index.get_item(A)
+        BD = self.index.get_item(B) + 1
+
+        x = FD - self.index.FD
+        y = BD - self.index.FD
+
         if arg.start is not None:
             start = self.index.get_item(arg.start) - self.index.FD
         if arg.stop is not None:
             stop = self.index.get_item(arg.stop) - self.index.FD
         
-        return self.frame.fast_init("I", (start, stop))
+        return self.frame.fast_init("I", displacement=(start, stop), coordinates=(x, y))
 
     # cdef inline Frame _handle_array(self, arg):
     #     cdef str i

@@ -4,6 +4,9 @@ from indexer cimport IntegerLocation, Location
 from index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
+from resample cimport Resampler
+
+
 cdef class Frame:
     cdef public:
         np.ndarray values
@@ -30,6 +33,8 @@ cdef class DataFrame(Frame):
         # cdef list columns
     
     cdef inline DataFrame _handle_array(self, arg)
+
+    # cdef _reindex(self,)
 
 cdef class Series(Frame):
     cdef public:

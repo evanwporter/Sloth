@@ -15,11 +15,11 @@ cdef class Resampler:
         self.index = frame.index
         cdef datetime64[:] keys = self.index.keys
 
-        cdef np.int64_t[:] bins = np.arange(keys[0], keys[-1], self.timedelta_to_ns(freq), dtype=np.int64)
+        cdef np.int64_t[:] bins = np.arange(keys[0], keys[-1], self._timedelta_to_ns(freq), dtype=np.int64)
 
         self.groups = np.unique(np.searchsorted(keys, bins))
 
-    cdef timedelta64 timedelta_to_ns(self, interval):
+    cdef timedelta64 _timedelta_to_ns(self, interval):
         """
         Convert timedelta to nanoseconds
         """

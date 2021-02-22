@@ -26,20 +26,22 @@ cdef class _Index:
 
     def fast_init(self, displacement):
         index = self.__new__(self.__class__)
-        index.keys_ = self.keys_
-        index.reference = self.reference
+
         index.index = self.index
+        index.keys_ = self.keys_
+
+        # index.reference = self.reference
         index.FD = displacement[0]
         index.BD = displacement[1]
 
         return index
     
-    def __setattr__(self, arg, value):
-        if arg == "FD":
-            raise AttributeError("Attribute 'FD' cannot be modified")
-        if arg == "BD":
-            raise AttributeError("Attribute 'BD' cannot be modified")
-        setattr(self, arg, value)
+    # def __setattr__(self, arg, value):
+    #     if arg == "FD":
+    #         raise AttributeError("Attribute 'FD' cannot be modified")
+    #     if arg == "BD":
+    #         raise AttributeError("Attribute 'BD' cannot be modified")
+    #     setattr(self, arg, value)
 
 
     # def __iter__(self):
@@ -102,6 +104,9 @@ cdef class DateTimeIndex(_Index):
         else:
             self.keys_ = index
         self._initialize()
+    
+    def to_pandas(self):
+        return pd.DatetimeIndex(data=self.keys_)
 
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
@@ -111,7 +116,7 @@ cdef class DateTimeIndex(_Index):
         cdef int length = len(self.keys_)
 
         self.FD = 0
-        self.BD = length
+        self.BD = length + 1
 
         # Use int64
         self.index = Int64to64Map(number_of_elements_hint=length, for_int=True)
@@ -119,10 +124,11 @@ cdef class DateTimeIndex(_Index):
             self.index.put_int64(self.keys_[i], i)
     
     def get_item(self, arg):
+        # Makes sure DateTime64 objects are in int64 format
         if not isinstance(arg, np.int64):
-            arg = arg.astype(np.int64)
+            arg_int = arg.astype(np.int64)
 
-        ret = self.index[arg]
+        ret = self.index.get_int64(arg_int)
         if self.FD <= ret and ret <= self.BD:
             return ret
         raise KeyError("Invalid key: %s" % arg)

@@ -6,7 +6,7 @@ from indexer cimport IntegerLocation, Location
 from index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
-# from resample cimport Resampler
+from resample cimport Resampler
 
 import pandas as pd
 
@@ -65,16 +65,16 @@ cdef class Frame:
     def dtype(self):
         return self.values.dtype
 
-    def __setattr__(self, arg, value):
-        if arg == "values":
-            raise AttributeError("Attribute 'values' cannot be modified")
-        else:
-            setattr(self, arg, value)
+    # def __setattr__(self, arg, value):
+    #     if arg == "values":
+    #         raise AttributeError("Attribute 'values' cannot be modified")
+    #     else:
+    #         setattr(self, arg, value)
     
-    # def resample(self, freq):
-    #     return Resampler(self, freq)
+    def resample(self, freq):
+        return Resampler(self, freq)
 
-    def fast_init(self, location: str, displacement: tuple):
+    def fast_init(self, location: str, displacement: tuple, coordinates: tuple):
         """
         Backdoor of sorts. Allows for a quicker initialization.
 
@@ -82,13 +82,18 @@ cdef class Frame:
         ----------
         location : str
             'C' for columns, or 'I' for index
+        displacement : tuple
+        coordinates : tuple
         """
         frame = self.__new__(self.__class__)
-        frame.values = self.values[displacement[0]: displacement[1]]
+
+        # TODO: FIX THIS.
+        frame.values = self.values[coordinates[0]: coordinates[1]]
         frame.reference = self.reference
 
         frame.index = self.index.fast_init(displacement)
         frame.columns = self.columns
+
         return frame
 
 
@@ -277,24 +282,24 @@ cdef class DataFrame(Frame):
     #     cdef int i
     #     for i in range(len(arg)):
 
-    def reindex(self):
-        return _reindex()
+    # def reindex(self):
+    #     return self._reindex(self.index, self.columns)
 
-    cdef _reindex(self, index):
-        cdef np.ndarray[:, :] reindexed_values = np.zeros(
-            (
-                # Dataframe width
-                len(columns.keys)
-                # Dataframe length
-                len(index)
-            )
-        )
+    # cdef _reindex(self, index, columns):
+    #     cdef np.ndarray[:, :] reindexed_values = np.zeros(
+    #         (
+    #             # Dataframe width
+    #             len(columns.keys),
+    #             # Dataframe length
+    #             len(index)
+    #         )
+    #     )
 
-        cdef int target_index, original_index
+    #     cdef int target_index, original_index
 
-        for target_index in range(len(index)):
-            for original_index in range(len(self.index.keys)):
-                if index[target_index] == self.index.keys[original_index]:
-                    reindexed_values[target_index] = self.values[original_index]
+    #     for target_index in range(len(index)):
+    #         for original_index in range(len(self.index.keys)):
+    #             if index[target_index] == self.index.keys[original_index]:
+    #                 reindexed_values[target_index] = self.values[original_index]
         
         
