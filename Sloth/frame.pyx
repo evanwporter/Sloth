@@ -17,6 +17,9 @@ Public Variables
   * values
 """
 
+# cdef class FrameView:
+#  def __init__(self, FD, 
+
 cdef class Frame:
         
     def __init__(self, np.ndarray values, index, index_type=None):
