@@ -6,6 +6,8 @@ from indexer cimport IntegerLocation, Location
 from index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
+import logging
+
 from resample cimport Resampler
 
 import pandas as pd
@@ -38,8 +40,18 @@ cdef class Frame:
             # Fast track for creating and index. Allows dataframe to skip over the lengthy
             # process of creating a new index
             self.index = index
-        elif index_type == "datetime" or np.issubdtype(index.dtype, np.datetime64):
-            self.index = DateTimeIndex(index)
+        elif index_type == "datetime":
+            try:
+                if np.issubdtype(index.dtype, np.datetime64):
+                    self.index = DateTimeIndex(index)
+            except:
+                logging.warn("The index is not of the datetime type as specified.")
+                self.index = ObjectIndex(index)
+        elif isinstance(index, np.ndarray):
+            if np.issubdtype(index.dtype, np.datetime64):
+                self.index = DateTimeIndex(index)
+            else:
+                self.index = ObjectIndex(index)
         else:
             self.index = ObjectIndex(index)
                 
@@ -175,7 +187,11 @@ cdef class DataFrame(Frame):
             The sloth dataframe
         """
         # TODO: Error handling
-        return cls(dataframe.to_numpy(), dataframe.index, dataframe.columns)
+        return cls(
+            values=dataframe.to_numpy(), 
+            index=dataframe.index.values, 
+            columns=dataframe.columns.values
+        )
     
     def to_pandas(self):
 
@@ -274,6 +290,8 @@ cdef class DataFrame(Frame):
             index = np.append(self.columns.keys, arg)
             self.columns = ObjectIndex(index)
             self.values = np.concatenate((self.values, np.transpose([value])), axis=1)
+    
+
     
     # def __setattr__(self, arg, value):
     #     import warnings

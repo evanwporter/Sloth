@@ -1,14 +1,18 @@
 cimport numpy as np 
-from util cimport datetime64, timedelta64
+from util cimport datetime64, timedelta64, ns_to_days, days_to_ns, ceil_, floor_
 
-from frame cimport Frame
+from frame cimport Frame, Series, DataFrame
 from index cimport DateTimeIndex
+from cpython cimport list
 
 
 cdef class Resampler:
     cdef public:
-        DateTimeIndex index
         Frame frame
-        np.int64_t[:] groups
         
-    cdef timedelta64 _timedelta_to_ns(self, interval)
+        datetime64[:] index
+        list split_data
+    
+    cdef inline _resample(self, freq)
+    
+    cdef inline mean(self)

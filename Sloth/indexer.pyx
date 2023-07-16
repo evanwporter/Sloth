@@ -50,6 +50,11 @@ cdef class Indexer:
 cdef class IntegerLocation(Indexer):
     
     def __getitem__(self, arg):
+        """
+        There are two (maybe 3) possible values of arg:
+         (1) single integer
+         (2) slice
+        """
         cdef int displacement
         cdef int start
         cdef int stop
@@ -64,50 +69,32 @@ cdef class IntegerLocation(Indexer):
             arg = displacement + arg
             return Series(self.values[arg], index=self.columns, name=self.index.keys[arg])          
 
-        length = len(self.values)
-
-        y1 = arg.start
-        y2 = arg.stop
-
-        if arg.start >= arg.stop: 
-            raise ValueError("%d cannot be greater than %d" % (y1, y2))
-
-        # Less than zero
-        if arg.start < 0: y1 = length - arg.start
-        if arg.stop < 0: y2 = length - arg.start
-
-        currentFD = self.index.FD
-        newFD = currentFD + y1
-        newBD = currentFD + y2 + 1
-
         # If its not an integer, then it assumes that it is a slice
+        if isinstance(arg, slice):
+            length = len(self.values)
 
-        # TODO: Allow arg.step to be used
-        return self.frame.fast_init(
-            location="I", 
-            displacement=(newFD, newBD), 
-            coordinates=(y1, y2)
-        )
+            start = arg.start
+            stop = arg.stop
 
-        # if isinstance(arg, int):
+            if arg.start >= arg.stop: 
+                raise ValueError("%d cannot be greater than %d" % (start, stop))
+
+            # Less than zero
+            if arg.start < 0 and arg.stop < 0: 
+                start = length - arg.start
+                stop = length - arg.start
+
+            currentFD = self.index.FD
+            newFD = currentFD + start
+            newBD = currentFD + stop
+
+            # TODO: Allow arg.step to be used
+            return self.frame.fast_init(
+                location="I", 
+                displacement=(newFD, newBD), 
+                coordinates=(start, stop)
+            )
             
-        #     # 1d
-        #     values = self.values[arg]
-        #     if isinstance(values, np.ndarray):
-        #         return Series(values, index=self.columns, name=list(self.index)[arg])
-        #     else:
-        #         # Value
-        #         return values
-                
-        # if isinstance(arg, slice):
-        #     values = self.values[arg]
-        #     index = list(self.index)[arg]
-            
-        #     if self.values.shape[0] == 1:
-        #         return Series(values=values, index=index, name=self.name)
-        #     else:
-        #         return DataFrame(values=values, columns=self.columns, index=index)
-
 cdef class Location(Indexer):
 
     def __getitem__(self, arg):

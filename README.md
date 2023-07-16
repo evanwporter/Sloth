@@ -14,5 +14,3 @@ Benchmarks
 | --- | ----- | ------ |
 | iloc[0] | 2.58 µs ± 298 ns | 168 µs ± 18.9 µs |
 | iloc[5:300000] | 3.48 µs ± 251 ns | 210 µs ± 15.1 µs |
-
-7.15.23: I messed up the folder filing RIP. Will need to fix later when I get the time

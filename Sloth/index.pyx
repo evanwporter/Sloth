@@ -24,7 +24,7 @@ cdef class _Index:
     def keys(self):
         return np.asarray(self.keys_)[self.FD: self.BD]
 
-    def fast_init(self, displacement):
+    def fast_init(self, displacement: tuple):
         index = self.__new__(self.__class__)
 
         index.index = self.index
@@ -106,7 +106,7 @@ cdef class DateTimeIndex(_Index):
         self._initialize()
     
     def to_pandas(self):
-        return pd.DatetimeIndex(data=self.keys_)
+        return pd.DatetimeIndex(data=self.keys)
 
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
@@ -143,7 +143,7 @@ cdef class RangeIndex(_Index):
         x = (y - b) / m
         where:
             x: desired index location 
-            y: index label (arg)
+            y: index label (passed argument)
             b: starting index value (start)
             m: interval (step)
     We can figure out the index of the row without having to go through
