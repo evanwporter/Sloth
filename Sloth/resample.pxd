@@ -16,3 +16,5 @@ cdef class Resampler:
     cdef inline _resample(self, freq)
     
     cdef inline mean(self)
+
+    cdef inline np.ndarray sum_axis_0(self, np.ndarray[np.float64_t, ndim=2] data)

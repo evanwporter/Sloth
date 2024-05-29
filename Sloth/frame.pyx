@@ -87,6 +87,8 @@ cdef class Frame:
     #         setattr(self, arg, value)
     
     def resample(self, freq):
+        if not isinstance(self.index, DateTimeIndex):
+            raise TypeError("Index must be a DataTimeIndex.")
         return Resampler(self, freq)
 
     def fast_init(self, location: str, displacement: tuple, coordinates: tuple):
@@ -200,6 +202,10 @@ cdef class DataFrame(Frame):
             index=self.index.to_pandas(), 
             columns=self.columns.to_pandas()
         )
+    
+    # @property
+    # def shape(self):
+    #     return tuple(self.values.shape)
     
     def __getitem__(self, arg):
         """
