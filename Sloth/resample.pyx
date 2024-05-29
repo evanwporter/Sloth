@@ -39,17 +39,17 @@ cdef class Resampler:
 
         return bins, split_data
 
-    cdef inline np.ndarray sum_axis_0(self, np.ndarray[np.float64_t, ndim=2] data):
-        cdef int nrows = data.shape[0]
-        cdef int ncols = data.shape[1]
-        cdef np.ndarray[np.float64_t, ndim=1] result = np.zeros(ncols)
-        cdef int i, j
+    # cdef inline np.ndarray sum_axis_0(self, np.ndarray[np.float64_t, ndim=2] data):
+    #     cdef int nrows = data.shape[0]
+    #     cdef int ncols = data.shape[1]
+    #     cdef np.ndarray[np.float64_t, ndim=1] result = np.zeros(ncols)
+    #     cdef int i, j
 
-        for j in range(ncols):
-            for i in range(nrows):
-                result[j] += data[i, j]
+    #     for j in range(ncols):
+    #         for i in range(nrows):
+    #             result[j] += data[i, j]
 
-        return result
+    #     return result
 
     cdef inline mean(self):
         cdef int length = len(self.split_data)
