@@ -9,6 +9,7 @@ cimport cython
 import logging
 
 from resample cimport Resampler
+from rolling cimport Rolling
 
 import pandas as pd
 
@@ -94,6 +95,9 @@ cdef class Frame:
         if not isinstance(self.index, DateTimeIndex):
             raise TypeError("Index must be a DataTimeIndex.")
         return Resampler(self, freq)
+    
+    def rolling(self, window):
+        return Rolling(self, window)
 
     def fast_init(self, location: str, displacement: tuple, coordinates: tuple):
         """

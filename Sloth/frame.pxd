@@ -5,6 +5,7 @@ from index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
 from resample cimport Resampler
+from rolling cimport Rolling
 
 
 cdef class Frame:
