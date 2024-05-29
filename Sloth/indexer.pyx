@@ -75,13 +75,13 @@ cdef class IntegerLocation(Indexer):
             start = arg.start if arg.start is not None else 0
             stop = arg.stop if arg.stop is not None else length
 
-            if arg.start >= arg.stop: 
+            if start >= stop: 
                 raise ValueError("%d cannot be greater than %d" % (start, stop))
 
             # Less than zero
-            if arg.start < 0 and arg.stop < 0: 
-                start = length - arg.start
-                stop = length - arg.start
+            if start < 0 and stop < 0: 
+                start = length - start
+                stop = length - start
 
             currentFD = self.index.FD
             newFD = currentFD + start
