@@ -75,7 +75,10 @@ cdef class ObjectIndex(_Index):
 
     def get_item(self, arg):
         # Grabs the exact index location of arg
-        ret = self.index[arg]
+        try:
+            ret = self.index[arg]
+        except KeyError:
+            raise KeyError("%s is not a member of the index." % arg)
 
         # Ensures that the user is unable to access date outside of the
         # current scope of the dataframe

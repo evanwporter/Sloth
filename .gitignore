@@ -7,5 +7,4 @@ Sloth/build/
 *.c
 *pyd
 
-
-Sloth/heat.ipynb
+Sloth/*.ipynb
