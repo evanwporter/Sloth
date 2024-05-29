@@ -119,7 +119,7 @@ cdef class DateTimeIndex(_Index):
         cdef indice i
         cdef int length = len(self.keys_)
 
-        mask = slice(0, length, 1)
+        self.mask = slice(0, length, 1)
 
         # Use int64
         self.index = Int64to64Map(number_of_elements_hint=length, for_int=True)

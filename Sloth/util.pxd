@@ -18,5 +18,5 @@ cdef datetime64 floor_(datetime64 dt, str timeframe)
 
 cdef datetime64 ceil_(datetime64 dt, str timeframe)
 
-cdef (int, int, int) _normalize_slice(slice s, int length)
+# cdef (int, int, int) _normalize_slice(slice s, int length)
 

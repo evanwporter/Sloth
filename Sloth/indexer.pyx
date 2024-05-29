@@ -9,7 +9,7 @@ from index cimport DateTimeIndex
 from cpython cimport  str
 from frame cimport Frame, Series, DataFrame
 
-from util cimport _normalize_slice
+# from util cimport _normalize_slice
 
 """
 Front Displacement (FD) & Back Displacement (BD)
@@ -117,23 +117,23 @@ cdef class Location(Indexer):
                 name=arg
             )
     
-    cdef inline Frame _handle_slice(self, slice arg):
-        A = arg.start
-        B = arg.stop
+    # cdef inline Frame _handle_slice(self, slice arg):
+    #     A = arg.start
+    #     B = arg.stop
 
-        print(A, B)
-        FD = self.index.get_item(A)
-        BD = self.index.get_item(B) + 1
+    #     print(A, B)
+    #     FD = self.index.get_item(A)
+    #     BD = self.index.get_item(B) + 1
 
-        x = FD - self.index.FD
-        y = BD - self.index.FD
+    #     x = FD - self.index.FD
+    #     y = BD - self.index.FD
 
-        if arg.start is not None:
-            start = self.index.get_item(arg.start) - self.index.FD
-        if arg.stop is not None:
-            stop = self.index.get_item(arg.stop) - self.index.FD
+    #     if arg.start is not None:
+    #         start = self.index.get_item(arg.start) - self.index.FD
+    #     if arg.stop is not None:
+    #         stop = self.index.get_item(arg.stop) - self.index.FD
         
-        return self.frame.fast_init("I", displacement=(start, stop), coordinates=(x, y))
+    #     return self.frame.fast_init("I", displacement=(start, stop), coordinates=(x, y))
 
     # cdef inline Frame _handle_array(self, arg):
     #     cdef str i

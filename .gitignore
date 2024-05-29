@@ -6,6 +6,7 @@ Sloth/.ipynb_checkpoints/
 Sloth/build/
 *.c
 *pyd
+*.html
 
 Sloth/*.ipynb
 Sloth/heat.ipynb
