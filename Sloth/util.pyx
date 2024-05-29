@@ -5,8 +5,6 @@ from cpython cimport str
 
 from conversions import Conversions
 
-
-
 # May change to double depending on what I use
 # this function for
 cdef np.int64_t ns_to_days(np.int64_t ns):

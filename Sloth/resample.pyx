@@ -56,8 +56,21 @@ cdef class Resampler:
         
         return DataFrame(np.asarray(data), index=np.asarray(self.index).astype("datetime64[ns]"), columns=self.frame.columns)
 
+    cdef inline sum(self):
+        cdef int length = len(self.split_data)
+        # TODO: Switch to Double[:, :] for consistency in typing
+        cdef np.ndarray[np.float64_t, ndim=2] data = np.zeros((length, self.frame.shape[1]))
+        cdef int l
+
+        for l in range(length):
+            data[l] = np.sum(self.split_data[l], axis=0)
+
+        return DataFrame(np.asarray(data), index=np.asarray(self.index).astype("datetime64[ns]"), columns=self.frame.columns)
+
     def __getattr__(self, arg):
         if arg == "mean":
             return self.mean()
+        elif arg == "sum":
+            return self.sum()
         raise AttributeError(f"'Resampler' object has no attribute '{arg}'")
 

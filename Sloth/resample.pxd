@@ -16,3 +16,5 @@ cdef class Resampler:
     cdef inline _resample(self, freq)
     
     cdef inline mean(self)
+    
+    cdef inline sum(self)
