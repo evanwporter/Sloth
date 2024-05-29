@@ -90,10 +90,7 @@ cdef class IntegerLocation(Indexer):
          (1) single integer
          (2) slice
         """
-        cdef int displacement
-        cdef int start
-        cdef int stop
-
+        
         if isinstance(arg, int):
             arg = self.calculate_index(self.frame.mask, arg)
             return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])    
@@ -106,16 +103,27 @@ cdef class Location(Indexer):
     def __getitem__(self, arg):
         # if isinstance(arg, np.ndarray):
         #     return self._handle_array(arg)
+        cdef int length
             
         if isinstance(arg, slice):
-            print("get")
-            return self._handle_slice(arg)
+            # if self.index.reference == "datetime":
+            length = len(self.index.keys_)
+
+            start = self.index.get_item(arg.start) if arg.start is not None else 0
+            stop = self.index.get_item(arg.stop) if arg.stop is not None else length
+            step = arg.step if arg.step is not None else 1
+
+            arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
+            return self.frame.fast_init(arg)
+            
         else:
+            arg = self.calculate_index(self.frame.mask, self.index.get_item(arg))
             return Series(
-                values=self.values_[self.index.get_item(arg) - self.index.FD], 
-                index=self.columns, 
-                name=arg
-            )
+                self.frame.values_[arg], 
+                index=self.frame.columns.keys_, 
+                name=self.index.keys_[arg]
+            )    
+
     
     cdef inline Frame _handle_slice(self, slice arg):
         A = arg.start
