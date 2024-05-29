@@ -66,6 +66,10 @@ cdef class Frame:
     
     def __len__(self):
         return len(self.values)
+
+    @property
+    def shape(self):
+        return np.asarray(self.values).shape
     
     def astype(self, type_):
         self.values = self.values.astype(type_)     

@@ -1,0 +1,8 @@
+Sloth/__pycache__/
+Sloth/.ipynb_checkpoints/
+.ipynb_checkpoints/
+
+# Cython Files
+Sloth/build/
+*.c
+*pyd
