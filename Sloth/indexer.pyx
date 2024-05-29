@@ -69,12 +69,11 @@ cdef class IntegerLocation(Indexer):
             arg = displacement + arg
             return Series(self.values[arg], index=self.columns, name=self.index.keys[arg])          
 
-        # If its not an integer, then it assumes that it is a slice
         if isinstance(arg, slice):
             length = len(self.values)
 
-            start = arg.start
-            stop = arg.stop
+            start = arg.start if arg.start is not None else 0
+            stop = arg.stop if arg.stop is not None else length
 
             if arg.start >= arg.stop: 
                 raise ValueError("%d cannot be greater than %d" % (start, stop))
