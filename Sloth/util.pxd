@@ -1,5 +1,5 @@
 cimport numpy as np 
-from cpython cimport list, str
+from cpython cimport list, str, slice
 
 # from conversions cimport conversions
 
@@ -17,4 +17,6 @@ cdef np.int64_t days_to_ns(np.int64_t days)
 cdef datetime64 floor_(datetime64 dt, str timeframe)
 
 cdef datetime64 ceil_(datetime64 dt, str timeframe)
+
+cdef (int, int, int) _normalize_slice(slice s, int length)
 

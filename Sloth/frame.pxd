@@ -1,5 +1,5 @@
 cimport numpy as np
-from cpython cimport list, dict, str
+from cpython cimport list, dict, str, slice
 from indexer cimport IntegerLocation, Location
 from index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
@@ -10,7 +10,7 @@ from rolling cimport Rolling
 
 cdef class Frame:
     cdef public:
-        np.ndarray values
+        np.ndarray values_
         _Index index
         IntegerLocation iloc
         Location loc
@@ -18,6 +18,7 @@ cdef class Frame:
         int i
         dict extras
         bint extra
+        slice mask
         
 
 cdef class DataFrame(Frame):

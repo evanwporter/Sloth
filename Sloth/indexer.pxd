@@ -14,6 +14,8 @@ cdef class Indexer:
         ObjectIndex columns
         str name
 
+    cdef slice combine_slices(self, slice mask, slice overlay, int length_a)
+
 cdef class IntegerLocation(Indexer):
     cdef str x
     #     dict columns

@@ -9,6 +9,8 @@ from index cimport DateTimeIndex
 from cpython cimport  str
 from frame cimport Frame, Series, DataFrame
 
+from util cimport _normalize_slice
+
 """
 Front Displacement (FD) & Back Displacement (BD)
 
@@ -38,7 +40,6 @@ cdef class Indexer:
     def __init__(self, Frame frame):
         self.frame = frame
         self.index = frame.index
-        self.values = frame.values
         
         self.reference = frame.reference
         
@@ -47,6 +48,40 @@ cdef class Indexer:
         else:
             self.name = frame.name
 
+    cdef slice combine_slices(self, slice mask, slice overlay, int length_mask):
+        # Normalize mask and overlay
+        cdef int mask_start = 0 if mask.start is None else mask.start
+        cdef int mask_stop = length_mask if mask.stop is None else mask.stop
+        cdef int mask_step = 1 if mask.step is None else mask.step
+
+        mask = slice(mask_start, mask_stop, mask_step)
+        length_overlay = (mask.stop - mask.start + (mask.step - 1)) // mask.step
+
+        cdef int overlay_start = 0 if overlay.start is None else overlay.start
+        cdef int overlay_stop = length_overlay if overlay.stop is None else overlay.stop
+        cdef int overlay_step = 1 if overlay.step is None else overlay.step
+
+        overlay = slice(overlay_start, overlay_stop, overlay_step)
+        
+        # Calculate the start, stop, and step for the final slice
+        cdef int start, stop, step
+        start = mask.start + (overlay.start * mask.step)
+        stop = mask.start + (overlay.stop * mask.step)
+        step = mask.step * overlay.step
+        
+        return slice(start, stop, step)
+
+
+    def calculate_index(self, mask, overlay):
+        # Normalize the slice to ensure it has start, stop, and step
+        start = mask.start if mask.start is not None else 0
+        step = mask.step if mask.step is not None else 1
+
+        # Calculate the final index
+        index = start + (overlay * step)
+
+        return index
+        
 cdef class IntegerLocation(Indexer):
     
     def __getitem__(self, arg):
@@ -60,39 +95,11 @@ cdef class IntegerLocation(Indexer):
         cdef int stop
 
         if isinstance(arg, int):
-            if arg >= 0:
-                displacement = self.index.FD
-            else:
-                displacement = self.index.BD
-
-            # Apply the displacement
-            arg = displacement + arg
-            return Series(self.values[arg], index=self.columns, name=self.index.keys[arg])          
-
+            arg = self.calculate_index(self.frame.mask, arg)
+            return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])    
         if isinstance(arg, slice):
-            length = len(self.values)
-
-            start = arg.start if arg.start is not None else 0
-            stop = arg.stop if arg.stop is not None else length
-
-            if start >= stop: 
-                raise ValueError("%d cannot be greater than %d" % (start, stop))
-
-            # Less than zero
-            if start < 0 and stop < 0: 
-                start = length - start
-                stop = length - start
-
-            currentFD = self.index.FD
-            newFD = currentFD + start
-            newBD = currentFD + stop
-
-            # TODO: Allow arg.step to be used
-            return self.frame.fast_init(
-                location="I", 
-                displacement=(newFD, newBD), 
-                coordinates=(start, stop)
-            )
+            arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
+            return self.frame.fast_init(arg)
             
 cdef class Location(Indexer):
 
@@ -105,7 +112,7 @@ cdef class Location(Indexer):
             return self._handle_slice(arg)
         else:
             return Series(
-                values=self.values[self.index.get_item(arg) - self.index.FD], 
+                values=self.values_[self.index.get_item(arg) - self.index.FD], 
                 index=self.columns, 
                 name=arg
             )

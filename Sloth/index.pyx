@@ -22,17 +22,15 @@ Public Variables
 cdef class _Index:
     @property
     def keys(self):
-        return np.asarray(self.keys_)[self.FD: self.BD]
+        return np.asarray(self.keys_)[self.mask]
 
-    def fast_init(self, displacement: tuple):
+    def fast_init(self, mask: slice):
         index = self.__new__(self.__class__)
 
         index.index = self.index
         index.keys_ = self.keys_
 
-        # index.reference = self.reference
-        index.FD = displacement[0]
-        index.BD = displacement[1]
+        index.mask = mask
 
         return index
     
@@ -56,6 +54,7 @@ cdef class ObjectIndex(_Index):
         self.keys_ = np.asarray(index)
         self._initialize()
         self.reference = "object"
+        self.mask = slice(0, len(self.keys_), 1)
 
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
@@ -63,9 +62,6 @@ cdef class ObjectIndex(_Index):
     cdef inline void _initialize(self):
         cdef indice i
         cdef int length = len(self.keys_)
-        
-        self.FD = 0
-        self.BD = length + 1
 
         # Because the index is a bunch of python objects
         # it will be stored in a python dictionary
@@ -80,11 +76,11 @@ cdef class ObjectIndex(_Index):
         except KeyError:
             raise KeyError("%s is not a member of the index." % arg)
 
-        # Ensures that the user is unable to access date outside of the
+        # TODO: Ensures that the user is unable to access date outside of the
         # current scope of the dataframe
-        if self.FD <= ret and ret <= self.BD:
-            return ret
-        raise KeyError("Invalid key: %s" % arg)
+        # if self.FD <= ret and ret <= self.BD:
+        #     return ret
+        # raise KeyError("Invalid key: %s" % arg)
 
     # def set_item(self, arg, value):
     def to_pandas(self):
@@ -99,6 +95,11 @@ cdef class DateTimeIndex(_Index):
         """
         Index must be of type np.ndarray. If coming from a pandas 
         DatetimeIndex you can do index._data._data.
+
+        Parameters
+        ----------
+        index : np.ndarray
+            Index array.
         """
         self.reference = "datetime"
 
@@ -118,8 +119,7 @@ cdef class DateTimeIndex(_Index):
         cdef indice i
         cdef int length = len(self.keys_)
 
-        self.FD = 0
-        self.BD = length + 1
+        mask = slice(0, length, 1)
 
         # Use int64
         self.index = Int64to64Map(number_of_elements_hint=length, for_int=True)
@@ -132,9 +132,10 @@ cdef class DateTimeIndex(_Index):
             arg_int = arg.astype(np.int64)
 
         ret = self.index.get_int64(arg_int)
-        if self.FD <= ret and ret <= self.BD:
-            return ret
-        raise KeyError("Invalid key: %s" % arg)
+        return ret
+        # if self.FD <= ret and ret <= self.BD:
+        #     return ret
+        # raise KeyError("Invalid key: %s" % arg)
 
     # @property
     # def keys(self):

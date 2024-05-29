@@ -6,6 +6,6 @@ folder_path = "%s/" % os.getcwd()
 #3
 for file_name in listdir(folder_path):
     #4
-    if file_name.endswith('.c') or file_name.endswith('.pyd'):
+    if file_name.endswith('.c') or file_name.endswith('.pyd') or file_name.endswith('.html'):
         #5
         os.remove(folder_path + file_name)

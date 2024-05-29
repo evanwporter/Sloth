@@ -1,13 +1,13 @@
 cimport numpy as np 
 cimport cython
-from cpython cimport dict
+from cpython cimport dict, slice
 from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
 from util cimport datetime64, indice
 
 cdef class _Index:
     cdef public:
-        indice FD, BD
+        slice mask
         
 cdef class ObjectIndex(_Index):
     cdef public:

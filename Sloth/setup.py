@@ -5,7 +5,7 @@ import numpy as np
 
 setup(
     ext_modules=cythonize(
-        "*.pyx", compiler_directives={"language_level": "3"},# annotate=True
+        "*.pyx", compiler_directives={"language_level": "3"}, annotate=True
     ),
     include_dirs=[np.get_include()],
 )

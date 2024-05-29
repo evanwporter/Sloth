@@ -35,7 +35,7 @@ cdef class Frame:
         index : array-like
             Index that of values. len(index) must be equal to values.shape[1]
         """
-        self.values = values.view()
+        self.values_ = values.view()
         
         if isinstance(index, _Index):
             # Fast track for creating and index. Allows dataframe to skip over the lengthy
@@ -58,6 +58,13 @@ cdef class Frame:
                 
         self.iloc = IntegerLocation(self)
         self.loc = Location(self)
+
+        self.mask = slice(0, len(self.index.keys_), 1)
+
+    
+    @property
+    def values(self):
+        return np.asarray(self.values_)[self.mask]
     
     def __repr__(self):
         return str(self.to_pandas())
@@ -99,24 +106,21 @@ cdef class Frame:
     def rolling(self, window):
         return Rolling(self, window)
 
-    def fast_init(self, location: str, displacement: tuple, coordinates: tuple):
+    def fast_init(self, mask):
         """
-        Backdoor of sorts. Allows for a quicker initialization.
+        Backdoor of sorts. Allows for a quicker initialization after slicing.
 
         Parameters
         ----------
-        location : str
-            'C' for columns, or 'I' for index
-        displacement : tuple
-        coordinates : tuple
+        mask : slice
+            slice to be used
         """
         frame = self.__new__(self.__class__)
+        
+        frame.mask = mask
+        frame.values_ = self.values_
 
-        # TODO: FIX THIS.
-        frame.values = self.values[coordinates[0]: coordinates[1]]
-        frame.reference = self.reference
-
-        frame.index = self.index.fast_init(displacement)
+        frame.index = self.index.fast_init(mask)
         frame.columns = self.columns
 
         return frame
@@ -138,7 +142,6 @@ cdef class Series(Frame):
     """
     MATH
     """
-
     def _quick_init(self, values):
         return Series(values=values, index=self.index)
 
@@ -159,6 +162,9 @@ cdef class Series(Frame):
     
     def __rsub__(self, other):
         return self._quick_init(other - self.values)
+
+    # def __eq__(self, other):
+
 
 cdef class DataFrame(Frame):
         
