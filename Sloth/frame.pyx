@@ -122,11 +122,6 @@ cdef class Frame:
 
         frame.index = self.index.fast_init(mask)
         frame.columns = self.columns
-        
-        frame.reference = self.reference
-
-        frame.iloc = IntegerLocation(frame)
-        frame.loc = Location(frame)
 
         return frame
 
