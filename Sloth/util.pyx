@@ -42,20 +42,20 @@ cdef datetime64 ceil_(datetime64 dt, str timeframe):
         d = np.ceil(dt / getattr(c, timeframe)) * getattr(c, timeframe)
     return (d)
 
-# cdef (int, int, int) _normalize_slice(slice s, int length):
-#     cdef int start
-#     cdef int stop
-#     cdef int step
+cdef (int, int, int) _normalize_slice(slice s, int length):
+    cdef int start
+    cdef int stop
+    cdef int step
     
-#     # Handle None for start, stop, and step
-#     start = s.start if s.start is not None else (0 if s.step is None or s.step > 0 else length - 1)
-#     stop = s.stop if s.stop is not None else (length if s.step is None or s.step > 0 else -1)
-#     step = s.step if s.step is not None else 1
+    # Handle None for start, stop, and step
+    start = s.start if s.start is not None else (0 if s.step is None or s.step > 0 else length - 1)
+    stop = s.stop if s.stop is not None else (length if s.step is None or s.step > 0 else -1)
+    step = s.step if s.step is not None else 1
     
-#     # Handle negative indices
-#     if start < 0:
-#         start += length
-#     if stop < 0:
-#         stop += length
+    # Handle negative indices
+    if start < 0:
+        start += length
+    if stop < 0:
+        stop += length
     
-#     return start, stop, step
+    return start, stop, step

@@ -21,4 +21,7 @@ cdef class IntegerLocation(Indexer):
     #     dict columns
 
 cdef class Location(Indexer):
-    cdef str x
+
+    cdef inline Frame _handle_slice(self, slice arg)
+
+    # cdef inline Frame _handle_array(self, arg)
