@@ -171,6 +171,16 @@ cdef class Series(Frame):
     def __gt__(self, other):
         return self._quick_init(self.values > other) 
 
+    def __lt__(self, other):
+        return self._quick_init(self.values < other)
+
+    def __gte__(self, other):
+        return self._quick_init(self.values >= other)
+
+    def __lte__(self, other):
+        return self._quick_init(self.values <= other)
+
+
 cdef class DataFrame(Frame):
         
     @cython.boundscheck(False)  # Deactivate bounds checking
