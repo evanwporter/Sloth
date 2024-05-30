@@ -8,7 +8,7 @@ from cpython cimport dict
 
 from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
-from util cimport datetime64, indice
+from util cimport datetime64, indice, in_slice
 
 import pandas as pd
 
@@ -76,11 +76,9 @@ cdef class ObjectIndex(_Index):
         except KeyError:
             raise KeyError("%s is not a member of the index." % arg)
 
-        # TODO: Ensures that the user is unable to access date outside of the
-        # current scope of the dataframe
-        # if self.FD <= ret and ret <= self.BD:
-        #     return ret
-        # raise KeyError("Invalid key: %s" % arg)
+        if in_slice(ret, self.mask.start, self.mask.stop, self.mask.step):
+            return ret
+        raise KeyError("Invalid key: %s" % arg)
 
     # def set_item(self, arg, value):
     def to_pandas(self):

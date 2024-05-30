@@ -168,8 +168,8 @@ cdef class Series(Frame):
     def __rsub__(self, other):
         return self._quick_init(other - self.values)
 
-    # def __eq__(self, other):
-
+    def __gt__(self, other):
+        return self._quick_init(self.values > other) 
 
 cdef class DataFrame(Frame):
         

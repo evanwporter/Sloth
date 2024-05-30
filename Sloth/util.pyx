@@ -59,3 +59,8 @@ cdef datetime64 ceil_(datetime64 dt, str timeframe):
 #         stop += length
     
 #     return start, stop, step
+
+cdef in_slice(int number, int start, int stop, int step):
+    if stop is not None and (number >= stop or number < start):
+        return False
+    return (number - start) % step == 0
