@@ -20,8 +20,6 @@ Public Variables
   * values
 """
 
-# cdef class FrameView:
-#  def __init__(self, FD, 
 
 cdef class Frame:
         
@@ -130,6 +128,12 @@ cdef class Frame:
 
         return frame
 
+    def plot(self, *args, **kwargs):
+        """
+        Plotting function. Requires matplotlib and Pandas to be installed. All paramters are passed onto pandas.
+        """
+        return self.to_pandas().plot(*args, **kwargs)
+
 
 cdef class Series(Frame):
         
@@ -174,10 +178,10 @@ cdef class Series(Frame):
     def __lt__(self, other):
         return self._quick_init(self.values < other)
 
-    def __gte__(self, other):
+    def __ge__(self, other):
         return self._quick_init(self.values >= other)
 
-    def __lte__(self, other):
+    def __le__(self, other):
         return self._quick_init(self.values <= other)
 
 
@@ -258,6 +262,19 @@ cdef class DataFrame(Frame):
         # Fancy indexing
         elif isinstance(arg, (list, np.ndarray)):
             return self._handle_array(arg)
+        
+        elif isinstance(arg, (Series)):
+            if arg.dtype == "bool":
+                return self._handle_bool_array(arg.values)
+
+        raise TypeError("{} is an incorrect type".format(type(arg)))
+    
+    cdef DataFrame _handle_bool_array(self, np.ndarray[np.npy_bool, ndim=1] arg):
+        return DataFrame(
+            values=self.values[arg], 
+            index=self.index.keys[arg], 
+            columns=self.columns
+        )
 
     def __getattr__(self, arg):
         """
@@ -325,8 +342,6 @@ cdef class DataFrame(Frame):
             index = np.append(self.columns.keys, arg)
             self.columns = ObjectIndex(index)
             self.values = np.concatenate((self.values, np.transpose([value])), axis=1)
-    
-
     
     # def __setattr__(self, arg, value):
     #     import warnings

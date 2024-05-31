@@ -36,6 +36,8 @@ cdef class DataFrame(Frame):
     
     cdef inline DataFrame _handle_array(self, arg)
 
+    cdef DataFrame _handle_bool_array(self, np.ndarray[np.npy_bool, ndim=1] arg)
+
     # cdef _reindex(self,)
 
 cdef class Series(Frame):
