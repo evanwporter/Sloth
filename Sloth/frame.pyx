@@ -144,6 +144,12 @@ cdef class Series(Frame):
             self.name = str(name)
 
         super().__init__(values, index, index_type)
+
+        if np.ndim(values) != 1:
+            raise ValueError("Unexpected number of dimensions for values. Expected 1, got {}.".format(np.ndim(values)))
+
+        if values.size != index.size:
+            raise ValueError("Mismatch between Index length ({}) and Values length ({})".format(index.size, values.size))
     
     def to_pandas(self):
         return pd.Series(self.values, index=self.index.to_pandas(), name=self.name, dtype=self.dtype)

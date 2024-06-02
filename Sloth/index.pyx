@@ -33,6 +33,10 @@ cdef class _Index:
         index.mask = mask
 
         return index
+
+    @property
+    def size(self):
+        return self.keys.size
     
     # def __setattr__(self, arg, value):
     #     if arg == "FD":
