@@ -6,7 +6,7 @@ import numpy as np
 from copy import copy
 
 from index cimport DateTimeIndex
-from cpython cimport  str
+from cpython cimport str
 from frame cimport Frame, Series, DataFrame
 
 # from util cimport _normalize_slice
@@ -73,6 +73,9 @@ cdef class Indexer:
 
 
     def calculate_index(self, mask, overlay):
+        """
+        This function is for handling single values ie: strings or ints.
+        """
         # Normalize the slice to ensure it has start, stop, and step
         start = mask.start if mask.start is not None else 0
         step = mask.step if mask.step is not None else 1
@@ -106,16 +109,25 @@ cdef class Location(Indexer):
     def __getitem__(self, arg):
         # if isinstance(arg, np.ndarray):
         #     return self._handle_array(arg)
-            
+        
         if isinstance(arg, slice):
-            print("get")
-            return self._handle_slice(arg)
-        else:
-            return Series(
-                values=self.values_[self.index.get_item(arg) - self.index.FD], 
-                index=self.columns, 
-                name=arg
+            arg = slice(
+                start=self.index.get_item(arg.start), 
+                stop=self.index.get_item(arg.stop), 
+                step=self.index.get_item(arg.step)
             )
+            arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
+            return self.frame.fast_init(arg) 
+        else: # single value
+            arg = self.calculate_index(self.frame.mask, self.index.get_item(arg))
+            return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])         
+        
+        # else:
+        #     return Series(
+        #         values=self.frame.values_[self.index.get_item(arg) - self.index.FD], 
+        #         index=self.columns, 
+        #         name=arg
+        #     )
     
     # cdef inline Frame _handle_slice(self, slice arg):
     #     A = arg.start

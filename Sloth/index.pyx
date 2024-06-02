@@ -171,8 +171,15 @@ cdef class RangeIndex(_Index):
         
         
     def get_item(self, arg):
-        return (arg - self.start) / self.step
+        return int((arg - self.start) / self.step)
 
     def to_pandas(self):
-        return pd.RangeIndex(start=self.start, step=self.step)
+        return pd.RangeIndex(start=self.start, stop=self.stop, step=self.step)
 
+    @property
+    def keys_(self):
+        return np.arange(self.start, self.stop, self.step)
+
+    @property
+    def size(self):
+        return self.stop - self.start

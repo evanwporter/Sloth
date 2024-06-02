@@ -3,7 +3,7 @@
 cimport numpy as np
 import numpy as np
 from indexer cimport IntegerLocation, Location
-from index cimport DateTimeIndex, _Index, ObjectIndex
+from index cimport DateTimeIndex, _Index, ObjectIndex, RangeIndex
 cimport cython
 
 import logging
@@ -23,7 +23,7 @@ Public Variables
 
 cdef class Frame:
         
-    def __init__(self, np.ndarray values, index, index_type=None):
+    def __init__(self, np.ndarray values, index=None, index_type=None):
         """
         Parameters
         ----------
@@ -39,6 +39,8 @@ cdef class Frame:
             # Fast track for creating and index. Allows dataframe to skip over the lengthy
             # process of creating a new index
             self.index = index
+        elif index is None:
+            self.index = RangeIndex(start=0, stop=values.shape[0], step=1)
         elif index_type == "datetime":
             try:
                 if np.issubdtype(index.dtype, np.datetime64):
@@ -58,6 +60,9 @@ cdef class Frame:
         self.loc = Location(self)
 
         self.mask = slice(0, len(self.index.keys_), 1)
+
+        if self.values_.shape[0] != self.index.size:
+            raise ValueError("Mismatch between Index length ({}) and Values length ({})".format(index.size, values.size))
 
     
     @property
@@ -148,8 +153,6 @@ cdef class Series(Frame):
         if np.ndim(values) != 1:
             raise ValueError("Unexpected number of dimensions for values. Expected 1, got {}.".format(np.ndim(values)))
 
-        if values.size != index.size:
-            raise ValueError("Mismatch between Index length ({}) and Values length ({})".format(index.size, values.size))
     
     def to_pandas(self):
         return pd.Series(self.values, index=self.index.to_pandas(), name=self.name, dtype=self.dtype)
@@ -195,7 +198,7 @@ cdef class DataFrame(Frame):
         
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
-    def __init__(self, np.ndarray values, index, columns, index_type=None):
+    def __init__(self, np.ndarray values, index=None, columns=None, index_type=None):
 
         self.reference = "D"
 
@@ -203,12 +206,20 @@ cdef class DataFrame(Frame):
         # it is a ObjectIndex
         if isinstance(columns, ObjectIndex):
             self.columns = columns
+        elif columns is None:
+            self.columns = RangeIndex(start=0, stop=values.shape[1], step=1)
         else:
             self.columns = ObjectIndex(columns)
                 
         super().__init__(values, index, index_type)
 
         self.extras = {}
+        
+        if np.ndim(values) != 2:
+            raise ValueError("Unexpected number of dimensions for values. Expected 1, got {}.".format(np.ndim(values)))
+
+        if values.shape[1] != columns.size:
+            raise ValueError("Mismatch between Columns length ({}) and Values Width ({})".format(columns.size, values.shape[1]))
                 
 #         self.loc = Location(self.values, self.index, self.columns)
     
