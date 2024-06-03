@@ -49,6 +49,9 @@ cdef class Indexer:
             self.name = frame.name
 
     cdef slice combine_slices(self, slice mask, slice overlay, int length_mask):
+        """
+        This function is for handling slices.
+        """
         # Normalize mask and overlay
         cdef int mask_start = 0 if mask.start is None else mask.start
         cdef int mask_stop = length_mask if mask.stop is None else mask.stop
@@ -112,9 +115,9 @@ cdef class Location(Indexer):
         
         if isinstance(arg, slice):
             arg = slice(
-                start=self.index.get_item(arg.start), 
-                stop=self.index.get_item(arg.stop), 
-                step=self.index.get_item(arg.step)
+                self.index.get_item(arg.start), 
+                self.index.get_item(arg.stop) if arg.stop is not None else self.index.size, 
+                arg.step
             )
             arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
             return self.frame.fast_init(arg) 

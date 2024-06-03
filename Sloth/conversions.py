@@ -1,3 +1,4 @@
+# All numbers are in nanoseconds
 class Conversions:
     # s = 10 ** 9 # ns
     def __init__(self):

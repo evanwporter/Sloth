@@ -60,7 +60,12 @@ cdef datetime64 ceil_(datetime64 dt, str timeframe):
     
 #     return start, stop, step
 
-cdef in_slice(int number, int start, int stop, int step):
+cdef bint in_slice(int number, int start, int stop, int step):
     if stop is not None and (number >= stop or number < start):
         return False
     return (number - start) % step == 0
+
+cdef timedelta64 interval_time_frame_to_timedelta(str freq):
+    # int interval = int(freq[:-1])
+    # char timeframe = freq[-1]
+    return np.timedelta64(int(freq[:-1]), freq[-1]).astype("timedelta64[ns]").astype("int64")

@@ -3,7 +3,7 @@ cimport cython
 from cpython cimport dict, slice
 from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
-from util cimport datetime64, indice
+from util cimport datetime64, timedelta64, indice
 
 cdef class _Index:
     cdef public:
@@ -30,5 +30,13 @@ cdef class DateTimeIndex(_Index):
 
     # cdef int get_item(self, item)
 
-cdef class RangeIndex(_Index):
-    cdef int start, stop, step
+cdef class _RangeIndexMixin(_Index):
+    cdef str x
+
+cdef class RangeIndex(_RangeIndexMixin):
+    cdef public int start, stop, step
+
+cdef class PeriodIndex(_RangeIndexMixin):
+    cdef public:
+        datetime64 start, stop
+        timedelta64 step

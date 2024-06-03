@@ -20,4 +20,7 @@ cdef datetime64 ceil_(datetime64 dt, str timeframe)
 
 # cdef (int, int, int) _normalize_slice(slice s, int length)
 
-cdef in_slice(int number, int start, int stop, int step)
+cdef bint in_slice(int number, int start, int stop, int step)
+
+cdef timedelta64 interval_time_frame_to_timedelta(str freq)
+

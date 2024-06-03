@@ -8,7 +8,7 @@ from cpython cimport dict
 
 from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
-from util cimport datetime64, indice, in_slice
+from util cimport datetime64, timedelta64, indice, in_slice, interval_time_frame_to_timedelta
 
 import pandas as pd
 
@@ -143,7 +143,31 @@ cdef class DateTimeIndex(_Index):
     # def keys(self):
     #     return super().keys.astype("datetime64[ns]")
 
-cdef class RangeIndex(_Index):
+cdef class _RangeIndexMixin(_Index):
+
+    def get_item(self, arg):
+        if not in_slice(arg, self.start, self.stop, self.step):
+            raise KeyError("{} not in slice".format(arg))
+        return int((arg - self.start) / self.step)
+
+    @property
+    def keys_(self):
+        return np.arange(self.start, self.stop, self.step)
+
+    @property
+    def size(self):
+        return self.stop - self.start
+
+    def fast_init(self, mask: slice):
+        index = self.__new__(self.__class__)
+
+        index.start = mask.start
+        index.stop = mask.stop
+        index.step = mask.step
+
+        return index
+
+cdef class RangeIndex(_RangeIndexMixin):
     """
     Using the equation:
         x = (y - b) / m
@@ -168,18 +192,34 @@ cdef class RangeIndex(_Index):
         self.start = start
         self.stop = stop
         self.step = step
-        
-        
-    def get_item(self, arg):
-        return int((arg - self.start) / self.step)
 
     def to_pandas(self):
         return pd.RangeIndex(start=self.start, stop=self.stop, step=self.step)
 
-    @property
-    def keys_(self):
-        return np.arange(self.start, self.stop, self.step)
+cdef class PeriodIndex(_RangeIndexMixin):
+    """
+    Index containing values of time along a regular period of time.
+
+    Parameters
+    ----------
+    start: datetime-like
+        Starting time in a range
+    stop: datetime-like
+        End time in the range
+    freq: str
+        How often to create point. ie: '1h', '4W', '200s'
+    """
+    def __init__(self, start, stop, freq):
+        self.start = np.datetime64(start).astype("datetime64[ns]").astype("int64")
+        self.stop = np.datetime64(stop).astype("datetime64[ns]").astype("int64")
+        self.step = interval_time_frame_to_timedelta(freq)
+
+        if (self.stop - self.start) % self.step != 0:
+            raise KeyError("Step doesn't evenly divide start to stop")
+
+    def to_pandas(self):
+        return pd.PeriodIndex(data=[self.start stop=self.stop], freq=self.step)
 
     @property
-    def size(self):
-        return self.stop - self.start
+    def freq(self):
+        return self.step
