@@ -8,7 +8,7 @@ Sloth/build/
 *.c
 *pyd
 *.html
+*.obj
 
 Sloth/*.ipynb
 Sloth/heat.ipynb
-build/temp.win-amd64-cpython-39/Release/Sloth/frame.obj
