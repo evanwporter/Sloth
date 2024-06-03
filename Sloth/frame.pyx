@@ -370,10 +370,15 @@ cdef class DataFrame(Frame):
     #     cdef int i
     #     for i in range(len(arg)):
 
-    # def reindex(self):
-    #     return self._reindex(self.index, self.columns)
-
     def reindex(self, index):
+
+        cdef: 
+            np.ndarray new_values
+            int i, idx
+
+        if np.issubdtype(index.dtype, np.datetime64):
+            index = index.astype("datetime64[ns]")
+
         new_values = np.empty((index.size, self.shape[1]))
         new_values[:] = np.nan
 
@@ -385,7 +390,6 @@ cdef class DataFrame(Frame):
             new_values[idx] = self.iloc[idx]
         
         return DataFrame(values=new_values, index=index, columns=self.columns)
-
 
 
 
