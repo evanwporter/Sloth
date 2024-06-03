@@ -1,6 +1,7 @@
 Sloth/__pycache__/
 Sloth/.ipynb_checkpoints/
 .ipynb_checkpoints/
+build/
 
 # Cython Files
 Sloth/build/
@@ -10,3 +11,4 @@ Sloth/build/
 
 Sloth/*.ipynb
 Sloth/heat.ipynb
+build/temp.win-amd64-cpython-39/Release/Sloth/frame.obj

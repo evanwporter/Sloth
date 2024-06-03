@@ -373,6 +373,22 @@ cdef class DataFrame(Frame):
     # def reindex(self):
     #     return self._reindex(self.index, self.columns)
 
+    def reindex(self, index):
+        new_values = np.empty((index.size, self.shape[1]))
+        new_values[:] = np.nan
+
+        for i in range(index.size):
+            try:
+                idx = self.index.get_item(self.loc[self.index.index[i]])
+            except KeyError:
+                continue
+            new_values[idx] = self.iloc[idx]
+        
+        return DataFrame(values=new_values, index=index, columns=self.columns)
+
+
+
+
     # cdef _reindex(self, index, columns):
     #     cdef np.ndarray[:, :] reindexed_values = np.zeros(
     #         (
