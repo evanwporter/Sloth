@@ -5,9 +5,9 @@ import numpy as np
 
 from copy import copy
 
-from index cimport DateTimeIndex
+from .index cimport DateTimeIndex
 from cpython cimport str
-from frame cimport Frame, Series, DataFrame
+from .frame cimport Frame, Series, DataFrame
 
 # from util cimport _normalize_slice
 

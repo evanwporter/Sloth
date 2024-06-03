@@ -8,7 +8,7 @@ from cpython cimport dict
 
 from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
-from util cimport datetime64, timedelta64, indice, in_slice, interval_time_frame_to_timedelta
+from .util cimport datetime64, timedelta64, indice, in_slice, interval_time_frame_to_timedelta
 
 import pandas as pd
 
@@ -218,7 +218,7 @@ cdef class PeriodIndex(_RangeIndexMixin):
             raise KeyError("Step doesn't evenly divide start to stop")
 
     def to_pandas(self):
-        return pd.PeriodIndex(data=[self.start stop=self.stop], freq=self.step)
+        return pd.PeriodIndex(data=[self.start, self.stop], freq=self.step)
 
     @property
     def freq(self):

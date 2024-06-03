@@ -1,7 +1,7 @@
 cimport numpy as np
 from cpython cimport str
-from index cimport DateTimeIndex, ObjectIndex, _Index
-from frame cimport Frame, Series, DataFrame
+from .index cimport DateTimeIndex, ObjectIndex, _Index
+from .frame cimport Frame, Series, DataFrame
 
 
 cdef class Indexer:

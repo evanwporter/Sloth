@@ -2,14 +2,14 @@
 
 cimport numpy as np
 import numpy as np
-from indexer cimport IntegerLocation, Location
-from index cimport DateTimeIndex, _Index, ObjectIndex, RangeIndex
+from .indexer cimport IntegerLocation, Location
+from .index cimport DateTimeIndex, _Index, ObjectIndex, RangeIndex
 cimport cython
 
 import logging
 
-from resample cimport Resampler
-from rolling cimport Rolling
+from .resample cimport Resampler
+from .rolling cimport Rolling
 
 import pandas as pd
 
@@ -235,7 +235,7 @@ cdef class DataFrame(Frame):
 
         Returns
         -------
-        sloth.DataFrame
+        DataFrame
             The sloth dataframe
         """
         # TODO: Error handling

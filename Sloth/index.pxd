@@ -3,7 +3,7 @@ cimport cython
 from cpython cimport dict, slice
 from cykhash.khashmaps cimport Int64to64Map#, Int64to32Map
 
-from util cimport datetime64, timedelta64, indice
+from .util cimport datetime64, timedelta64, indice
 
 cdef class _Index:
     cdef public:

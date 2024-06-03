@@ -3,7 +3,7 @@ cimport numpy as np
 
 from cpython cimport str
 
-from conversions import Conversions
+from .conversions import Conversions
 
 # May change to double depending on what I use
 # this function for

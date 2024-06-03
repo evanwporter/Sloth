@@ -3,7 +3,7 @@
 cimport numpy as np
 import numpy as np
 
-from frame cimport Frame, Series, DataFrame
+from .frame cimport Frame, Series, DataFrame
 
 cdef class Rolling:
     def __init__(self, Frame frame, int window):

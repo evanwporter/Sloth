@@ -1,11 +1,11 @@
 cimport numpy as np
 import numpy as np
 
-from frame cimport Frame, Series, DataFrame
+from .frame cimport Frame, Series, DataFrame
 
 import datetime
-from index cimport DateTimeIndex
-from util cimport datetime64, timedelta64, ns_to_days, days_to_ns, ceil_, floor_
+from .index cimport DateTimeIndex
+from .util cimport datetime64, timedelta64, ns_to_days, days_to_ns, ceil_, floor_
 
 from cpython cimport list
 

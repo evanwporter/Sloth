@@ -1,11 +1,11 @@
 cimport numpy as np
 from cpython cimport list, dict, str, slice
-from indexer cimport IntegerLocation, Location
-from index cimport DateTimeIndex, _Index, ObjectIndex
+from .indexer cimport IntegerLocation, Location
+from .index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
-from resample cimport Resampler
-from rolling cimport Rolling
+from .resample cimport Resampler
+from .rolling cimport Rolling
 
 
 cdef class Frame:

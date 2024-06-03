@@ -2,7 +2,7 @@
 import os 
 from os import listdir
 #2
-folder_path = "%s/" % os.getcwd()
+folder_path = "%s/Sloth/" % os.getcwd()
 #3
 for file_name in listdir(folder_path):
     #4
