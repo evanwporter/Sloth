@@ -387,7 +387,7 @@ cdef class DataFrame(Frame):
 
         for i in range(index.size):
             try:
-                idx = self.index.get_item(self.loc[self.index.index[i]])
+                idx = self.index.get_item(self.index.index[i])
             except KeyError:
                 continue
             new_values[idx] = self.iloc[idx]
