@@ -38,13 +38,6 @@ cdef class DataFrame(Frame):
 
     cdef DataFrame _handle_bool_array(self, np.ndarray[np.npy_bool, ndim=1] arg)
 
-    # cdef inline DataFrame _reindex(self, np.ndarray index):
-    #     cdef: 
-    #         np.ndarray new_values
-    #         int i, idx
-
-    # cdef _reindex(self,)
-
 cdef class Series(Frame):
     cdef public:
         str name

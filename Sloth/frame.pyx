@@ -25,6 +25,8 @@ cdef class Frame:
         
     def __init__(self, np.ndarray values, index=None, index_type=None):
         """
+        Basic Frame
+        
         Parameters
         ----------
         values : np.ndarray
@@ -303,8 +305,10 @@ cdef class DataFrame(Frame):
         arg : str
             single column name
         """
-        return self._handle_str(arg)
-    
+        if arg in self.columns.index:
+            return self._handle_str(arg)
+        raise AttributeError(f"{arg} not found.")
+
     cdef inline Series _handle_str(self, arg):
         return Series(
             # A 1d numpy array
@@ -360,12 +364,11 @@ cdef class DataFrame(Frame):
             self.columns = ObjectIndex(index)
             self.values = np.concatenate((self.values, np.transpose([value])), axis=1)
     
-    # def __setattr__(self, arg, value):
-    #     import warnings
-    #     warning.warn("Sloth doesn't allow columns to be created via a new attribute name")
+    # def __setattr__(self, arg: str, value):
+    #     if not hasattr(self, arg):
+    #         import logging
+    #         logging.warning("Sloth doesn't allow columns to be created via a new attribute name")
         
-
-
     # cdef _handle_tuple(self, tuple arg):
     #     cdef int i
     #     for i in range(len(arg)):
