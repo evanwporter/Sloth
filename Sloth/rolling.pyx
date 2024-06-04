@@ -18,7 +18,8 @@ cdef class Rolling:
         return "Rolling[window={}]".format(self.window)
 
     def mean(self):
-        return bn.move_mean(self.frame.values, window=self.window, axis=0)
+        return DataFrame(values=bn.move_mean(self.frame.values, window=self.window, axis=0), index=self.frame.index, columns=self.frame.columns)
 
     def sum(self):
-        return bn.move_sum(self.frame.values, window=self.window, axis=0)
+        # Note floting points may happen
+        return DataFrame(values=bn.move_sum(self.frame.values, window=self.window, axis=0), index=self.frame.index, columns=self.frame.columns)
