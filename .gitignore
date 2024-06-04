@@ -10,6 +10,6 @@ Sloth/build/
 *pyd
 *.html
 *.obj
+*.ipynb
 
 Sloth/*.ipynb
-Sloth/heat.ipynb
