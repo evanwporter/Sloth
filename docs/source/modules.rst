@@ -6,3 +6,10 @@ sphinx-example
 
    frame
    frame.dataframe
+   frame.series
+
+   indexes
+   indexes.range
+   indexes.period
+   indexes.datetime
+   indexes.object
