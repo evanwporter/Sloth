@@ -11,6 +11,8 @@ Sloth
 
    frame
    indexes
+   resample
+   rolling
 
 Index
 =====

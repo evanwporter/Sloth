@@ -10,6 +10,15 @@ from .util cimport datetime64, timedelta64, ns_to_days, days_to_ns, ceil_, floor
 from cpython cimport list
 
 cdef class Resampler:
+    """
+    Resample dataframe or series.
+
+    mean
+    ----
+
+    sum
+    ---
+    """
     def __init__(self, Frame frame, freq):
         self.frame = frame
         self.index, self.split_data = self._resample(freq)

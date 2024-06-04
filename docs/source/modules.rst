@@ -13,3 +13,6 @@ sphinx-example
    indexes.period
    indexes.datetime
    indexes.object
+
+   resample
+   rolling
