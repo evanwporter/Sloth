@@ -196,6 +196,9 @@ cdef class RangeIndex(_RangeIndexMixin):
     def to_pandas(self):
         return pd.RangeIndex(start=self.start, stop=self.stop, step=self.step)
 
+    def __repr__(self):
+        return f"RangeIndex{repr(self.keys)[5:]}"
+
 cdef class PeriodIndex(_RangeIndexMixin):
     """
     Index containing values of time along a regular period of time.
@@ -223,3 +226,6 @@ cdef class PeriodIndex(_RangeIndexMixin):
     @property
     def freq(self):
         return self.step
+
+    def __repr__(self):
+        return f"PeriodIndex{repr(self.keys)[5:]}"

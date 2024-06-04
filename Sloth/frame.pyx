@@ -197,6 +197,22 @@ cdef class Series(Frame):
 
 
 cdef class DataFrame(Frame):
+    """
+    The Sloth Dataframe is meant to be a faster version of pandas 
+    dataframe. It accomplished this by being a thin wrapper of 
+    numpy. Essentially its a numpy matrix with an index and a
+    list of columns corresponding to the the row and columns of
+    the numpy matrix.
+
+    Parameters
+    ----------
+    values : numpy.ndarray[ndims=2]
+        Matrix to store in the DataFrame
+    index : array-like
+        List of index values corresponding to the rows of values.
+    columns : array-like
+        List of column values corresponding to the columns of values.
+    """
         
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
@@ -232,7 +248,7 @@ cdef class DataFrame(Frame):
 
         Parameters
         ----------
-        dataframe : pd.DataFrame
+        dataframe : pandas.DataFrame
             pd.DataFrame to convert into a sloth DataFrame
 
         Returns
@@ -248,6 +264,14 @@ cdef class DataFrame(Frame):
         )
     
     def to_pandas(self):
+        """
+        Class method to convert sloth dataframe to pandas dataframe
+
+        Returns
+        -------
+        pandas.DataFrame
+            The pandas dataframe
+        """
 
         return pd.DataFrame(
             self.values, 
@@ -374,6 +398,19 @@ cdef class DataFrame(Frame):
     #     for i in range(len(arg)):
 
     def reindex(self, index):
+        """
+        Fits the dataframe with a new index.
+
+        Parameters
+        ----------
+        index : np.ndarray[ndims=1]
+            Index to fit the dataframe with.
+
+        Returns
+        -------
+        DataFrame
+            A new DataFrame fitted with the new index
+        """
 
         cdef: 
             np.ndarray new_values
