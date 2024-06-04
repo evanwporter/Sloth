@@ -126,7 +126,6 @@ cdef class Frame:
         frame.values_ = self.values_
 
         frame.index = self.index.fast_init(mask)
-        frame.columns = self.columns
 
         frame.reference = self.reference
 
@@ -431,7 +430,12 @@ cdef class DataFrame(Frame):
         
         return DataFrame(values=new_values, index=index, columns=self.columns)
 
+    def fast_init(self, mask):
+        frame = super().fast_init(mask)
 
+        frame.columns = self.columns
+
+        return frame
 
     # cdef _reindex(self, index, columns):
     #     cdef np.ndarray[:, :] reindexed_values = np.zeros(

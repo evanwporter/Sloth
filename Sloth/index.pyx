@@ -91,6 +91,9 @@ cdef class ObjectIndex(_Index):
     def __contains__(self, item):
         return item in self.keys
 
+    def __repr__(self):
+        return f"ObjectIndex{repr(self.keys)[5:]}"
+
 
 cdef class DateTimeIndex(_Index):
     def __init__(self, index):
@@ -106,7 +109,7 @@ cdef class DateTimeIndex(_Index):
         self.reference = "datetime"
 
         if isinstance(index, np.ndarray):
-            self.keys_ = index.view(np.int64)
+            self.keys_ = index.astype(np.int64)
         else:
             self.keys_ = index
         self._initialize()
@@ -131,17 +134,11 @@ cdef class DateTimeIndex(_Index):
     def get_item(self, arg):
         # Makes sure DateTime64 objects are in int64 format
         if not isinstance(arg, np.int64):
-            arg_int = arg.astype(np.int64)
+            arg = np.int64(arg)
+        return self.index.get_int64(int(arg))
 
-        ret = self.index.get_int64(arg_int)
-        return ret
-        # if self.FD <= ret and ret <= self.BD:
-        #     return ret
-        # raise KeyError("Invalid key: %s" % arg)
-
-    # @property
-    # def keys(self):
-    #     return super().keys.astype("datetime64[ns]")
+    def __repr__(self):
+        return "DateTimeIndex{}".format(repr(self.keys.astype("datetime64[ns]"))[5:])
 
 cdef class _RangeIndexMixin(_Index):
 
