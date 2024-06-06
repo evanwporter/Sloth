@@ -1,5 +1,5 @@
 Rolling Window
-=============
+==============
 
 .. automodule:: Sloth.rolling.Rolling
    :members:

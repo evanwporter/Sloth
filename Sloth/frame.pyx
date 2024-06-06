@@ -30,8 +30,8 @@ cdef class Frame:
         Parameters
         ----------
         values : np.ndarray
-            Values to fill up the dataframe with. The dimensions of "values" must be 
-            equal to len(columns) x len(index)
+            Data that is to be represented by the DataFrame. The dimensions 
+            of "values" must be equal to len(columns) x len(index)
         index : array-like
             Index that of values. len(index) must be equal to values.shape[1]
         """
@@ -207,10 +207,10 @@ cdef class DataFrame(Frame):
     ----------
     values : numpy.ndarray[ndims=2]
         Matrix to store in the DataFrame
-    index : array-like
-        List of index values corresponding to the rows of values.
-    columns : array-like
-        List of column values corresponding to the columns of values.
+    index : array-like or Index, optional
+        Index to use for resulting frame. Defaults to RangeIndex if no index is provided.
+    columns : array-like or Index, optional
+        Column labels to use for resulting frame. Defaults to RangeIndex if no columns are provided.
     """
         
     @cython.boundscheck(False)  # Deactivate bounds checking

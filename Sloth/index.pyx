@@ -22,6 +22,20 @@ Public Variables
 cdef class _Index:
     @property
     def keys(self):
+        """
+        Returns the keys of the index.
+
+        Returns
+        -------
+        np.ndarray
+            Array of keys.
+
+        Examples
+        --------
+        >>> idx = ObjectIndex(['a', 'b', 'c'])
+        >>> idx.keys
+        array(['a', 'b', 'c'], dtype='<U1')
+        """
         return np.asarray(self.keys_)[self.mask]
 
     def fast_init(self, mask: slice):
@@ -36,6 +50,20 @@ cdef class _Index:
 
     @property
     def size(self):
+        """
+        Returns the size of the index.
+
+        Returns
+        -------
+        int
+            The size of the index.
+
+        Examples
+        --------
+        >>> idx = ObjectIndex(['a', 'b', 'c'])
+        >>> idx.size
+        3
+        """
         return self.keys.size
     
     # def __setattr__(self, arg, value):
@@ -53,6 +81,20 @@ cdef class _Index:
 
 
 cdef class ObjectIndex(_Index):
+    """
+    Initializes an ObjectIndex with the given index.
+
+    Parameters
+    ----------
+    index : list
+        List of objects to be indexed.
+
+    Examples
+    --------
+    >>> idx = ObjectIndex(['a', 'b', 'c'])
+    >>> idx.keys
+    array(['a', 'b', 'c'], dtype='<U1')
+    """
     def __init__(self, object index):
         # Makes the index a numpy array
         self.keys_ = np.asarray(index)
@@ -74,6 +116,32 @@ cdef class ObjectIndex(_Index):
             self.index[self.keys_[i]] = i
 
     def get_item(self, arg):
+        """
+        Retrieves the exact index location of the given argument.
+
+        Parameters
+        ----------
+        arg : object
+            The key to retrieve the index for.
+
+        Returns
+        -------
+        int
+            The index of the key.
+
+        Raises
+        ------
+        KeyError
+            If the key is not found or invalid.
+
+        Examples
+        --------
+        >>> idx = ObjectIndex(['a', 'b', 'c'])
+        >>> idx.get_item('b')
+        1
+        >>> idx.get_item('d')
+        KeyError: 'd is not a member of the index.'
+        """
         # Grabs the exact index location of arg
         try:
             ret = self.index[arg]
@@ -133,6 +201,8 @@ cdef class DateTimeIndex(_Index):
     
     def get_item(self, arg):
         # Makes sure DateTime64 objects are in int64 format
+        if isinstance(arg, np.datetime64):
+            arg = np.datetime64(arg, "ns")
         if not isinstance(arg, np.int64):
             arg = np.int64(arg)
         return self.index.get_int64(int(arg))
@@ -166,26 +236,31 @@ cdef class _RangeIndexMixin(_Index):
 
 cdef class RangeIndex(_RangeIndexMixin):
     """
-    Using the equation:
-        x = (y - b) / m
-        where:
-            x: desired index location 
-            y: index label (passed argument)
-            b: starting index value (start)
-            m: interval (step)
-    We can figure out the index of the row without having to go through
-    the lengthy process of looking up the key in a dictionary/hash table
+    Index that is roughly equivalent to numpy.arange().
+
+    RangeIndex class provides ...
+
+    Methods
+    -------
+    fast_init
+        Quickly initializes a RangeIndex object.
+    get_item
+        Retrieves an item based on its index.
+    to_pandas
+        Converts the RangeIndex to a pandas Index object.
+
+    Parameters
+    ----------
+    start : int
+        Beginning position.
+    stop : int
+        End position.
+    step : int
+        How much to increase the range every step. Must be positive.
     """
 
     def __init__(self, start=0, stop=1, step=1):
-        """
-        Parameters
-        ----------
-        start : int
-        stop : int
-            'stop' is not used at all. The only reason that it is a parameter is 
-            for symbolic reasons 
-        """
+
         self.start = start
         self.stop = stop
         self.step = step
