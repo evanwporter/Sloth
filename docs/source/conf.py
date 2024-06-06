@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# sphinx-build -M html ./docs/source ./docs/build/ -E
 #
 # Sphinx Example and Cheat Sheet documentation build configuration file, created by
 # sphinx-quickstart on Sun Dec  4 20:12:41 2016.
