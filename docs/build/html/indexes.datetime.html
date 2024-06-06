@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DateTimeIndex &#8212; Sloth 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
+    
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ObjectIndex" href="indexes.object.html" />
+    <link rel="prev" title="PeriodIndex" href="indexes.period.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="indexes.object.html" title="ObjectIndex"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="indexes.period.html" title="PeriodIndex"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sloth 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="indexes.html" accesskey="U">Indexes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DateTimeIndex</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-Sloth.DateTimeIndex">
+<span id="datetimeindex"></span><h1>DateTimeIndex<a class="headerlink" href="#module-Sloth.DateTimeIndex" title="Link to this heading">¶</a></h1>
+<p>Initializes a DateTimeIndex with the given index.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>index<span class="classifier">np.ndarray</span></dt><dd><p>Index array.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">DateTimeIndex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-02&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-03&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;datetime64&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">keys</span>
+<span class="go">array([&#39;2022-01-01T00:00:00.000000000&#39;, &#39;2022-01-02T00:00:00.000000000&#39;,</span>
+<span class="go">        &#39;2022-01-03T00:00:00.000000000&#39;], dtype=&#39;datetime64[ns]&#39;)</span>
+</pre></div>
+</div>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DateTimeIndex.fast_init">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DateTimeIndex.</span></span><span class="sig-name descname"><span class="pre">fast_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DateTimeIndex.fast_init" title="Link to this definition">¶</a></dt>
+<dd><p>Quickly initializes an _Index object with a given mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mask</strong><span class="classifier">slice</span></dt><dd><p>The mask to apply to the index.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>_Index</dt><dd><p>A new _Index object with the mask applied.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">ObjectIndex</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">fast_init</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_idx</span><span class="o">.</span><span class="n">keys</span>
+<span class="go">array([&#39;b&#39;, &#39;c&#39;], dtype=&#39;&lt;U1&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DateTimeIndex.get_item">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DateTimeIndex.</span></span><span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DateTimeIndex.get_item" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the exact index location of the given argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>arg</strong><span class="classifier">np.datetime64 or int</span></dt><dd><p>The key to retrieve the index for.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>int</dt><dd><p>The index of the key.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">DateTimeIndex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-02&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-03&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;datetime64&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">get_item</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">datetime64</span><span class="p">(</span><span class="s1">&#39;2022-01-02&#39;</span><span class="p">))</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DateTimeIndex.to_pandas">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DateTimeIndex.</span></span><span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DateTimeIndex.to_pandas" title="Link to this definition">¶</a></dt>
+<dd><p>Converts the DateTimeIndex to a pandas DatetimeIndex object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>pd.DatetimeIndex</dt><dd><p>A pandas DatetimeIndex object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">DateTimeIndex</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-02&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-03&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;datetime64&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+<span class="go">DatetimeIndex([&#39;2022-01-01&#39;, &#39;2022-01-02&#39;, &#39;2022-01-03&#39;], dtype=&#39;datetime64[ns]&#39;, freq=None)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">DateTimeIndex</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#examples">Examples</a></li>
+<li><a class="reference internal" href="#Sloth.DateTimeIndex.fast_init"><code class="docutils literal notranslate"><span class="pre">fast_init()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DateTimeIndex.get_item"><code class="docutils literal notranslate"><span class="pre">get_item()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DateTimeIndex.to_pandas"><code class="docutils literal notranslate"><span class="pre">to_pandas()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="indexes.period.html"
+                          title="previous chapter">PeriodIndex</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="indexes.object.html"
+                          title="next chapter">ObjectIndex</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/indexes.datetime.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="indexes.object.html" title="ObjectIndex"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="indexes.period.html" title="PeriodIndex"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sloth 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="indexes.html" >Indexes</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DateTimeIndex</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright .
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

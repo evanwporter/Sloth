@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DataFrame module &#8212; Sloth 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css?v=def86cc0" />
+    
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Series module" href="frame.series.html" />
+    <link rel="prev" title="Frame package" href="frame.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="frame.series.html" title="Series module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="frame.html" title="Frame package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sloth 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="frame.html" accesskey="U">Frame package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataFrame module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-Sloth.DataFrame">
+<span id="dataframe-module"></span><h1>DataFrame module<a class="headerlink" href="#module-Sloth.DataFrame" title="Link to this heading">¶</a></h1>
+<p>The Sloth Dataframe is meant to be a faster version of pandas
+dataframe. It accomplished this by being a thin wrapper of
+numpy. Essentially its a numpy matrix with an index and a
+list of columns corresponding to the the row and columns of
+the numpy matrix.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>values<span class="classifier">numpy.ndarray[ndims=2]</span></dt><dd><p>Matrix to store in the DataFrame</p>
+</dd>
+<dt>index<span class="classifier">array-like or Index, optional</span></dt><dd><p>Index to use for resulting frame. Defaults to RangeIndex if no index is provided.</p>
+</dd>
+<dt>columns<span class="classifier">array-like or Index, optional</span></dt><dd><p>Column labels to use for resulting frame. Defaults to RangeIndex if no columns are provided.</p>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.astype">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.astype" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.fast_init">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">fast_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.fast_init" title="Link to this definition">¶</a></dt>
+<dd><p>Backdoor of sorts. Allows for a quicker initialization after slicing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>mask</strong><span class="classifier">slice</span></dt><dd><p>slice to be used</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.from_pandas">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">from_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.from_pandas" title="Link to this definition">¶</a></dt>
+<dd><p>Class method to convert pandas dataframe to a sloth frame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>dataframe</strong><span class="classifier">pandas.DataFrame</span></dt><dd><p>pd.DataFrame to convert into a sloth DataFrame</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>DataFrame</dt><dd><p>The sloth dataframe</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.iterrows">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">iterrows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.iterrows" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.plot">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Plotting function. Requires matplotlib and Pandas to be installed. All paramters are passed onto pandas.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.reindex">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">reindex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.reindex" title="Link to this definition">¶</a></dt>
+<dd><p>Fits the dataframe with a new index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>index</strong><span class="classifier">np.ndarray[ndims=1]</span></dt><dd><p>Index to fit the dataframe with.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>DataFrame</dt><dd><p>A new DataFrame fitted with the new index</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.resample">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.resample" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.rolling">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">rolling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.rolling" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.to_numpy">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">to_numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.to_numpy" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.DataFrame.to_pandas">
+<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.to_pandas" title="Link to this definition">¶</a></dt>
+<dd><p>Class method to convert sloth dataframe to pandas dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>pandas.DataFrame</dt><dd><p>The pandas dataframe</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">DataFrame module</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.fast_init"><code class="docutils literal notranslate"><span class="pre">fast_init()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.from_pandas"><code class="docutils literal notranslate"><span class="pre">from_pandas()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.iterrows"><code class="docutils literal notranslate"><span class="pre">iterrows()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.reindex"><code class="docutils literal notranslate"><span class="pre">reindex()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.rolling"><code class="docutils literal notranslate"><span class="pre">rolling()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.to_numpy"><code class="docutils literal notranslate"><span class="pre">to_numpy()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.to_pandas"><code class="docutils literal notranslate"><span class="pre">to_pandas()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="frame.html"
+                          title="previous chapter">Frame package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="frame.series.html"
+                          title="next chapter">Series module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/frame.dataframe.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="frame.series.html" title="Series module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="frame.html" title="Frame package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Sloth 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="frame.html" >Frame package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">DataFrame module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright .
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

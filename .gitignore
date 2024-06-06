@@ -8,8 +8,9 @@ build/
 Sloth/build/
 *.c
 *pyd
-*.html
 *.obj
 *.ipynb
 
 Sloth/*.ipynb
+
+!docs/build
