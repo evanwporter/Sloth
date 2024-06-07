@@ -6,3 +6,8 @@ Frame package
 
    frame.dataframe
    frame.series
+
+.. automodule:: Sloth.frame.Frame
+   :members:
+   :undoc-members:
+   

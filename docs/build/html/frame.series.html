@@ -46,55 +46,163 @@
             
   <section id="module-Sloth.Series">
 <span id="series-module"></span><h1>Series module<a class="headerlink" href="#module-Sloth.Series" title="Link to this heading">¶</a></h1>
+<p>One-dimensional labeled array capable of holding any data type.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>values<span class="classifier">np.ndarray</span></dt><dd><p>The array holding the data.</p>
+</dd>
+<dt>index<span class="classifier">Index</span></dt><dd><p>The index (axis labels).</p>
+</dd>
+<dt>name<span class="classifier">str, optional</span></dt><dd><p>The name of the Series.</p>
+</dd>
+<dt>index_type<span class="classifier">IndexType, optional</span></dt><dd><p>The type of index.</p>
+</dd>
+</dl>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>reference<span class="classifier">str</span></dt><dd><p>A reference code for the Series.</p>
+</dd>
+<dt>name<span class="classifier">str or None</span></dt><dd><p>The name of the Series.</p>
+</dd>
+</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.astype">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.astype" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.Series.fast_init">
-<span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">fast_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.fast_init" title="Link to this definition">¶</a></dt>
-<dd><p>Backdoor of sorts. Allows for a quicker initialization after slicing.</p>
+<dd><p>Cast the values of the frame to the specified type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>mask</strong><span class="classifier">slice</span></dt><dd><p>slice to be used</p>
+<dt><strong>type_</strong><span class="classifier">type</span></dt><dd><p>Type to cast the values to.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.iterrows">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">iterrows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.iterrows" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Iterate over the rows of the frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>Numpy array representing a row of the frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+<span class="go">[4, 5, 6]</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.plot">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.plot" title="Link to this definition">¶</a></dt>
-<dd><p>Plotting function. Requires matplotlib and Pandas to be installed. All paramters are passed onto pandas.</p>
+<dd><p>Plotting function. Requires matplotlib and Pandas to be installed. All parameters are passed onto pandas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>matplotlib.axes.AxesSubplot</dt><dd><p>AxesSubplot object representing the plot.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.resample">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.resample" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Resample the frame to a specified frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>freq</strong><span class="classifier">str</span></dt><dd><p>Frequency string.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Resampler</dt><dd><p>Resampler object for resampling the frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.rolling">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">rolling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.rolling" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Provide rolling window calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>window</strong><span class="classifier">int</span></dt><dd><p>Size of the moving window.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Rolling</dt><dd><p>Rolling object for performing rolling window calculations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.to_numpy">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">to_numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.to_numpy" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Convert the frame to a numpy array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>Numpy array representation of the frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="go">array([[1, 2, 3],</span>
+<span class="go">       [4, 5, 6]])</span>
+</pre></div>
+</div>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Sloth.Series.to_pandas">
 <span class="sig-prename descclassname"><span class="pre">Sloth.Series.</span></span><span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.Series.to_pandas" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Convert the Series to a pandas Series.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>pd.Series</dt><dd><p>A pandas Series containing the same data.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 
@@ -109,8 +217,9 @@
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">Series module</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#attributes">Attributes</a></li>
 <li><a class="reference internal" href="#Sloth.Series.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.Series.fast_init"><code class="docutils literal notranslate"><span class="pre">fast_init()</span></code></a></li>
 <li><a class="reference internal" href="#Sloth.Series.iterrows"><code class="docutils literal notranslate"><span class="pre">iterrows()</span></code></a></li>
 <li><a class="reference internal" href="#Sloth.Series.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li><a class="reference internal" href="#Sloth.Series.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>

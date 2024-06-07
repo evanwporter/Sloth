@@ -105,7 +105,7 @@ cdef class IntegerLocation(Indexer):
             return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])    
         if isinstance(arg, slice):
             arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
-            return self.frame.fast_init(arg)
+            return self.frame._fast_init(arg)
             
 cdef class Location(Indexer):
 
@@ -120,7 +120,7 @@ cdef class Location(Indexer):
                 arg.step
             )
             arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
-            return self.frame.fast_init(arg) 
+            return self.frame._fast_init(arg) 
         else: # single value
             arg = self.calculate_index(self.frame.mask, self.index.get_item(arg))
             return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])         
@@ -148,7 +148,7 @@ cdef class Location(Indexer):
     #     if arg.stop is not None:
     #         stop = self.index.get_item(arg.stop) - self.index.FD
         
-    #     return self.frame.fast_init("I", displacement=(start, stop), coordinates=(x, y))
+    #     return self.frame._fast_init("I", displacement=(start, stop), coordinates=(x, y))
 
     # cdef inline Frame _handle_array(self, arg):
     #     cdef str i

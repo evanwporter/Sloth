@@ -38,7 +38,7 @@ cdef class _Index:
         """
         return np.asarray(self.keys_)[self.mask]
 
-    def fast_init(self, mask: slice):
+    def _fast_init(self, mask: slice):
         """
         Quickly initializes an _Index object with a given mask.
 
@@ -55,7 +55,7 @@ cdef class _Index:
         Examples
         --------
         >>> idx = ObjectIndex(['a', 'b', 'c'])
-        >>> new_idx = idx.fast_init(slice(1, 3))
+        >>> new_idx = idx._fast_init(slice(1, 3))
         >>> new_idx.keys
         array(['b', 'c'], dtype='<U1')
         """
@@ -384,7 +384,7 @@ cdef class _RangeIndexMixin(_Index):
         """
         return self.stop - self.start
 
-    def fast_init(self, mask: slice):
+    def _fast_init(self, mask: slice):
         """
         Quickly initializes a RangeIndex object with a given mask.
 
@@ -401,7 +401,7 @@ cdef class _RangeIndexMixin(_Index):
         Examples
         --------
         >>> idx = RangeIndex(0, 10, 2)
-        >>> new_idx = idx.fast_init(slice(2, 8, 2))
+        >>> new_idx = idx._fast_init(slice(2, 8, 2))
         >>> new_idx.keys_
         array([2, 4, 6])
         """

@@ -50,7 +50,6 @@
 <li class="toctree-l1"><a class="reference internal" href="frame.dataframe.html">DataFrame module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="frame.dataframe.html#parameters">Parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.dataframe.html#Sloth.DataFrame.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="frame.dataframe.html#Sloth.DataFrame.fast_init"><code class="docutils literal notranslate"><span class="pre">fast_init()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.dataframe.html#Sloth.DataFrame.from_pandas"><code class="docutils literal notranslate"><span class="pre">from_pandas()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.dataframe.html#Sloth.DataFrame.iterrows"><code class="docutils literal notranslate"><span class="pre">iterrows()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.dataframe.html#Sloth.DataFrame.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
@@ -62,8 +61,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="frame.series.html">Series module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="frame.series.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame.series.html#attributes">Attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.series.html#Sloth.Series.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="frame.series.html#Sloth.Series.fast_init"><code class="docutils literal notranslate"><span class="pre">fast_init()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.series.html#Sloth.Series.iterrows"><code class="docutils literal notranslate"><span class="pre">iterrows()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.series.html#Sloth.Series.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame.series.html#Sloth.Series.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
@@ -74,6 +74,138 @@
 </li>
 </ul>
 </div>
+<p id="module-Sloth.frame.Frame">Basic Frame</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>values<span class="classifier">np.ndarray</span></dt><dd><p>Data that is to be represented by the DataFrame. The dimensions
+of “values” must be equal to len(columns) x len(index)</p>
+</dd>
+<dt>index<span class="classifier">array-like</span></dt><dd><p>Index that of values. len(index) must be equal to values.shape[1]</p>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.astype">
+<span class="sig-prename descclassname"><span class="pre">Sloth.frame.Frame.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.astype" title="Link to this definition">¶</a></dt>
+<dd><p>Cast the values of the frame to the specified type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>type_</strong><span class="classifier">type</span></dt><dd><p>Type to cast the values to.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.iterrows">
+<span class="sig-prename descclassname"><span class="pre">Sloth.frame.Frame.</span></span><span class="sig-name descname"><span class="pre">iterrows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.iterrows" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over the rows of the frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>Numpy array representing a row of the frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+<span class="go">[4, 5, 6]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.plot">
+<span class="sig-prename descclassname"><span class="pre">Sloth.frame.Frame.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.plot" title="Link to this definition">¶</a></dt>
+<dd><p>Plotting function. Requires matplotlib and Pandas to be installed. All parameters are passed onto pandas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>matplotlib.axes.AxesSubplot</dt><dd><p>AxesSubplot object representing the plot.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.resample">
+<span class="sig-prename descclassname"><span class="pre">Sloth.frame.Frame.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.resample" title="Link to this definition">¶</a></dt>
+<dd><p>Resample the frame to a specified frequency.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>freq</strong><span class="classifier">str</span></dt><dd><p>Frequency string.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Resampler</dt><dd><p>Resampler object for resampling the frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.rolling">
+<span class="sig-prename descclassname"><span class="pre">Sloth.frame.Frame.</span></span><span class="sig-name descname"><span class="pre">rolling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.rolling" title="Link to this definition">¶</a></dt>
+<dd><p>Provide rolling window calculations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>window</strong><span class="classifier">int</span></dt><dd><p>Size of the moving window.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>Rolling</dt><dd><p>Rolling object for performing rolling window calculations.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.to_numpy">
+<span class="sig-prename descclassname"><span class="pre">Sloth.frame.Frame.</span></span><span class="sig-name descname"><span class="pre">to_numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.to_numpy" title="Link to this definition">¶</a></dt>
+<dd><p>Convert the frame to a numpy array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>np.ndarray</dt><dd><p>Numpy array representation of the frame.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="go">array([[1, 2, 3],</span>
+<span class="go">       [4, 5, 6]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 
@@ -83,6 +215,22 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Frame package</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#Sloth.frame.Frame.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.frame.Frame.iterrows"><code class="docutils literal notranslate"><span class="pre">iterrows()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.frame.Frame.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.frame.Frame.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.frame.Frame.rolling"><code class="docutils literal notranslate"><span class="pre">rolling()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.frame.Frame.to_numpy"><code class="docutils literal notranslate"><span class="pre">to_numpy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="index.html"

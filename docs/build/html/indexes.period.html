@@ -69,33 +69,6 @@
 </div>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="Sloth.PeriodIndex.fast_init">
-<span class="sig-prename descclassname"><span class="pre">Sloth.PeriodIndex.</span></span><span class="sig-name descname"><span class="pre">fast_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.PeriodIndex.fast_init" title="Link to this definition">¶</a></dt>
-<dd><p>Quickly initializes a RangeIndex object with a given mask.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>mask</strong><span class="classifier">slice</span></dt><dd><p>The mask to apply to the index.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>_RangeIndexMixin</dt><dd><p>A new _RangeIndexMixin object with the mask applied.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">RangeIndex</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">new_idx</span> <span class="o">=</span> <span class="n">idx</span><span class="o">.</span><span class="n">fast_init</span><span class="p">(</span><span class="nb">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">new_idx</span><span class="o">.</span><span class="n">keys_</span>
-<span class="go">array([2, 4, 6])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="Sloth.PeriodIndex.get_item">
 <span class="sig-prename descclassname"><span class="pre">Sloth.PeriodIndex.</span></span><span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.PeriodIndex.get_item" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieves an item based on its index.</p>
@@ -164,7 +137,6 @@
 <li><a class="reference internal" href="#">PeriodIndex</a><ul>
 <li><a class="reference internal" href="#parameters">Parameters</a></li>
 <li><a class="reference internal" href="#examples">Examples</a></li>
-<li><a class="reference internal" href="#Sloth.PeriodIndex.fast_init"><code class="docutils literal notranslate"><span class="pre">fast_init()</span></code></a></li>
 <li><a class="reference internal" href="#Sloth.PeriodIndex.get_item"><code class="docutils literal notranslate"><span class="pre">get_item()</span></code></a></li>
 <li><a class="reference internal" href="#Sloth.PeriodIndex.to_pandas"><code class="docutils literal notranslate"><span class="pre">to_pandas()</span></code></a></li>
 </ul>
