@@ -44,45 +44,89 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="module-Sloth.DataFrame">
-<span id="dataframe-module"></span><h1>DataFrame module<a class="headerlink" href="#module-Sloth.DataFrame" title="Link to this heading">¶</a></h1>
+  <section id="dataframe-module">
+<h1>DataFrame module<a class="headerlink" href="#dataframe-module" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Sloth.DataFrame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Sloth.</span></span><span class="sig-name descname"><span class="pre">DataFrame</span></span><a class="headerlink" href="#Sloth.DataFrame" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="frame.html#module-Sloth.frame.Frame" title="Sloth.frame.Frame"><code class="xref py py-class docutils literal notranslate"><span class="pre">Frame</span></code></a></p>
 <p>The Sloth Dataframe is meant to be a faster version of pandas
 dataframe. It accomplished this by being a thin wrapper of
 numpy. Essentially its a numpy matrix with an index and a
 list of columns corresponding to the the row and columns of
 the numpy matrix.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>values<span class="classifier">numpy.ndarray[ndims=2]</span></dt><dd><p>Matrix to store in the DataFrame</p>
-</dd>
-<dt>index<span class="classifier">array-like or Index, optional</span></dt><dd><p>Index to use for resulting frame. Defaults to RangeIndex if no index is provided.</p>
-</dd>
-<dt>columns<span class="classifier">array-like or Index, optional</span></dt><dd><p>Column labels to use for resulting frame. Defaults to RangeIndex if no columns are provided.</p>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.DataFrame.astype">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.astype" title="Link to this definition">¶</a></dt>
-<dd><p>Cast the values of the frame to the specified type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>type_</strong><span class="classifier">type</span></dt><dd><p>Type to cast the values to.</p>
+<dt><strong>values</strong><span class="classifier">numpy.ndarray[ndims=2]</span></dt><dd><p>Matrix to store in the DataFrame</p>
+</dd>
+<dt><strong>index</strong><span class="classifier">array-like or Index, optional</span></dt><dd><p>Index to use for resulting frame. Defaults to RangeIndex if no index is provided.</p>
+</dd>
+<dt><strong>columns</strong><span class="classifier">array-like or Index, optional</span></dt><dd><p>Column labels to use for resulting frame. Defaults to RangeIndex if no columns are provided.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>columns</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></dt><dd><p>Get the data type of the values of the frame.</p>
+</dd>
+<dt><strong>extra</strong></dt><dd></dd>
+<dt><strong>extras</strong></dt><dd></dd>
+<dt><strong>i</strong></dt><dd></dd>
+<dt><strong>iloc</strong></dt><dd></dd>
+<dt><strong>index</strong></dt><dd></dd>
+<dt><strong>loc</strong></dt><dd></dd>
+<dt><strong>mask</strong></dt><dd></dd>
+<dt><strong>reference</strong></dt><dd></dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape</span></code></dt><dd><p>Get the shape of the frame.</p>
+</dd>
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">values</span></code></dt><dd><p>Get the values of the frame as a numpy array.</p>
+</dd>
+<dt><strong>values_</strong></dt><dd></dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Sloth.DataFrame.astype" title="Sloth.DataFrame.astype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">astype</span></code></a></p></td>
+<td><p>Cast the values of the frame to the specified type.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#Sloth.DataFrame.from_pandas" title="Sloth.DataFrame.from_pandas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_pandas</span></code></a></p></td>
+<td><p>Class method to convert pandas dataframe to a sloth frame</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">iterrows</span></code></p></td>
+<td><p>Iterate over the rows of the frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></p></td>
+<td><p>Plotting function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Sloth.DataFrame.reindex" title="Sloth.DataFrame.reindex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reindex</span></code></a></p></td>
+<td><p>Fits the dataframe with a new index.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">resample</span></code></p></td>
+<td><p>Resample the frame to a specified frequency.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rolling</span></code></p></td>
+<td><p>Provide rolling window calculations.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_numpy</span></code></p></td>
+<td><p>Convert the frame to a numpy array.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#Sloth.DataFrame.to_pandas" title="Sloth.DataFrame.to_pandas"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_pandas</span></code></a></p></td>
+<td><p>Class method to convert sloth dataframe to pandas dataframe</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Sloth.DataFrame.columns">
+<span class="sig-name descname"><span class="pre">columns</span></span><a class="headerlink" href="#Sloth.DataFrame.columns" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
-<dl class="py function">
+<dl class="py method">
 <dt class="sig sig-object py" id="Sloth.DataFrame.from_pandas">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">from_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.from_pandas" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">from_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.from_pandas" title="Link to this definition">¶</a></dt>
 <dd><p>Class method to convert pandas dataframe to a sloth frame</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -106,44 +150,9 @@ the numpy matrix.</p>
 </div>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.DataFrame.iterrows">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">iterrows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.iterrows" title="Link to this definition">¶</a></dt>
-<dd><p>Iterate over the rows of the frame.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Yields<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt>np.ndarray</dt><dd><p>Numpy array representing a row of the frame.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-<span class="go">[1, 2, 3]</span>
-<span class="go">[4, 5, 6]</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.DataFrame.plot">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.plot" title="Link to this definition">¶</a></dt>
-<dd><p>Plotting function. Requires matplotlib and Pandas to be installed. All parameters are passed onto pandas.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt>matplotlib.axes.AxesSubplot</dt><dd><p>AxesSubplot object representing the plot.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
+<dl class="py method">
 <dt class="sig sig-object py" id="Sloth.DataFrame.reindex">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">reindex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.reindex" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">reindex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.reindex" title="Link to this definition">¶</a></dt>
 <dd><p>Fits the dataframe with a new index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -166,77 +175,9 @@ the numpy matrix.</p>
 </div>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.DataFrame.resample">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.resample" title="Link to this definition">¶</a></dt>
-<dd><p>Resample the frame to a specified frequency.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>freq</strong><span class="classifier">str</span></dt><dd><p>Frequency string.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>Resampler</dt><dd><p>Resampler object for resampling the frame.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.DataFrame.rolling">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">rolling</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.rolling" title="Link to this definition">¶</a></dt>
-<dd><p>Provide rolling window calculations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><strong>window</strong><span class="classifier">int</span></dt><dd><p>Size of the moving window.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>Rolling</dt><dd><p>Rolling object for performing rolling window calculations.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="Sloth.DataFrame.to_numpy">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">to_numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.to_numpy" title="Link to this definition">¶</a></dt>
-<dd><p>Convert the frame to a numpy array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt>np.ndarray</dt><dd><p>Numpy array representation of the frame.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-<span class="go">array([[1, 2, 3],</span>
-<span class="go">       [4, 5, 6]])</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
+<dl class="py method">
 <dt class="sig sig-object py" id="Sloth.DataFrame.to_pandas">
-<span class="sig-prename descclassname"><span class="pre">Sloth.DataFrame.</span></span><span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.to_pandas" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_pandas</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.to_pandas" title="Link to this definition">¶</a></dt>
 <dd><p>Class method to convert sloth dataframe to pandas dataframe</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -249,6 +190,29 @@ the numpy matrix.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sloth_df</span> <span class="o">=</span> <span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">sloth_df</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="methods">
+<h1>Methods<a class="headerlink" href="#methods" title="Link to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="Sloth.DataFrame.astype">
+<span class="sig-prename descclassname"><span class="pre">DataFrame.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.DataFrame.astype" title="Link to this definition">¶</a></dt>
+<dd><p>Cast the values of the frame to the specified type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>type_</strong><span class="classifier">type</span></dt><dd><p>Type to cast the values to.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -266,16 +230,17 @@ the numpy matrix.</p>
     <h3><a href="index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">DataFrame module</a><ul>
-<li><a class="reference internal" href="#parameters">Parameters</a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.astype"><code class="docutils literal notranslate"><span class="pre">astype()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.from_pandas"><code class="docutils literal notranslate"><span class="pre">from_pandas()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.iterrows"><code class="docutils literal notranslate"><span class="pre">iterrows()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.reindex"><code class="docutils literal notranslate"><span class="pre">reindex()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.rolling"><code class="docutils literal notranslate"><span class="pre">rolling()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.to_numpy"><code class="docutils literal notranslate"><span class="pre">to_numpy()</span></code></a></li>
-<li><a class="reference internal" href="#Sloth.DataFrame.to_pandas"><code class="docutils literal notranslate"><span class="pre">to_pandas()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame"><code class="docutils literal notranslate"><span class="pre">DataFrame</span></code></a><ul>
+<li><a class="reference internal" href="#Sloth.DataFrame.columns"><code class="docutils literal notranslate"><span class="pre">DataFrame.columns</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.from_pandas"><code class="docutils literal notranslate"><span class="pre">DataFrame.from_pandas()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.reindex"><code class="docutils literal notranslate"><span class="pre">DataFrame.reindex()</span></code></a></li>
+<li><a class="reference internal" href="#Sloth.DataFrame.to_pandas"><code class="docutils literal notranslate"><span class="pre">DataFrame.to_pandas()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#Sloth.DataFrame.astype"><code class="docutils literal notranslate"><span class="pre">DataFrame.astype()</span></code></a></li>
 </ul>
 </li>
 </ul>

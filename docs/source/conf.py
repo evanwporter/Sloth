@@ -34,9 +34,9 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
-    'sphinx.ext.napoleon',
+    # 'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'numpydoc'
+    # 'numpydoc'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -344,5 +344,6 @@ texinfo_documents = [
 # texinfo_no_detailmenu = False
 
 # Disable NumPy docstring support in Napoleon to avoid conflicts:
-napoleon_numpy_docstring = False
+# napoleon_numpy_docstring = False
 
+autosummary_generate = True

@@ -10,4 +10,4 @@ Frame package
 .. automodule:: Sloth.frame.Frame
    :members:
    :undoc-members:
-   
+   :show-inheritance:

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PeriodIndex &#8212; Sloth 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=def86cc0" />
+    
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PeriodIndex</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="periodindex">
+<h1>PeriodIndex<a class="headerlink" href="#periodindex" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Sloth.index.PeriodIndex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Sloth.index.</span></span><span class="sig-name descname"><span class="pre">PeriodIndex</span></span><a class="headerlink" href="#Sloth.index.PeriodIndex" title="Link to this definition">¶</a></dt>
+<dd><p>Index containing values of time along a regular period of time.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>start: datetime-like</dt><dd><p>Starting time in a range</p>
+</dd>
+<dt>stop: datetime-like</dt><dd><p>End time in the range</p>
+</dd>
+<dt>freq: str</dt><dd><p>How often to create point. ie: ‘1h’, ‘4W’, ‘200s’</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">PeriodIndex</span><span class="p">(</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-10&#39;</span><span class="p">,</span> <span class="s1">&#39;1d&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">keys_</span>
+<span class="go">array([&#39;2022-01-01&#39;, &#39;2022-01-02&#39;, &#39;2022-01-03&#39;, &#39;2022-01-04&#39;,</span>
+<span class="go">       &#39;2022-01-05&#39;, &#39;2022-01-06&#39;, &#39;2022-01-07&#39;, &#39;2022-01-08&#39;,</span>
+<span class="go">       &#39;2022-01-09&#39;], dtype=&#39;datetime64[D]&#39;)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<section id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="to_pandas.html">to_pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="freq.html">freq</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">PeriodIndex</a><ul>
+<li><a class="reference internal" href="#Sloth.index.PeriodIndex"><code class="docutils literal notranslate"><span class="pre">PeriodIndex</span></code></a></li>
+<li><a class="reference internal" href="#methods">Methods</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/periodindex/periodindex.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PeriodIndex</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+    &#169; Copyright .
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    </div>
+  </body>
+</html>

@@ -9,10 +9,8 @@ Sloth
 .. toctree::
    :maxdepth: 2
 
-   frame
-   indexes
-   resample
-   rolling
+   frame/frame
+   dataframe/dataframe
 
 Index
 =====
