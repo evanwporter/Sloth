@@ -11,6 +11,13 @@ Sloth
 
    frame/frame
    dataframe/dataframe
+   series/series
+   
+   objectindex/objectindex
+   rangeindex/rangeindex
+   periodindex/periodindex
+   datetimeindex/datetimeindex
+
 
 Index
 =====
