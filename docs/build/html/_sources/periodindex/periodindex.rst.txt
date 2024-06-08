@@ -11,5 +11,3 @@ Methods
 
    to_pandas
 
-   freq
-

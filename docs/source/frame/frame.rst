@@ -9,17 +9,11 @@ Methods
 .. toctree::
    :maxdepth: 1
 
-   values
-
-   shape
-
    astype
 
    iterrows
 
    to_numpy
-
-   dtype
 
    resample
 

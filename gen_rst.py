@@ -9,17 +9,28 @@ sloth_dir = os.path.join(base_dir, 'Sloth')
 # Ensure source directory exists
 os.makedirs(source_dir, exist_ok=True)
 
-# Regular expressions to identify classes and methods
+# Regular expressions to identify classes, methods, and properties
 class_pattern = re.compile(r'class\s+(\w+)')
 method_pattern = re.compile(r'def\s+(\w+)\s*\(.*\)')
+property_pattern = re.compile(r'^\s*@property', re.MULTILINE)
 
 def parse_classes_and_methods(pyx_file):
     """ Parse the .pyx file to get classes and their methods """
     classes = {}
     current_class = None
+    in_property = False
     
     with open(pyx_file, 'r') as f:
-        for line in f:
+        lines = f.readlines()
+        for i, line in enumerate(lines):
+            if property_pattern.match(line):
+                in_property = True
+                continue
+
+            if in_property and method_pattern.search(line):
+                in_property = False
+                continue
+
             class_match = class_pattern.search(line)
             if class_match:
                 class_name = class_match.group(1)
@@ -28,7 +39,7 @@ def parse_classes_and_methods(pyx_file):
                     classes[current_class] = []
             if current_class:
                 method_match = method_pattern.search(line)
-                if method_match:
+                if method_match and not in_property:
                     method_name = method_match.group(1)
                     if not method_name.startswith('_'):
                         classes[current_class].append(method_name)

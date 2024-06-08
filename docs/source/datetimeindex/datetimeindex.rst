@@ -15,7 +15,3 @@ Methods
 
    get_item
 
-   keys_
-
-   size
-
