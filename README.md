@@ -14,12 +14,3 @@ Benchmarks
 | --- | ----- | ------ |
 | iloc[0] | 2.58 µs ± 298 ns | 168 µs ± 18.9 µs |
 | iloc[5:300000] | 3.48 µs ± 251 ns | 210 µs ± 15.1 µs |
-
-## Where
-
-| **Link**  | **URL**                                    |
-|-----------|---------------------------------------------|
-| download  | [https://pypi.python.org/pypi/Sloth (TBA)](https://pypi.python.org/pypi/Sloth) |
-| docs      | [https://evanwporter.github.io/Sloth](https://evanwporter.github.io/Sloth)   |
-| code      | [https://github.com/evanwporter/Sloth](https://github.com/evanwporter/Sloth) |
-
