@@ -227,6 +227,11 @@
 <li class="toctree-l2"><a class="reference internal" href="frame/resample.html">resample</a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame/rolling.html">rolling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="frame/plot.html">plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame/tail.html">tail</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame/head.html">head</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame/iloc.html">iloc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame/loc.html">loc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="frame/iat.html">iat</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="index/index.html">Index</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Index</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -245,7 +250,6 @@
 </li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="index/datetime/datetime.html">DateTimeIndex</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of DateTimeIndex</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="index/datetime/to_pandas.html">to_pandas</a></li>
-<li class="toctree-l3"><a class="reference internal" href="index/datetime/get_item.html">get_item</a></li>
 <li class="toctree-l3"><a class="reference internal" href="index/datetime/get_item.html">get_item</a></li>
 </ul>
 </li>
@@ -272,6 +276,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="rolling/rolling.html">Rolling</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of Rolling</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="rolling/mean.html">mean</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rolling/sum.html">sum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rolling/min.html">min</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rolling/max.html">max</a></li>
 </ul>
 </li>
 </ul>
@@ -311,11 +317,21 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#I"><strong>I</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#O"><strong>O</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a></div>
 </section>
 <section id="_" class="genindex-section">
   <h2>_</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="frame/iat.html#Sloth.indexer.iAT.__getitem__">__getitem__() (Sloth.indexer.iAT method)</a>
+
+        <ul>
+          <li><a href="frame/iloc.html#Sloth.indexer.IntegerLocation.__getitem__">(Sloth.indexer.IntegerLocation method)</a>
+</li>
+          <li><a href="frame/loc.html#Sloth.indexer.Location.__getitem__">(Sloth.indexer.Location method)</a>
+</li>
+        </ul></li>
+    </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="index/index.html#Sloth.index._Index">_Index (class in Sloth.index)</a>
 </li>
@@ -385,6 +401,16 @@
   </tr></table>
 </section>
 
+<section id="H" class="genindex-section">
+  <h2>H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="frame/head.html#Sloth.frame.Frame.head">head() (Sloth.frame.Frame method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
 <section id="I" class="genindex-section">
   <h2>I</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
@@ -417,7 +443,13 @@
   <h2>M</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="rolling/max.html#Sloth.rolling.Rolling.max">max() (Sloth.rolling.Rolling method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="rolling/mean.html#Sloth.rolling.Rolling.mean">mean() (Sloth.rolling.Rolling method)</a>
+</li>
+        <li><a href="rolling/min.html#Sloth.rolling.Rolling.min">min() (Sloth.rolling.Rolling method)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -487,6 +519,8 @@
   <h2>T</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="frame/tail.html#Sloth.frame.Frame.tail">tail() (Sloth.frame.Frame method)</a>
+</li>
         <li><a href="frame/to_numpy.html#Sloth.frame.Frame.to_numpy">to_numpy() (Sloth.frame.Frame method)</a>
 </li>
         <li><a href="frame/dataframe/to_pandas.html#Sloth.frame.DataFrame.to_pandas">to_pandas() (Sloth.frame.DataFrame method)</a>

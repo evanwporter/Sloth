@@ -27,4 +27,14 @@ Methods
 
    plot
 
+   tail
+
+   head
+
+   iloc
+
+   loc 
+   
+   iat
+
 
