@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>sum &#8212; Sloth 1.0 documentation</title>
+    <title>mean &#8212; Sloth 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=def86cc0" />
     
@@ -15,7 +15,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="mean" href="mean.html" /> 
+    <link rel="next" title="sum" href="sum.html" />
+    <link rel="prev" title="Resampler" href="resampler.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -24,11 +25,14 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="mean.html" title="mean"
+          <a href="sum.html" title="sum"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="resampler.html" title="Resampler"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rolling.html" accesskey="U">Rolling</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">sum</a></li> 
+          <li class="nav-item nav-item-1"><a href="resampler.html" accesskey="U">Resampler</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">mean</a></li> 
       </ul>
     </div>  
 
@@ -37,28 +41,23 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="sum">
-<h1>sum<a class="headerlink" href="#sum" title="Link to this heading">¶</a></h1>
-<dl class="py method">
-<dt class="sig sig-object py" id="Sloth.rolling.Rolling.sum">
-<span class="sig-prename descclassname"><span class="pre">Rolling.</span></span><span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.rolling.Rolling.sum" title="Link to this definition">¶</a></dt>
-<dd><p>Calculate the rolling sum over the specified window.</p>
+  <section id="mean">
+<h1>mean<a class="headerlink" href="#mean" title="Link to this heading">¶</a></h1>
+<p>Computes the mean for each resampled group.</p>
 <section id="returns">
 <h2>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h2>
 <dl class="simple">
-<dt>DataFrame</dt><dd><p>A new DataFrame containing the rolling sum values.</p>
+<dt>DataFrame</dt><dd><p>DataFrame containing the means of the resampled groups.</p>
 </dd>
 </dl>
 </section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rolling</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-<span class="go">DataFrame with rolling sum values</span>
-</pre></div>
-</div>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the computation of mean fails.</p>
+</dd>
+</dl>
 </section>
-</dd></dl>
-
 </section>
 
 
@@ -71,8 +70,9 @@
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">sum</a><ul>
-<li><a class="reference internal" href="#Sloth.rolling.Rolling.sum"><code class="docutils literal notranslate"><span class="pre">Rolling.sum()</span></code></a></li>
+<li><a class="reference internal" href="#">mean</a><ul>
+<li><a class="reference internal" href="#returns">Returns</a></li>
+<li><a class="reference internal" href="#raises">Raises</a></li>
 </ul>
 </li>
 </ul>
@@ -80,13 +80,18 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="mean.html"
-                          title="previous chapter">mean</a></p>
+    <p class="topless"><a href="resampler.html"
+                          title="previous chapter">Resampler</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="sum.html"
+                          title="next chapter">sum</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/rolling/sum.rst.txt"
+      <li><a href="../_sources/resample/mean.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -111,11 +116,14 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="mean.html" title="mean"
+          <a href="sum.html" title="sum"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="resampler.html" title="Resampler"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="rolling.html" >Rolling</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">sum</a></li> 
+          <li class="nav-item nav-item-1"><a href="resampler.html" >Resampler</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">mean</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

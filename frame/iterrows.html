@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>iterrows &#8212; Sloth 1.0 documentation</title>
+    <title>Frame.iterrows &#8212; Sloth 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=def86cc0" />
     
@@ -32,7 +32,7 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="frame.html" accesskey="U">Frame</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">iterrows</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Frame.iterrows</a></li> 
       </ul>
     </div>  
 
@@ -41,8 +41,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="iterrows">
-<h1>iterrows<a class="headerlink" href="#iterrows" title="Link to this heading">¶</a></h1>
+  <section id="frame-iterrows">
+<h1>Frame.iterrows<a class="headerlink" href="#frame-iterrows" title="Link to this heading">¶</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="Sloth.frame.Frame.iterrows">
 <span class="sig-prename descclassname"><span class="pre">Frame.</span></span><span class="sig-name descname"><span class="pre">iterrows</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.iterrows" title="Link to this definition">¶</a></dt>
@@ -56,10 +56,11 @@
 </section>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-<span class="go">[1, 2, 3]</span>
-<span class="go">[4, 5, 6]</span>
+<span class="go">[1 2 3]</span>
+<span class="go">[4 5 6]</span>
 </pre></div>
 </div>
 </section>
@@ -77,7 +78,7 @@
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">iterrows</a><ul>
+<li><a class="reference internal" href="#">Frame.iterrows</a><ul>
 <li><a class="reference internal" href="#Sloth.frame.Frame.iterrows"><code class="docutils literal notranslate"><span class="pre">Frame.iterrows()</span></code></a></li>
 </ul>
 </li>
@@ -129,7 +130,7 @@
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="frame.html" >Frame</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">iterrows</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Frame.iterrows</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

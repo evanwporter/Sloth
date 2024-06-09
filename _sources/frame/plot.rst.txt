@@ -1,5 +1,5 @@
-plot
-====
+Frame.plot
+==========
 
 .. automethod:: Sloth.frame.Frame.plot
 

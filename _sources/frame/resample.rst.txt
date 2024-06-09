@@ -1,5 +1,5 @@
-resample
-========
+Frame.resample
+==============
 
 .. automethod:: Sloth.frame.Frame.resample
 

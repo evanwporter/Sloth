@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>resample &#8212; Sloth 1.0 documentation</title>
+    <title>Frame.resample &#8212; Sloth 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=def86cc0" />
     
@@ -32,7 +32,7 @@
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="frame.html" accesskey="U">Frame</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">resample</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Frame.resample</a></li> 
       </ul>
     </div>  
 
@@ -41,8 +41,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="resample">
-<h1>resample<a class="headerlink" href="#resample" title="Link to this heading">¶</a></h1>
+  <section id="frame-resample">
+<h1>Frame.resample<a class="headerlink" href="#frame-resample" title="Link to this heading">¶</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="Sloth.frame.Frame.resample">
 <span class="sig-prename descclassname"><span class="pre">Frame.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.resample" title="Link to this definition">¶</a></dt>
@@ -63,7 +63,9 @@
 </section>
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">]]),</span> <span class="n">index</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;2021-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2021-01-02&#39;</span><span class="p">,</span> <span class="s1">&#39;2021-01-03&#39;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;datetime64&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
+<span class="go">&lt;Resampler&gt;</span>
 </pre></div>
 </div>
 </section>
@@ -81,7 +83,7 @@
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">resample</a><ul>
+<li><a class="reference internal" href="#">Frame.resample</a><ul>
 <li><a class="reference internal" href="#Sloth.frame.Frame.resample"><code class="docutils literal notranslate"><span class="pre">Frame.resample()</span></code></a></li>
 </ul>
 </li>
@@ -133,7 +135,7 @@
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="frame.html" >Frame</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">resample</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Frame.resample</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
