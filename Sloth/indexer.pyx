@@ -163,6 +163,8 @@ cdef class IntegerLocation(Indexer):
 
         if isinstance(arg, int):
             arg = self.calculate_index(self.frame.mask, arg)
+            if self.reference == "S":
+                return self.frame.values_[arg]
             return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])    
         if isinstance(arg, slice):
             arg = self.combine_slices(self.frame.mask, arg, len(self.index.keys_))
@@ -223,14 +225,14 @@ cdef class iAT(Indexer):
         Raises
         ------
         ValueError
-            If the length of the argument tuple is not 2.
+            If two values are not passed.
 
         Examples
         --------
-        >>> iat[3, 5]
+        >>> Sloth.DataFrame.iat[3, 5]
         42
         """
-        if len(arg) != 2:
+        if len(arg) != 2 or isinstance(arg, int):
             raise ValueError("Must pass two values.")
 
-        return self.values[arg[0], arg[1]]
+        return self.frame.values[arg[0], arg[1]]

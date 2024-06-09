@@ -1,6 +1,6 @@
 cimport numpy as np
 from cpython cimport list, dict, str, slice
-from .indexer cimport IntegerLocation, Location
+from .indexer cimport IntegerLocation, Location, iAT
 from .index cimport DateTimeIndex, _Index, ObjectIndex
 cimport cython
 
@@ -14,6 +14,7 @@ cdef class Frame:
         _Index index
         IntegerLocation iloc
         Location loc
+
         str reference
         int i
         dict extras
@@ -24,6 +25,7 @@ cdef class Frame:
 cdef class DataFrame(Frame):
     cdef public:
         ObjectIndex columns
+        iAT iat
     
     cdef inline Series _handle_str(self, arg)
 
