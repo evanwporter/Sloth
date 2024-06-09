@@ -1,5 +1,5 @@
-Frame.iterrows
-==============
+iterrows
+========
 
 .. automethod:: Sloth.frame.Frame.iterrows
 
