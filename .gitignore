@@ -21,3 +21,4 @@ Sloth.egg-info
 .pytest_cache
 
 .benchmarks/
+benchmark_results.*

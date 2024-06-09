@@ -1,5 +1,5 @@
 """
-pytest benchmark.py --benchmark-save=benchmark.json
+pytest benchmark.py --benchmark-save=benchmark
 """
 
 import pandas as pd
