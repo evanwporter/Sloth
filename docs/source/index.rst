@@ -10,13 +10,10 @@ Sloth
    :maxdepth: 2
 
    frame/frame
-   dataframe/dataframe
-   series/series
-   
-   objectindex/objectindex
-   rangeindex/rangeindex
-   periodindex/periodindex
-   datetimeindex/datetimeindex
+   index/index
+   indexer/indexer
+   resample/resampler
+   rolling/rolling    
 
 
 Index

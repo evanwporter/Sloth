@@ -46,9 +46,14 @@ def parse_classes_and_methods(pyx_file):
     
     return classes
 
-def create_rst_files(classes, class_name, module_path):
-    """ Create rst files for each method in the class """
-    class_dir = os.path.join(source_dir, class_name.lower())
+def create_rst_files(classes, class_name, module_path, file_name):
+    """ Create rst files for each class and method """
+    # Create directory for the pyx file
+    file_dir = os.path.join(source_dir, file_name.lower())
+    os.makedirs(file_dir, exist_ok=True)
+    
+    # Create directory for the class within the pyx file directory
+    class_dir = os.path.join(file_dir, class_name.lower())
     os.makedirs(class_dir, exist_ok=True)
     
     class_rst_path = os.path.join(class_dir, f'{class_name.lower()}.rst')
@@ -80,9 +85,12 @@ def main():
                 # Get the module path relative to the sloth_dir
                 module_path = os.path.relpath(pyx_path, sloth_dir).replace(os.sep, '.')[:-4]
                 module_path = f'Sloth.{module_path}'
-
+                
+                # Extract file name without extension for directory creation
+                file_name = os.path.splitext(file)[0]
+                
                 for class_name in classes:
-                    create_rst_files(classes, class_name, module_path)
+                    create_rst_files(classes, class_name, module_path, file_name)
 
 if __name__ == "__main__":
     main()
