@@ -156,3 +156,12 @@ cdef class Location(Indexer):
     #     for i in arg:
     #         args[i] = self.index.get_item(i)
     #     return DataFrame(self.values[args], columns=self.columns, index=arg)
+
+cdef class iAT(Indexer):
+    
+    def __getitem__(self, arg):
+   
+        if len(arg) != 2:
+            raise ValueError("Must pass two values.")
+
+        return self.values[arg[0], arg[1]]

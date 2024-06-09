@@ -2,7 +2,7 @@
 
 cimport numpy as np
 import numpy as np
-from .indexer cimport IntegerLocation, Location
+from .indexer cimport IntegerLocation, Location, iAT
 from .index cimport DateTimeIndex, _Index, ObjectIndex, RangeIndex
 cimport cython
 
@@ -12,13 +12,6 @@ from .resample cimport Resampler
 from .rolling cimport Rolling
 
 import pandas as pd
-
-"""
-Public Variables
-(Displacement Compliant)
-------------------------
-  * values
-"""
 
 
 cdef class Frame:
@@ -78,6 +71,7 @@ cdef class Frame:
             
         Examples
         --------
+        >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6]]))
         >>> frame.values
         array([[1, 2, 3],
                [4, 5, 6]])
@@ -92,6 +86,12 @@ cdef class Frame:
         -------
         str
             String representation of the frame.
+            
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
+        >>> repr(frame)
+        '   0  1\n0  1  2\n1  3  4'
         """
         return str(self.to_pandas())
     
@@ -103,6 +103,13 @@ cdef class Frame:
         -------
         np.ndarray
             Numpy array representation of the frame.
+            
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
+        >>> np.array(frame)
+        array([[1, 2],
+               [3, 4]])
         """
         return self.values
     
@@ -114,6 +121,12 @@ cdef class Frame:
         -------
         int
             Length of the frame.
+            
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
+        >>> len(frame)
+        2
         """
         return len(self.values)
 
@@ -126,6 +139,12 @@ cdef class Frame:
         -------
         tuple
             Shape of the frame.
+            
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
+        >>> frame.shape
+        (2, 2)
         """
         return np.asarray(self.values).shape
     
@@ -140,6 +159,7 @@ cdef class Frame:
             
         Examples
         --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
         >>> frame.astype(float)
         """
         self.values = self.values.astype(type_)     
@@ -155,10 +175,11 @@ cdef class Frame:
             
         Examples
         --------
+        >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6]]))
         >>> for row in frame.iterrows():
         ...     print(row)
-        [1, 2, 3]
-        [4, 5, 6]
+        [1 2 3]
+        [4 5 6]
         """
         return self.values
     
@@ -173,9 +194,10 @@ cdef class Frame:
             
         Examples
         --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
         >>> frame.to_numpy()
-        array([[1, 2, 3],
-               [4, 5, 6]])
+        array([[1, 2],
+               [3, 4]])
         """
         return self.values
 
@@ -191,6 +213,7 @@ cdef class Frame:
             
         Examples
         --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
         >>> frame.dtype
         dtype('int64')
         """
@@ -212,10 +235,12 @@ cdef class Frame:
             
         Examples
         --------
+        >>> frame = Frame(np.array([[1], [2], [3]]), index=np.array(['2021-01-01', '2021-01-02', '2021-01-03'], dtype='datetime64'))
         >>> frame.resample('D')
+        <Resampler>
         """
         if not isinstance(self.index, DateTimeIndex):
-            raise TypeError("Index must be a DataTimeIndex.")
+            raise TypeError("Index must be a DateTimeIndex.")
         return Resampler(self, freq)
     
     def rolling(self, window):
@@ -234,7 +259,9 @@ cdef class Frame:
             
         Examples
         --------
-        >>> frame.rolling(3)
+        >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6]]))
+        >>> frame.rolling(2)
+        <Rolling>
         """
         return Rolling(self, window)
 
@@ -251,6 +278,11 @@ cdef class Frame:
         -------
         Frame
             Frame object initialized with the specified mask.
+            
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2], [3, 4]]))
+        >>> new_frame = frame._fast_init(slice(0, 1))
         """
         frame = self.__new__(self.__class__)
         
@@ -274,6 +306,12 @@ cdef class Frame:
         -------
         matplotlib.axes.AxesSubplot
             AxesSubplot object representing the plot.
+            
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6]]))
+        >>> frame.plot()
+        <AxesSubplot:xlabel='index', ylabel='values'>
         """
         return self.to_pandas().plot(*args, **kwargs)
 
@@ -320,6 +358,15 @@ cdef class Series(Frame):
         -------
         pd.Series
             A pandas Series containing the same data.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series.to_pandas()
+        a    1
+        b    2
+        c    3
+        dtype: int64
         """
         return pd.Series(self.values, index=self.index.to_pandas(), name=self.name, dtype=self.dtype)
 
@@ -339,6 +386,11 @@ cdef class Series(Frame):
         -------
         Series
             A new Series with the given values.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> new_series = series._quick_init(np.array([4, 5, 6]))
         """
         return Series(values=values, index=self.index)
 
@@ -355,6 +407,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series resulting from element-wise multiplication.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series * 2
+        a    2
+        b    4
+        c    6
+        dtype: int64
         """
         return self._quick_init(self.values * other)
 
@@ -371,6 +432,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series resulting from element-wise division.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([2, 4, 6]), index=np.array(['a', 'b', 'c']))
+        >>> series / 2
+        a    1.0
+        b    2.0
+        c    3.0
+        dtype: float64
         """
         return self._quick_init(self.values / other)
 
@@ -387,6 +457,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series resulting from element-wise division.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([2, 4, 6]), index=np.array(['a', 'b', 'c']))
+        >>> 12 / series
+        a    6.0
+        b    3.0
+        c    2.0
+        dtype: float64
         """
         return self._quick_init(other / self.values)
 
@@ -403,6 +482,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series resulting from element-wise addition.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series + 2
+        a    3
+        b    4
+        c    5
+        dtype: int64
         """
         return self._quick_init(self.values + other)
 
@@ -419,6 +507,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series resulting from element-wise subtraction.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series - 1
+        a    0
+        b    1
+        c    2
+        dtype: int64
         """
         return self._quick_init(self.values - other)
 
@@ -435,6 +532,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series resulting from element-wise subtraction.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> 5 - series
+        a    4
+        b    3
+        c    2
+        dtype: int64
         """
         return self._quick_init(other - self.values)
 
@@ -451,6 +557,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series of boolean values resulting from element-wise comparison.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series > 2
+        a    False
+        b    False
+        c     True
+        dtype: bool
         """
         return self._quick_init(self.values > other)
 
@@ -467,6 +582,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series of boolean values resulting from element-wise comparison.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series < 2
+        a     True
+        b    False
+        c    False
+        dtype: bool
         """
         return self._quick_init(self.values < other)
 
@@ -483,6 +607,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series of boolean values resulting from element-wise comparison.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series >= 2
+        a    False
+        b     True
+        c     True
+        dtype: bool
         """
         return self._quick_init(self.values >= other)
 
@@ -499,6 +632,15 @@ cdef class Series(Frame):
         -------
         Series
             A new Series of boolean values resulting from element-wise comparison.
+            
+        Examples
+        --------
+        >>> series = Series(np.array([1, 2, 3]), index=np.array(['a', 'b', 'c']))
+        >>> series <= 2
+        a     True
+        b     True
+        c    False
+        dtype: bool
         """
         return self._quick_init(self.values <= other)
 
@@ -543,6 +685,13 @@ cdef class DataFrame(Frame):
         ------
         ValueError
             If unexpected number of dimensions for values or if there's a mismatch between columns length and values width.
+            
+        Examples
+        --------
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['col1', 'col2'])
+        >>> df.values
+        array([[1, 2],
+               [3, 4]])
         """
         self.reference = "D"
 
@@ -558,6 +707,8 @@ cdef class DataFrame(Frame):
         super().__init__(values, index, index_type)
 
         self.extras = {}
+
+        self.iat = iAT(self)
         
         if np.ndim(values) != 2:
             raise ValueError("Unexpected number of dimensions for values. Expected 2, got {}.".format(np.ndim(values)))
@@ -587,6 +738,9 @@ cdef class DataFrame(Frame):
         >>> import pandas as pd
         >>> df = pd.DataFrame({'A': [1, 2], 'B': [3, 4]})
         >>> sloth_df = DataFrame.from_pandas(df)
+        >>> sloth_df.values
+        array([[1, 3],
+               [2, 4]])
         """
         # TODO: Error handling
         return cls(
@@ -606,8 +760,11 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> sloth_df = DataFrame({'A': [1, 2], 'B': [3, 4]})
-        >>> df = sloth_df.to_pandas()
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['col1', 'col2'])
+        >>> df.to_pandas()
+              col1  col2
+        row1     1     2
+        row2     3     4
         """
         return pd.DataFrame(
             self.values, 
@@ -637,9 +794,17 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
-        >>> series_a = df['A']
-        >>> subset_df = df[['A', 'B']]
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
+        >>> df['A']
+        A
+        row1    1
+        row2    3
+        dtype: int64
+
+        >>> df[['A', 'B']]
+              A  B
+        row1  1  2
+        row2  3  4
         """
         if isinstance(arg, str):
             # str means that arg is a column name,
@@ -673,9 +838,11 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
         >>> mask = df['A'] > 1
         >>> filtered_df = df[mask]
+              A  B
+        row2  3  4
         """
         return DataFrame(
             values=self.values[arg], 
@@ -705,8 +872,12 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
-        >>> series_a = df.A
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
+        >>> df.A
+        A
+        row1    1
+        row2    3
+        dtype: int64
         """
         if arg in self.columns.index:
             return self._handle_str(arg)
@@ -728,8 +899,12 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
-        >>> series_a = df._handle_str('A')
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
+        >>> df._handle_str('A')
+        A
+        row1    1
+        row2    3
+        dtype: int64
         """
         return Series(
             # A 1d numpy array
@@ -754,8 +929,11 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4], 'C': [5, 6]})
-        >>> subset_df = df._handle_array(['A', 'B'])
+        >>> df = DataFrame(np.array([[1, 2, 3], [4, 5, 6]]), index=['row1', 'row2'], columns=['A', 'B', 'C'])
+        >>> df._handle_array(['A', 'C'])
+              A  C
+        row1  1  3
+        row2  4  6
         """
         cdef np.int64_t length = len(arg)
         cdef np.int64_t[:] args = np.zeros(length, dtype=np.int64)
@@ -779,8 +957,11 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
         >>> df['A'] = [5, 6]
+              A  B
+        row1  5  2
+        row2  6  4
         """
         if isinstance(value, Series):
             value = value.values
@@ -809,8 +990,11 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
-        >>> new_df = df.reindex(np.arange(3))
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
+        >>> new_df = df.reindex(np.array(['row1', 'row3'], dtype=object))
+              A   B
+        row1  1   2
+        row3 NaN NaN
         """
         cdef: 
             np.ndarray new_values
@@ -847,14 +1031,14 @@ cdef class DataFrame(Frame):
 
         Examples
         --------
-        >>> df = DataFrame({'A': [1, 2], 'B': [3, 4]})
+        >>> df = DataFrame(np.array([[1, 2], [3, 4]]), index=['row1', 'row2'], columns=['A', 'B'])
         >>> mask = df['A'] > 1
         >>> new_df = df._fast_init(mask)
+              A  B
+        row1  1  2
         """
         frame = super()._fast_init(mask)
 
         frame.columns = self.columns
 
         return frame
-
-        

@@ -26,3 +26,6 @@ cdef class Location(Indexer):
     # cdef inline Frame _handle_slice(self, slice arg)
 
     # cdef inline Frame _handle_array(self, arg)
+
+cdef class iAT(Indexer):
+    cdef str x
