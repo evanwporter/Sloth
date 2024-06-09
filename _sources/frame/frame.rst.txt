@@ -1,6 +1,12 @@
 Frame
 =====
 
+.. toctree::
+   :maxdepth: 1
+
+   dataframe/dataframe
+   series/series
+
 .. autoclass:: Sloth.frame.Frame
 
 Methods
@@ -20,4 +26,5 @@ Methods
    rolling
 
    plot
+
 
