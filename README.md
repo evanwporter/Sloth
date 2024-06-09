@@ -20,7 +20,6 @@ This program is fast like [Flash](https://www.youtube.com/watch?v=dM-li2Cn5Pw).
 
 | **Link**  | **URL**                                    |
 |-----------|---------------------------------------------|
-| download  | [https://pypi.python.org/pypi/Sloth (TBA)](https://pypi.python.org/pypi/Sloth) |
 | docs      | [https://evanwporter.github.io/Sloth](https://evanwporter.github.io/Sloth)   |
 | code      | [https://github.com/evanwporter/Sloth](https://github.com/evanwporter/Sloth) |
 
