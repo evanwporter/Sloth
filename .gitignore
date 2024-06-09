@@ -17,3 +17,7 @@ Sloth/*.ipynb
 
 dist/
 Sloth.egg-info
+*.json
+.pytest_cache
+
+.benchmarks/
