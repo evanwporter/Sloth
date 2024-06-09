@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>sum &#8212; Sloth 1.0 documentation</title>
+    <title>astype &#8212; Sloth 1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../_static/classic.css?v=def86cc0" />
     
@@ -15,8 +15,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Rolling" href="../rolling/rolling.html" />
-    <link rel="prev" title="mean" href="mean.html" /> 
+    <link rel="next" title="iterrows" href="iterrows.html" />
+    <link rel="prev" title="to_pandas" href="series/to_pandas.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -25,14 +25,14 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../rolling/rolling.html" title="Rolling"
+          <a href="iterrows.html" title="iterrows"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="mean.html" title="mean"
+          <a href="series/to_pandas.html" title="to_pandas"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="resampler.html" accesskey="U">Resampler</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">sum</a></li> 
+          <li class="nav-item nav-item-1"><a href="frame.html" accesskey="U">Frame</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">astype</a></li> 
       </ul>
     </div>  
 
@@ -41,23 +41,28 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="sum">
-<h1>sum<a class="headerlink" href="#sum" title="Link to this heading">¶</a></h1>
-<p>Computes the sum for each resampled group.</p>
-<section id="returns">
-<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h2>
+  <section id="astype">
+<h1>astype<a class="headerlink" href="#astype" title="Link to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="Sloth.frame.Frame.astype">
+<span class="sig-prename descclassname"><span class="pre">Frame.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.frame.Frame.astype" title="Link to this definition">¶</a></dt>
+<dd><p>Cast the values of the frame to the specified type.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
 <dl class="simple">
-<dt>DataFrame</dt><dd><p>DataFrame containing the sums of the resampled groups.</p>
+<dt><a href="#id1"><span class="problematic" id="id2">type_</span></a><span class="classifier">type</span></dt><dd><p>Type to cast the values to.</p>
 </dd>
 </dl>
 </section>
-<section id="raises">
-<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>ValueError</dt><dd><p>If the computation of sum fails.</p>
-</dd>
-</dl>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]]))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
+</dd></dl>
+
 </section>
 
 
@@ -70,9 +75,8 @@
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
-<li><a class="reference internal" href="#">sum</a><ul>
-<li><a class="reference internal" href="#returns">Returns</a></li>
-<li><a class="reference internal" href="#raises">Raises</a></li>
+<li><a class="reference internal" href="#">astype</a><ul>
+<li><a class="reference internal" href="#Sloth.frame.Frame.astype"><code class="docutils literal notranslate"><span class="pre">Frame.astype()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -80,18 +84,18 @@
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="mean.html"
-                          title="previous chapter">mean</a></p>
+    <p class="topless"><a href="series/to_pandas.html"
+                          title="previous chapter">to_pandas</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="../rolling/rolling.html"
-                          title="next chapter">Rolling</a></p>
+    <p class="topless"><a href="iterrows.html"
+                          title="next chapter">iterrows</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/resample/sum.rst.txt"
+      <li><a href="../_sources/frame/astype.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -116,14 +120,14 @@
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../rolling/rolling.html" title="Rolling"
+          <a href="iterrows.html" title="iterrows"
              >next</a> |</li>
         <li class="right" >
-          <a href="mean.html" title="mean"
+          <a href="series/to_pandas.html" title="to_pandas"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Sloth 1.0 documentation</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="resampler.html" >Resampler</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">sum</a></li> 
+          <li class="nav-item nav-item-1"><a href="frame.html" >Frame</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">astype</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
