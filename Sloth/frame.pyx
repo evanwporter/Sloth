@@ -74,7 +74,7 @@ cdef class Frame:
         >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6]]))
         >>> frame.values
         array([[1, 2, 3],
-               [4, 5, 6]])
+                [4, 5, 6]])
         """
         return np.asarray(self.values_)[self.mask]
     

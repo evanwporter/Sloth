@@ -6,6 +6,7 @@ Indexer
 
    integerlocation/integerlocation
    location/location
+   iat/iat
 
 .. autoclass:: Sloth.indexer.Indexer
 
