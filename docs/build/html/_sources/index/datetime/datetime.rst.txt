@@ -13,5 +13,3 @@ Methods
 
    get_item
 
-   get_item
-

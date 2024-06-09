@@ -31,4 +31,10 @@ Methods
 
    head
 
+   iloc
+
+   loc 
+   
+   iat
+
 

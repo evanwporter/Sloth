@@ -87,3 +87,35 @@ cdef class Rolling:
         >>> rolling.sum()
         """
         return DataFrame(values=bn.move_sum(self.frame.values, window=self.window, axis=0), index=self.frame.index, columns=self.frame.columns)
+
+    def min(self):
+        """
+        Calculate the rolling minimum of the DataFrame.
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame containing the rolling minimum values.
+
+        Examples
+        --------
+        >>> rolling = Rolling(df, window=3)
+        >>> rolling.min()
+        """
+        return DataFrame(values=bn.move_min(self.frame.values, window=self.window, axis=0), index=self.frame.index, columns=self.frame.columns)
+
+    def max(self):
+        """
+        Calculate the rolling maximum of the DataFrame.
+
+        Returns
+        -------
+        DataFrame
+            A DataFrame containing the rolling maximum values.
+
+        Examples
+        --------
+        >>> rolling = Rolling(df, window=3)
+        >>> rolling.max()
+        """
+        return DataFrame(values=bn.move_max(self.frame.values, window=self.window, axis=0), index=self.frame.index, columns=self.frame.columns)

@@ -14,3 +14,6 @@ Sloth/build/
 Sloth/*.ipynb
 
 !docs/build
+
+dist/
+Sloth.egg-info

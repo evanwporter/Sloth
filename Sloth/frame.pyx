@@ -230,7 +230,7 @@ cdef class Frame:
             
         Returns
         -------
-        Resampler
+        :doc:`../resample/resampler`
             Resampler object for resampling the frame.
             
         Examples
@@ -254,7 +254,7 @@ cdef class Frame:
             
         Returns
         -------
-        Rolling
+        :doc:`../rolling/rolling`
             Rolling object for performing rolling window calculations.
             
         Examples
@@ -1044,7 +1044,7 @@ cdef class DataFrame(Frame):
         ----------
         index : numpy.ndarray
             Index to fit the dataframe with.
-
+    
         Returns
         -------
         DataFrame

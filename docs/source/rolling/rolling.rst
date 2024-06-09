@@ -13,3 +13,7 @@ Methods
 
    sum
 
+   min
+
+   max
+
