@@ -27,4 +27,8 @@ Methods
 
    plot
 
+   tail
+
+   head
+
 

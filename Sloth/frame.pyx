@@ -314,7 +314,69 @@ cdef class Frame:
         <AxesSubplot:xlabel='index', ylabel='values'>
         """
         return self.to_pandas().plot(*args, **kwargs)
+    
+    def tail(self, n=5):
+        """
+        Return the last `n` rows of the frame.
 
+        This function returns the last `n` rows of the frame, based on the number
+        of rows specified by the `n` parameter. If `n` is not provided, it defaults
+        to 5. It is useful for quickly inspecting the tail of a frame for large datasets.
+
+        Parameters
+        ----------
+        n : int, optional
+            Number of rows to return. Defaults to 5.
+
+        Returns
+        -------
+        Frame
+            A new Frame instance containing the last `n` rows.
+
+        See Also
+        --------
+        Frame.head : Returns the first `n` rows.
+
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]))
+        >>> frame.tail(2)
+        array([[ 7,  8,  9],
+            [10, 11, 12]])
+        """
+        return self.iloc[-n:]
+
+
+    def head(self, n=5):
+        """
+        Return the first `n` rows of the frame.
+
+        This function returns the first `n` rows of the frame, based on the number
+        of rows specified by the `n` parameter. If `n` is not provided, it defaults
+        to 5. It is useful for quickly inspecting the head of a frame for large datasets.
+
+        Parameters
+        ----------
+        n : int, optional
+            Number of rows to return. Defaults to 5.
+
+        Returns
+        -------
+        Frame
+            A new Frame instance containing the first `n` rows.
+
+        See Also
+        --------
+        Frame.tail : Returns the last `n` rows.
+
+        Examples
+        --------
+        >>> frame = Frame(np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]]))
+        >>> frame.head(2)
+        array([[1, 2, 3],
+                [4, 5, 6]])
+        """
+        return self.iloc[:n]        
 
 cdef class Series(Frame):
     """
