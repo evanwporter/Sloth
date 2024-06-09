@@ -16,6 +16,8 @@ This program is fast like [Flash](https://www.youtube.com/watch?v=dM-li2Cn5Pw).
 | iloc[0] | 2.58 µs ± 298 ns | 168 µs ± 18.9 µs |
 | iloc[5:300000] | 3.48 µs ± 251 ns | 210 µs ± 15.1 µs |
 
+![benchmark_results](https://github.com/evanwporter/Sloth/assets/115374841/50b6fbfd-8f40-4a08-868f-6763c9ef7a0a)
+
 ## Where
 
 | **Link**  | **URL**                                    |
