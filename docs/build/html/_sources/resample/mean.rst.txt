@@ -1,4 +1,4 @@
-Resampler.mean
+mean
 ==============
 
 Computes the mean for each resampled group.

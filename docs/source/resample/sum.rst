@@ -1,4 +1,4 @@
-Resampler.sum
+sum
 =============
 
 Computes the sum for each resampled group.

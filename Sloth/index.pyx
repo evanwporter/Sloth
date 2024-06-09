@@ -12,13 +12,6 @@ from .util cimport datetime64, timedelta64, indice, in_slice, interval_time_fram
 
 import pandas as pd
 
-"""
-Public Variables
-(Displacement Compliant)
-------------------------
-  * keys
-"""
-
 cdef class _Index:
     @property
     def keys(self):
