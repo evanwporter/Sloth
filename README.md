@@ -9,7 +9,8 @@ More detailed and accurate benchmarks between Sloth and Pandas coming soon.
 
 This program is fast like [Flash](https://www.youtube.com/watch?v=dM-li2Cn5Pw).
 
-Benchmarks
+## Benchmarks
+
 | CMD | Sloth | Pandas |
 | --- | ----- | ------ |
 | iloc[0] | 2.58 µs ± 298 ns | 168 µs ± 18.9 µs |
@@ -19,7 +20,6 @@ Benchmarks
 
 | **Link**  | **URL**                                    |
 |-----------|---------------------------------------------|
-| download  | [https://pypi.python.org/pypi/Sloth (TBA)](https://pypi.python.org/pypi/Sloth) |
 | docs      | [https://evanwporter.github.io/Sloth](https://evanwporter.github.io/Sloth)   |
 | code      | [https://github.com/evanwporter/Sloth](https://github.com/evanwporter/Sloth) |
 
