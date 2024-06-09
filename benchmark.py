@@ -1,4 +1,6 @@
-# pytest benchmark.py --benchmark-save=benchmark.json
+"""
+pytest benchmark.py --benchmark-save=benchmark.json
+"""
 
 import pandas as pd
 import numpy as np
