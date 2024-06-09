@@ -9,8 +9,6 @@ from .index cimport DateTimeIndex
 from cpython cimport str
 from .frame cimport Frame, Series, DataFrame
 
-# from util cimport _normalize_slice
-
 """
 Front Displacement (FD) & Back Displacement (BD)
 
@@ -23,7 +21,7 @@ smaller, however as the index grows bigger, the number of values to hash
 increases thus it becomes slower over time.
 
 Instead of adjusting the values, the index and the columns every time 
-the table is queried, the solution is to siimply adjust two properties: 
+the table is queried, the solution is to simply adjust two properties: 
 the Front Displacement (FD) and the Back Displacement (BD). Let's say we
 have a 10x10 table, and we want to query rows 2-8. 
 Current Index Hash Map:
@@ -38,6 +36,27 @@ then a renderer table is shown with values[FD:BD] and index[FD:BD]
 cdef class Indexer:
     
     def __init__(self, Frame frame):
+        """
+        Initialize the Indexer with the given Frame.
+
+        Parameters
+        ----------
+        frame : Frame
+            The frame to index.
+
+        Attributes
+        ----------
+        frame : Frame
+            The frame to index.
+        index : Any
+            The index of the frame.
+        reference : str
+            The reference type of the frame.
+        columns : Any
+            The columns of the frame if reference is "D".
+        name : Any
+            The name of the frame if reference is not "D".
+        """
         self.frame = frame
         self.index = frame.index
         
@@ -50,7 +69,21 @@ cdef class Indexer:
 
     cdef slice combine_slices(self, slice mask, slice overlay, int length_mask):
         """
-        This function is for handling slices.
+        Combine two slices into a single slice.
+
+        Parameters
+        ----------
+        mask : slice
+            The mask slice.
+        overlay : slice
+            The overlay slice.
+        length_mask : int
+            The length of the mask.
+
+        Returns
+        -------
+        slice
+            The combined slice.
         """
         # Normalize mask and overlay
         cdef int mask_start = 0 if mask.start is None else mask.start
@@ -77,7 +110,19 @@ cdef class Indexer:
 
     def calculate_index(self, mask, overlay):
         """
-        This function is for handling single values ie: strings or ints.
+        Calculate the final index for a single value.
+
+        Parameters
+        ----------
+        mask : slice
+            The mask slice.
+        overlay : int
+            The overlay value.
+
+        Returns
+        -------
+        int
+            The calculated index.
         """
         # Normalize the slice to ensure it has start, stop, and step
         start = mask.start if mask.start is not None else 0
@@ -92,9 +137,25 @@ cdef class IntegerLocation(Indexer):
     
     def __getitem__(self, arg):
         """
-        There are two (maybe 3) possible values of arg:
-         (1) single integer
-         (2) slice
+        Get item(s) from the frame using integer location.
+
+        Parameters
+        ----------
+        arg : int or slice
+            The integer or slice to index.
+
+        Returns
+        -------
+        Series or DataFrame
+            The indexed data.
+
+        Examples
+        --------
+        >>> iloc[5]
+        Series(...)
+
+        >>> iloc[2:8]
+        DataFrame(...)
         """
         cdef int displacement
         cdef int start
@@ -110,9 +171,27 @@ cdef class IntegerLocation(Indexer):
 cdef class Location(Indexer):
 
     def __getitem__(self, arg):
-        # if isinstance(arg, np.ndarray):
-        #     return self._handle_array(arg)
-        
+        """
+        Get item(s) from the frame using label-based location.
+
+        Parameters
+        ----------
+        arg : int, slice, or str
+            The label, slice, or array to index.
+
+        Returns
+        -------
+        Series or DataFrame
+            The indexed data.
+
+        Examples
+        --------
+        >>> loc['row_label']
+        Series(...)
+
+        >>> loc['start_label':'end_label']
+        DataFrame(...)
+        """
         if isinstance(arg, slice):
             arg = slice(
                 self.index.get_item(arg.start), 
@@ -125,42 +204,32 @@ cdef class Location(Indexer):
             arg = self.calculate_index(self.frame.mask, self.index.get_item(arg))
             return Series(self.frame.values_[arg], index=self.frame.columns.keys_, name=self.index.keys_[arg])         
         
-        # else:
-        #     return Series(
-        #         values=self.frame.values_[self.index.get_item(arg) - self.index.FD], 
-        #         index=self.columns, 
-        #         name=arg
-        #     )
-    
-    # cdef inline Frame _handle_slice(self, slice arg):
-    #     A = arg.start
-    #     B = arg.stop
-
-    #     print(A, B)
-    #     FD = self.index.get_item(A)
-    #     BD = self.index.get_item(B) + 1
-
-    #     x = FD - self.index.FD
-    #     y = BD - self.index.FD
-
-    #     if arg.start is not None:
-    #         start = self.index.get_item(arg.start) - self.index.FD
-    #     if arg.stop is not None:
-    #         stop = self.index.get_item(arg.stop) - self.index.FD
-        
-    #     return self.frame._fast_init("I", displacement=(start, stop), coordinates=(x, y))
-
-    # cdef inline Frame _handle_array(self, arg):
-    #     cdef str i
-    #     cdef np.int64_t[:] args = np.zeros_like(arg, dtype=np.int64)
-    #     for i in arg:
-    #         args[i] = self.index.get_item(i)
-    #     return DataFrame(self.values[args], columns=self.columns, index=arg)
-
 cdef class iAT(Indexer):
     
     def __getitem__(self, arg):
-   
+        """
+        Get item from the frame using integer-based indexing.
+
+        Parameters
+        ----------
+        arg : tuple
+            A tuple of two integers representing row and column indices.
+
+        Returns
+        -------
+        Any
+            The indexed value.
+
+        Raises
+        ------
+        ValueError
+            If the length of the argument tuple is not 2.
+
+        Examples
+        --------
+        >>> iat[3, 5]
+        42
+        """
         if len(arg) != 2:
             raise ValueError("Must pass two values.")
 
