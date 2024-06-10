@@ -32,6 +32,7 @@ cdef class Frame:
         if isinstance(index, _Index):
             # Fast track for creating and index. Allows dataframe to skip over the lengthy
             # process of creating a new index
+            # TODO: Could be made faster by using pointers
             self.index = index
         elif index is None:
             self.index = RangeIndex(start=0, stop=values.shape[0], step=1)
