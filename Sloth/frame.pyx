@@ -288,7 +288,7 @@ cdef class Frame:
         frame = self.__new__(self.__class__)
         
         frame.mask = mask
-        frame.values_ = self.values_
+        frame.values_ = self.values_ # TODO: look into pointers
 
         frame.index = self.index._fast_init(mask)
 
