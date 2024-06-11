@@ -22,3 +22,5 @@ Sloth.egg-info
 
 .benchmarks/
 benchmark_results.*
+
+!tests/test.ipynb
