@@ -8,11 +8,12 @@ def main():
     df = frame.DataFrame(data)
     print(df.values)
     print(df.head(2))
+    print(df.iloc[10:19:2])
 
 if __name__ == "__main__":
     cProfile.run('main()', 'profile_output')
     
     p = pstats.Stats('profile_output')
-    p.sort_stats('cumulative').print_stats(10)
+    p.sort_stats('cumulative').print_stats()
 
     # main()
