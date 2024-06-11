@@ -10,7 +10,7 @@ setup(
     ],
     ext_modules=cythonize(
         ["Sloth/*.pyx"],
-        compiler_directives={'language_level': "3"}
+        compiler_directives={'language_level': "3", "profile": True}
     ),
     include_dirs=[np.get_include()],
 )
