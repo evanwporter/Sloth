@@ -1,7 +1,7 @@
-Start off by creating by compiling the files using the code:
+Start by downloading the source files. Then run the following command:
 
-`python setup.py build_ext --inplace`
+`make package`
 
-Once that's done, import the files using `from frame import DataFrame`. I'm working on creating a package.
+Once run its possible to import the Sloth package from anywhere using `import Sloth`.
 
 Then create a pandas dataframe and initialize the Sloth DataFrame using `DataFrame.from_pandas()`.
