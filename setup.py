@@ -1,4 +1,6 @@
-from setuptools import setup, find_packages, Extension
+from setuptools import setup, Extension
+from Cython.Build import cythonize
+import numpy as np
 import os
 
 def get_extensions():
@@ -10,7 +12,6 @@ def get_extensions():
         Extension("Sloth.util", ["Sloth/util.c"]),
     ]
 
-# https://github.com/FedericoStra/cython-package-example/blob/master/setup.py
 with open("requirements.txt") as fp:
     install_requires = fp.read().strip().split("\n")
 
@@ -19,7 +20,7 @@ with open("requirements-dev.txt") as fp:
 
 setup(
     name="Sloth",
-    version="1.0.0-beta.1",
+    version="1.0.1b1",
     description="Sloth module",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
@@ -27,7 +28,11 @@ setup(
     author_email="evanwporter@gmail.com",
     url="https://github.com/evanwporter/Sloth",
     packages=['Sloth'],
-    ext_modules=get_extensions(),
+    ext_modules=get_extensions() + cythonize(
+        ["Sloth/*.pyx"],
+        compiler_directives={'language_level': "3", "profile": True}
+    ),
+    include_dirs=[np.get_include()],
     include_package_data=True,
     install_requires=install_requires,
     extras_require={
@@ -39,12 +44,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.12',
     zip_safe=False,
-
 )
-
-"""
-python setup.py sdist bdist_wheel
-pip install .
-"""
