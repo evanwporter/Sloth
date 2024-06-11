@@ -1,6 +1,8 @@
 @echo off
 setlocal
 
+REM Modular bat file for easy addition of new commands
+
 REM Check command-line arguments
 echo Command-line argument: %1
 
@@ -15,7 +17,6 @@ echo No valid argument provided.
 echo Usage: make.bat [clean|package|compile|html|profile [profile_file]]
 goto end
 
-REM Define the clean function
 :clean
 echo Deleting all .c and .pyd files from the Sloth directory and its subdirectories...
 del /s /q "Sloth\*.c"
@@ -37,26 +38,22 @@ if exist "test\profile" (
 echo Cleanup completed.
 goto end
 
-REM Define the package function
 :package
 echo Packaging the project...
 python setup.py sdist bdist_wheel
 pip install .
 goto end
 
-REM Define the compile function
 :compile
 echo Compiling Cython files...
 python setup.py build_ext --inplace
 goto end
 
-REM Define the html function
 :html
 echo Building HTML documentation...
 sphinx-build -M html ./docs/source ./docs/build/ -E
 goto end
 
-REM Define the profile function
 :profile
 REM Create the test\profile directory if it doesn't exist
 if not exist "tests\profile" (
@@ -75,7 +72,6 @@ echo Profiling the project and saving to %PROFILE_PATH%...
 REM Ensure the profile_example.py script is configured correctly to profile your code.
 python -m cProfile -o %PROFILE_PATH% "tests\profiler.py"
 
-REM Optionally convert the profiling data to a call graph using gprof2dot
 if exist %PROFILE_PATH% (
     gprof2dot -f pstats %PROFILE_PATH% | dot -Tpng -o %PROFILE_PATH%.png
     echo Call graph generated as %PROFILE_PATH%.png

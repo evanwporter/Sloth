@@ -20,7 +20,7 @@ with open("requirements-dev.txt") as fp:
 
 setup(
     name="Sloth",
-    version="1.0.0-beta.1",
+    version="1.0.1b1",
     description="Sloth module",
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',

@@ -24,3 +24,5 @@ Sloth.egg-info
 benchmark_results.*
 
 !tests/test.ipynb
+tests/profile/
+

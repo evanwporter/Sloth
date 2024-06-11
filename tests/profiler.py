@@ -11,9 +11,9 @@ def main():
     print(df.iloc[10:19:2])
 
 if __name__ == "__main__":
-    cProfile.run('main()', 'profile_output')
+    cProfile.run('main()', './tests/profile/profile_output')
     
-    p = pstats.Stats('profile_output')
+    p = pstats.Stats('./tests/profile/profile_output')
     p.sort_stats('cumulative').print_stats()
 
     # main()
