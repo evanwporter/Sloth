@@ -763,7 +763,7 @@ cdef class DataFrame(Frame):
         if isinstance(columns, ObjectIndex):
             self.columns = columns
         elif columns is None:
-            self.columns = RangeIndex(start=0, stop=values.shape[1], step=1)
+            self.columns = ObjectIndex(np.arange(0, values.shape[1], 1))
         else:
             self.columns = ObjectIndex(columns)
                 
@@ -776,7 +776,7 @@ cdef class DataFrame(Frame):
         if np.ndim(values) != 2:
             raise ValueError("Unexpected number of dimensions for values. Expected 2, got {}.".format(np.ndim(values)))
 
-        if values.shape[1] != columns.size:
+        if values.shape[1] != self.columns.size:
             raise ValueError("Mismatch between Columns length ({}) and Values Width ({})".format(columns.size, values.shape[1]))
                 
 #         self.loc = Location(self.values, self.index, self.columns)
