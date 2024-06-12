@@ -1,52 +1,42 @@
 #include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 #include "dataframe.h"
-#include "index.h"
-#include "Slice.h"
 
 namespace py = pybind11;
 
-py::array_t<double> dataframe_to_numpy(const DataFrame& df) {
-    auto values = df.getValues();
-    size_t rows = df.rows();
-    size_t cols = df.cols();
-    py::array_t<double> array({rows, cols});
-    auto buf = array.request();
-    double* ptr = static_cast<double*>(buf.ptr);
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < cols; ++j) {
-            ptr[i * cols + j] = values[i][j];
-        }
-    }
-    return array;
-}
+PYBIND11_MODULE(dataframe, m) {
+    // Mask class
+    py::class_<Mask>(m, "Mask")
+        .def(py::init<int, int, int>(), py::arg("start") = 0, py::arg("stop") = 0, py::arg("step") = 1)
+        .def_readwrite("start", &Mask::start)
+        .def_readwrite("stop", &Mask::stop)
+        .def_readwrite("step", &Mask::step);
 
-PYBIND11_MODULE(pydataframe, m) {
-    py::class_<DataFrame>(m, "DataFrame")
-        .def(py::init<const std::vector<std::vector<double>>&>())
-        .def("get_values", &DataFrame::getValues)
-        .def("rows", &DataFrame::rows)
-        .def("cols", &DataFrame::cols)
-        .def("to_numpy", &dataframe_to_numpy)
-        .def("sum", &DataFrame::sum, py::arg("axis") = 0); // Bind the sum method
-
-    py::class_<slice>(m, "slice")
-        .def(py::init<int, int, int>(), py::arg("start"), py::arg("stop"), py::arg("step"))
-        .def_property("start", &slice::get_start, &slice::set_start)
-        .def_property("stop", &slice::get_stop, &slice::set_stop)
-        .def_property("step", &slice::get_step, &slice::set_step);
-    
+    // ObjectIndex class
     py::class_<ObjectIndex>(m, "ObjectIndex")
-        .def(py::init<const std::vector<std::string>&>())
+        .def(py::init<const std::vector<std::string>&, DataFrame*>(), py::arg("keys"), py::arg("df") = nullptr)
+        .def("get_index", &ObjectIndex::get_index)
         .def("keys", &ObjectIndex::keys)
-        .def("get_item", &ObjectIndex::get_item)
-        .def("__contains__", &ObjectIndex::contains)
+        .def("index_map", &ObjectIndex::index_map)
+        .def("repr", &ObjectIndex::repr)
         .def("__repr__", &ObjectIndex::repr);
 
-    py::class_<RangeIndex>(m, "RangeIndex")
-        .def(py::init<int, int, int>())
-        .def("keys", &RangeIndex::keys)
-        .def("get_item", &RangeIndex::get_item)
-        .def("size", &RangeIndex::size);
+    // IntegerLocation class
+    py::class_<IntegerLocation>(m, "IntegerLocation")
+        .def("__getitem__", &IntegerLocation::get);
+
+    // DataFrame class
+    py::class_<DataFrame>(m, "DataFrame")
+        .def(py::init<const std::vector<std::vector<double>>&, const std::vector<std::string>&, const std::vector<std::string>&>(),
+             py::arg("values"), py::arg("row_keys"), py::arg("column_keys"))
+        .def("values", &DataFrame::values)
+        .def("get_row", &DataFrame::get_row)
+        .def("get_column", &DataFrame::get_column)
+        .def("set_mask", &DataFrame::set_mask)
+        .def("shape", &DataFrame::shape)
+        .def("index", &DataFrame::index, py::return_value_policy::reference)
+        .def("columns", &DataFrame::columns, py::return_value_policy::reference)
+        .def("repr", &DataFrame::repr)
+        .def_readonly("iloc", &DataFrame::iloc)
+        .def("__repr__", &DataFrame::repr);
 }
