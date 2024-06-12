@@ -1,7 +1,7 @@
 import numpy as np
-from pydataframe import PyDataFrame
+from pydataframe import DataFrame
 
 data = np.array([[1, 2, 3], [4, 5, 6]], dtype=np.float64)
-df = PyDataFrame(data)
+df = DataFrame(data.tolist())
 
-print(df.get_values())
+print(df.to_numpy())

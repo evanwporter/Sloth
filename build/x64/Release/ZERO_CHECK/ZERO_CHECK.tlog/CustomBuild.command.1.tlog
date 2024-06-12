@@ -1,0 +1,10 @@
+^C:\USERS\EVANW\SLOTH-1\BUILD\CMAKEFILES\7215715E302171689B992774521C9590\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/evanw/Sloth-1 -BC:/Users/evanw/Sloth-1/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/evanw/Sloth-1/build/pydataframe.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

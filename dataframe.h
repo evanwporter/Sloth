@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 class DataFrame {
 public:
