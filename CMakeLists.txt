@@ -8,7 +8,7 @@ set(pybind11_DIR "C:\\Users\\evanw\\miniconda3\\lib\\site-packages\\pybind11\\sh
 find_package(pybind11 REQUIRED)
 
 # Use Pybind11 to create the Python module
-pybind11_add_module(pydataframe pydataframe.cpp DataFrame.cpp)
+pybind11_add_module(pydataframe pydataframe.cpp)
 
 # Specify output directory
 set_target_properties(pydataframe PROPERTIES

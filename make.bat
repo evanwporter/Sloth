@@ -7,3 +7,5 @@ cmake .. -G "Visual Studio 17 2022"
 
 REM Build the project in Release mode
 cmake --build . --config Release
+
+cd ..

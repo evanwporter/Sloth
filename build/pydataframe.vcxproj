@@ -325,7 +325,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\evanw\Sloth-1\pydataframe.cpp" />
-    <ClCompile Include="C:\Users\evanw\Sloth-1\dataframe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\evanw\Sloth-1\build\ZERO_CHECK.vcxproj">
