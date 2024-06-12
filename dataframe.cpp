@@ -1,4 +1,5 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
 #include <pybind11/stl.h>
 #include <memory>
 #include <vector>
@@ -15,9 +16,7 @@ struct slice {
     T stop;
     int step;
 
-    slice(T start_, T stop_, int step_) : start(start_), stop(stop_), step(step_) {
-        normalize();
-    }
+    slice(T start_, T stop_, int step_) : start(start_), stop(stop_), step(step_) {}
 
     void normalize(int length = 0) {
         if (start < 0) start += length;
@@ -35,6 +34,10 @@ struct slice {
             return (start - stop + (-step) - 1) / (-step);
         }
     }
+
+    T get_start() const { return start; }
+    T get_stop() const { return stop; }
+    int get_step() const { return step; }
 };
 
 slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, int length_mask) {
@@ -84,6 +87,10 @@ public:
         }
         return result;
     }
+
+    std::shared_ptr<slice<int>> get_mask() const {
+        return mask_;
+    }
 };
 
 class ColumnIndex : public ObjectIndex {
@@ -104,7 +111,7 @@ public:
           columns_(std::make_shared<ColumnIndex>(columns)),
           mask_(std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {}
 
-    std::string repr() {
+    std::string repr() const {
         std::ostringstream oss;
         oss << "Columns: " << columns_->keys().size() << ", Rows: " << values_->size() << "\nValues:\n";
         for (const auto& row : *values_) {
@@ -116,42 +123,60 @@ public:
         return oss.str();
     }
 
-    std::pair<int, int> shape() {
+    std::pair<int, int> shape() const {
         return {static_cast<int>(values_->size()), static_cast<int>((*values_)[0].size())};
     }
 
-    std::vector<double> get_col(const std::string& col) {
-        // Check if the column name exists in the column index
+    py::array_t<double> get_col(const std::string& col) const {
         if (columns_->index_.find(col) == columns_->index_.end()) {
             throw std::invalid_argument("Column name not found");
         }
-        
-        // Get the column index
+
         int col_index = columns_->index_.at(col);
+        py::array_t<double> column(mask_->length());
+        auto buf = column.request();
+        double *ptr = static_cast<double *>(buf.ptr);
         
-        // Retrieve the column values
-        std::vector<double> column;
-        for (int i = mask_->start; i < mask_->stop; i += mask_->step) {
-            column.push_back((*values_)[i][col_index]);
+        for (int i = mask_->start, idx = 0; i < mask_->stop; i += mask_->step, ++idx) {
+            ptr[idx] = (*values_)[i][col_index];
         }
-        
+
         return column;
     }
 
-    std::vector<std::vector<double>> values() {
-        std::vector<std::vector<double>> result;
-        for (int i = mask_->start; i < mask_->stop; i += mask_->step) {
-            result.push_back((*values_)[i]);
+    py::array_t<double> values() const {
+        // Calculate the number of rows based on the mask
+        int num_rows = mask_->length();
+        int num_cols = static_cast<int>(values_->at(0).size());  // Access directly through the pointer
+
+        // Create a 2D NumPy array with the appropriate shape
+        py::array_t<double> result({num_rows, num_cols});
+        auto buf = result.request();
+        double* ptr = static_cast<double*>(buf.ptr);
+
+        // Fill the NumPy array with values from the masked DataFrame
+        for (int i = 0, mask_row = mask_->start; i < num_rows; ++i, mask_row += mask_->step) {
+            std::copy(values_->at(mask_row).begin(), values_->at(mask_row).end(), ptr + i * num_cols);
         }
+
         return result;
     }
 
-    std::shared_ptr<DataFrame> fast_init(std::shared_ptr<slice<int>> mask) {
+
+    std::shared_ptr<DataFrame> fast_init(std::shared_ptr<slice<int>> mask) const {
         auto frame = std::make_shared<DataFrame>(*this);
         frame->index_ = index_->fast_init(mask);
         frame->mask_ = mask;
         return frame;
     }
+
+    std::shared_ptr<slice<int>> get_mask() const {
+        return mask_;
+    }
+
+    int mask_start() const { return mask_->get_start(); }
+    int mask_stop() const { return mask_->get_stop(); }
+    int mask_step() const { return mask_->get_step(); }
 };
 
 class IntegerLocation {
@@ -161,13 +186,13 @@ public:
     IntegerLocation(std::shared_ptr<DataFrame> frame)
         : frame_(frame) {}
 
-    std::vector<double> get(int arg) {
+    py::array_t<double> get(int arg) const {
         auto values_ = frame_->values_;
         arg = combine_slices(*frame_->mask_, slice<int>(arg, arg + 1, 1), static_cast<int>(values_->size())).start;
-        return (*values_)[arg];
+        return py::array_t<double>((*values_)[arg].size(), (*values_)[arg].data());
     }
 
-    std::shared_ptr<DataFrame> get(const slice<int>& arg) {
+    std::shared_ptr<DataFrame> get(const slice<int>& arg) const {
         auto values_ = frame_->values_;
         auto combined_slice = combine_slices(*frame_->mask_, arg, static_cast<int>(values_->size()));
         return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
@@ -181,14 +206,14 @@ public:
     Location(std::shared_ptr<DataFrame> frame)
         : frame_(frame) {}
 
-    std::vector<double> get(const std::string& arg) {
+    py::array_t<double> get(const std::string& arg) const {
         auto values_ = frame_->values_;
         auto index_ = frame_->index_;
         int row = combine_slices(*frame_->mask_, slice<int>(index_->index_.at(arg), index_->index_.at(arg) + 1, 1), static_cast<int>(values_->size())).start;
-        return (*values_)[row];
+        return py::array_t<double>((*values_)[row].size(), (*values_)[row].data());
     }
 
-    std::shared_ptr<DataFrame> get(const slice<std::string>& arg) {
+    std::shared_ptr<DataFrame> get(const slice<std::string>& arg) const {
         auto index_ = frame_->index_;
         auto start = index_->index_.at(arg.start);
         auto stop = index_->index_.at(arg.stop);
@@ -202,13 +227,20 @@ PYBIND11_MODULE(dataframe, m) {
     py::class_<slice<int>>(m, "slice")
         .def(py::init<int, int, int>())
         .def("normalize", &slice<int>::normalize)
-        .def("length", &slice<int>::length);
+        .def("length", &slice<int>::length)
+        .def_readwrite("start", &slice<int>::start)
+        .def_readwrite("stop", &slice<int>::stop)
+        .def_readwrite("step", &slice<int>::step)
+        .def("get_start", &slice<int>::get_start)
+        .def("get_stop", &slice<int>::get_stop)
+        .def("get_step", &slice<int>::get_step);
 
     py::class_<Index_, std::shared_ptr<Index_>>(m, "Index_");
 
     py::class_<ObjectIndex, Index_, std::shared_ptr<ObjectIndex>>(m, "ObjectIndex")
         .def(py::init<std::unordered_map<std::string, int>, std::vector<std::string>>())
-        .def("keys", &ObjectIndex::keys);
+        .def("keys", &ObjectIndex::keys)
+        .def("get_mask", &ObjectIndex::get_mask);
 
     py::class_<ColumnIndex, ObjectIndex, std::shared_ptr<ColumnIndex>>(m, "ColumnIndex")
         .def(py::init<std::unordered_map<std::string, int>, std::vector<std::string>>());
@@ -219,15 +251,19 @@ PYBIND11_MODULE(dataframe, m) {
         .def("shape", &DataFrame::shape)
         .def("get_col", &DataFrame::get_col)
         .def("values", &DataFrame::values)
-        .def("fast_init", &DataFrame::fast_init);
+        .def("fast_init", &DataFrame::fast_init)
+        .def("get_mask", &DataFrame::get_mask)
+        .def("mask_start", &DataFrame::mask_start)
+        .def("mask_stop", &DataFrame::mask_stop)
+        .def("mask_step", &DataFrame::mask_step);
 
     py::class_<IntegerLocation>(m, "IntegerLocation")
         .def(py::init<std::shared_ptr<DataFrame>>())
-        .def("get", (std::vector<double> (IntegerLocation::*)(int)) &IntegerLocation::get)
-        .def("get", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const slice<int>&)) &IntegerLocation::get);
+        .def("get", (py::array_t<double> (IntegerLocation::*)(int) const) &IntegerLocation::get)
+        .def("get", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const slice<int>&) const) &IntegerLocation::get);
 
     py::class_<Location>(m, "Location")
         .def(py::init<std::shared_ptr<DataFrame>>())
-        .def("get", (std::vector<double> (Location::*)(const std::string&)) &Location::get)
-        .def("get", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&)) &Location::get);
+        .def("get", (py::array_t<double> (Location::*)(const std::string&) const) &Location::get)
+        .def("get", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get);
 }
