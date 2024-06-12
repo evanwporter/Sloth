@@ -1,14 +1,4 @@
 @echo off
-<<<<<<< HEAD
-REM Navigate to the build directory
-cd /d C:\Users\evanw\Sloth-1\build
-
-REM Run CMake to configure the project
-cmake .. -G "Visual Studio 17 2022"
-
-REM Build the project in Release mode
-cmake --build . --config Release
-=======
 setlocal
 
 REM Modular bat file for easy addition of new commands
@@ -92,4 +82,3 @@ goto end
 
 :end
 endlocal
->>>>>>> parent of 9c42ea3 (Created experimental)
