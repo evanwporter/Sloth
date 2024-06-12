@@ -1,57 +1,50 @@
-// dataframe.cpp
-#include <vector>
-#include <stdexcept>
+# distutils: language = c++
+# distutils: sources = DataFrame.cpp
 
-class DataFrame {
-public:
-    DataFrame(const std::vector<std::vector<double>>& values) : values_(values) {}
+from libcpp.vector cimport vector
+from libc.stdlib cimport malloc, free
 
-    std::vector<std::vector<double>> values() const {
-        return values_;
-    }
+cdef extern from "DataFrame.h":
+    cdef cppclass DataFrame:
+        DataFrame(const vector[vector[double]]& values)
+        vector[vector[double]] getValues() const
+        size_t rows() const
+        size_t cols() const
 
-    size_t num_rows() const {
-        return values_.size();
-    }
+cimport numpy as np
+import numpy as np
 
-    size_t num_cols() const {
-        return values_.empty() ? 0 : values_[0].size();
-    }
+cdef class PyDataFrame:
+    cdef DataFrame* c_df
 
-    std::vector<double> get_row(size_t index) const {
-        if (index >= values_.size()) {
-            throw std::out_of_range("Index out of range");
-        }
-        return values_[index];
-    }
+    def __cinit__(self, np.ndarray[np.double_t, ndim=2] values):
+        cdef vector[vector[double]] cpp_values = self._convert_to_cpp(values)
+        self.c_df = new DataFrame(cpp_values)
 
-    std::vector<double> get_col(size_t index) const {
-        if (values_.empty() || index >= values_[0].size()) {
-            throw std::out_of_range("Index out of range");
-        }
-        std::vector<double> column(values_.size());
-        for (size_t i = 0; i < values_.size(); ++i) {
-            column[i] = values_[i][index];
-        }
-        return column;
-    }
+    def __dealloc__(self):
+        del self.c_df
 
-    void set_row(size_t index, const std::vector<double>& row) {
-        if (index >= values_.size() || row.size() != num_cols()) {
-            throw std::invalid_argument("Invalid row size");
-        }
-        values_[index] = row;
-    }
+    cdef vector[vector[double]] _convert_to_cpp(self, np.ndarray[np.double_t, ndim=2] values):
+        cdef vector[vector[double]] cpp_values
+        cdef vector[double] row
 
-    void set_col(size_t index, const std::vector<double>& column) {
-        if (column.size() != num_rows()) {
-            throw std::invalid_argument("Invalid column size");
-        }
-        for (size_t i = 0; i < values_.size(); ++i) {
-            values_[i][index] = column[i];
-        }
-    }
+        for i in range(values.shape[0]):
+            for j in range(values.shape[1]):
+                row.push_back(values[i, j])
+            cpp_values.push_back(row)
+        return cpp_values
 
-private:
-    std::vector<std::vector<double>> values_;
-};
+    def get_values(self):
+        """
+        Convert the C++ DataFrame values to a NumPy array.
+        """
+        cdef vector[vector[double]] cpp_values = self.c_df.getValues()
+        cdef int rows = self.c_df.rows()
+        cdef int cols = self.c_df.cols()
+        cdef np.ndarray[np.double_t, ndim=2] np_values = np.empty((rows, cols), dtype=np.double)
+
+        for i in range(rows):
+            for j in range(cols):
+                np_values[i, j] = cpp_values[i][j]
+
+        return np_values
