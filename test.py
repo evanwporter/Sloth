@@ -94,4 +94,6 @@ def test_dataframe():
     print("Accessing 'row1' in List DataFrame:")
     print(df_list.loc["row1"])
 
+    print(df_np.sum(1))
+
 test_dataframe()

@@ -208,6 +208,30 @@ public:
                     std::make_shared<ColumnIndex>(std::move(columns)),
                     std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {}
 
+    // Sum function
+    std::vector<double> sum(int axis) const {
+        std::vector<double> result;
+        if (axis == 0) {
+            // Sum along rows
+            for (const auto& row : *values_) {
+                double rowSum = std::accumulate(row.begin(), row.end(), 0.0);
+                result.push_back(rowSum);
+            }
+        } else if (axis == 1) {
+            // Sum along columns
+            int num_cols = static_cast<int>(values_->at(0).size());
+            result.resize(num_cols, 0);
+            for (const auto& row : *values_) {
+                for (int col = 0; col < num_cols; ++col) {
+                    result[col] += row[col];
+                }
+            }
+        } else {
+            throw std::invalid_argument("Invalid axis value. Use 0 for columns and 1 for rows.");
+        }
+        return result;
+    }
+
     std::string repr() const {
         std::ostringstream oss;
         oss << "Columns: " << columns_->keys().size() << ", Rows: " << values_->size() << "\nValues:\n";
@@ -362,7 +386,8 @@ PYBIND11_MODULE(sloth, m) {
         .def("mask_stop", &DataFrame::mask_stop)
         .def("mask_step", &DataFrame::mask_step)
         .def_property_readonly("loc", [](const DataFrame& df) { return df.loc_.get(); })
-        .def_property_readonly("iloc", [](const DataFrame& df) { return df.iloc_.get(); });
+        .def_property_readonly("iloc", [](const DataFrame& df) { return df.iloc_.get(); })
+        .def("sum", &DataFrame::sum);
 
     py::class_<IntegerLocation>(m, "IntegerLocation")
         .def(py::init<DataFrame*>())
