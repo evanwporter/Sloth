@@ -18,10 +18,13 @@ This program is fast like [Flash](https://www.youtube.com/watch?v=dM-li2Cn5Pw).
 
 ![benchmark_results](https://github.com/evanwporter/Sloth/assets/115374841/50b6fbfd-8f40-4a08-868f-6763c9ef7a0a)
 
+Still not fast enough? Try [Cloth](https://github.com/evanwporter/Sloth/tree/experimental)!
+
 ## Where
 
 | **Link**  | **URL**                                    |
 |-----------|---------------------------------------------|
 | docs      | [https://evanwporter.github.io/Sloth](https://evanwporter.github.io/Sloth)   |
 | code      | [https://github.com/evanwporter/Sloth](https://github.com/evanwporter/Sloth) |
+| cloth     | [https://github.com/evanwporter/Sloth/tree/experimental](https://github.com/evanwporter/Sloth/tree/experimental) |
 
