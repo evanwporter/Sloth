@@ -324,33 +324,6 @@
         <article role="main" id="furo-main-content">
           <section id="periodindex">
 <h1>PeriodIndex<a class="headerlink" href="#periodindex" title="Link to this heading">¶</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="Sloth.index.PeriodIndex">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Sloth.index.</span></span><span class="sig-name descname"><span class="pre">PeriodIndex</span></span><a class="headerlink" href="#Sloth.index.PeriodIndex" title="Link to this definition">¶</a></dt>
-<dd><p>Index containing values of time along a regular period of time.</p>
-<section id="parameters">
-<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
-<dl class="simple">
-<dt>start: datetime-like</dt><dd><p>Starting time in a range</p>
-</dd>
-<dt>stop: datetime-like</dt><dd><p>End time in the range</p>
-</dd>
-<dt>freq: str</dt><dd><p>How often to create point. ie: ‘1h’, ‘4W’, ‘200s’</p>
-</dd>
-</dl>
-</section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span> <span class="o">=</span> <span class="n">PeriodIndex</span><span class="p">(</span><span class="s1">&#39;2022-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2022-01-10&#39;</span><span class="p">,</span> <span class="s1">&#39;1d&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">idx</span><span class="o">.</span><span class="n">keys_</span>
-<span class="go">array([&#39;2022-01-01&#39;, &#39;2022-01-02&#39;, &#39;2022-01-03&#39;, &#39;2022-01-04&#39;,</span>
-<span class="go">       &#39;2022-01-05&#39;, &#39;2022-01-06&#39;, &#39;2022-01-07&#39;, &#39;2022-01-08&#39;,</span>
-<span class="go">       &#39;2022-01-09&#39;], dtype=&#39;datetime64[D]&#39;)</span>
-</pre></div>
-</div>
-</section>
-</dd></dl>
-
 <section id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -417,7 +390,6 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">PeriodIndex</a><ul>
-<li><a class="reference internal" href="#Sloth.index.PeriodIndex"><code class="docutils literal notranslate"><span class="pre">PeriodIndex</span></code></a></li>
 <li><a class="reference internal" href="#methods">Methods</a></li>
 </ul>
 </li>

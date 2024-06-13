@@ -191,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -316,7 +316,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -326,41 +326,62 @@
 <h1>Sloth<a class="headerlink" href="#sloth" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="frame/frame.html">Frame</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="frame/dataframe/dataframe.html">DataFrame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="frame/series/series.html">Series</a></li>
-<li class="toctree-l2"><a class="reference internal" href="frame/frame.html#Sloth.frame.Frame"><code class="docutils literal notranslate"><span class="pre">Frame</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="frame/frame.html#methods">Methods</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="index/index.html">Index</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="index/object/object.html">ObjectIndex</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index/range/range.html">RangeIndex</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index/period/period.html">PeriodIndex</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index/datetime/datetime.html">DateTimeIndex</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index/index.html#Sloth.index._Index"><code class="docutils literal notranslate"><span class="pre">_Index</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="indexer/indexer.html">Indexer</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="indexer/integerlocation/integerlocation.html">IntegerLocation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="indexer/location/location.html">Location</a></li>
-<li class="toctree-l2"><a class="reference internal" href="indexer/iat/iat.html">iAT</a></li>
-<li class="toctree-l2"><a class="reference internal" href="indexer/indexer.html#Sloth.indexer.Indexer"><code class="docutils literal notranslate"><span class="pre">Indexer</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="indexer/indexer.html#methods">Methods</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="resample/resampler.html">Resampler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="resample/resampler.html#Sloth.resample.Resampler"><code class="docutils literal notranslate"><span class="pre">Resampler</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="resample/resampler.html#methods">Methods</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rolling/rolling.html">Rolling</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rolling/rolling.html#Sloth.rolling.Rolling"><code class="docutils literal notranslate"><span class="pre">Rolling</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rolling/rolling.html#methods">Methods</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="frame/frame.html">Frame</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index/index.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="indexer/indexer.html">Indexer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="resample/resampler.html">Resampler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rolling/rolling.html">Rolling</a></li>
 </ul>
 </div>
+<p>(named sloth because koala was taken)</p>
+<p>Aimed to be a faster pandas, by being a <em>thin</em> wrapper for numpy. Keep in mind that this is not a replacement for pandas as only a few features are supported. If you want more features code them up yourself.</p>
+<p>Currently only indexing and resampling is supported.</p>
+<p>More detailed and accurate benchmarks between Sloth and Pandas coming soon.</p>
+<p>This program is fast like <a class="reference external" href="https://www.youtube.com/watch?v=dM-li2Cn5Pw">Flash</a>.</p>
+<section id="benchmarks">
+<h2>Benchmarks<a class="headerlink" href="#benchmarks" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>CMD</p></th>
+<th class="head"><p>Sloth</p></th>
+<th class="head"><p>Pandas</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">iloc[0]</span></code></p></td>
+<td><p>2.58 µs ± 298 ns</p></td>
+<td><p>168 µs ± 18.9 µs</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">iloc[5:300000]</span></code></p></td>
+<td><p>3.48 µs ± 251 ns</p></td>
+<td><p>210 µs ± 15.1 µs</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<img alt="benchmark_results" src="https://github.com/evanwporter/Sloth/assets/115374841/50b6fbfd-8f40-4a08-868f-6763c9ef7a0a" />
+</section>
+<section id="where">
+<h2>Where<a class="headerlink" href="#where" title="Link to this heading">¶</a></h2>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Link</strong></p></th>
+<th class="head"><p><strong>URL</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>docs</p></td>
+<td><p><a class="reference external" href="https://evanwporter.github.io/Sloth">https://evanwporter.github.io/Sloth</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>code</p></td>
+<td><p><a class="reference external" href="https://github.com/evanwporter/Sloth">https://github.com/evanwporter/Sloth</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 </section>
 <section id="index">
 <h1>Index<a class="headerlink" href="#index" title="Link to this heading">¶</a></h1>
@@ -404,8 +425,29 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Sloth</a><ul>
+<li><a class="reference internal" href="#benchmarks">Benchmarks</a></li>
+<li><a class="reference internal" href="#where">Where</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#index">Index</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
