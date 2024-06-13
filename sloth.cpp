@@ -73,11 +73,11 @@ public:
 
 class ObjectIndex : public Index_ {
 public:
-    std::unordered_map<std::string, int> index_;
+    robin_hood::unordered_map<std::string, int> index_;
     std::vector<std::string> keys_;
     std::shared_ptr<slice<int>> mask_;
 
-    ObjectIndex(std::unordered_map<std::string, int> index, std::vector<std::string> keys)
+    ObjectIndex(robin_hood::unordered_map<std::string, int> index, std::vector<std::string> keys)
         : index_(index), keys_(keys), mask_(std::make_shared<slice<int>>(0, static_cast<int>(keys.size()), 1)) {}
 
     std::shared_ptr<ObjectIndex> fast_init(std::shared_ptr<slice<int>> mask) {
@@ -165,7 +165,7 @@ public:
             }
         }
 
-        std::unordered_map<std::string, int> index_map;
+        robin_hood::unordered_map<std::string, int> index_map;
         std::vector<std::string> index_keys;
         for (py::ssize_t i = 0; i < index.size(); ++i) {
             std::string key = py::cast<std::string>(index[i]);
@@ -173,7 +173,7 @@ public:
             index_keys.push_back(key);
         }
 
-        std::unordered_map<std::string, int> column_map;
+        robin_hood::unordered_map<std::string, int> column_map;
         std::vector<std::string> column_keys;
         for (py::ssize_t i = 0; i < columns.size(); ++i) {
             std::string key = py::cast<std::string>(columns[i]);
@@ -204,7 +204,7 @@ public:
             }
         }
 
-        std::unordered_map<std::string, int> index_map;
+        robin_hood::unordered_map<std::string, int> index_map;
         std::vector<std::string> index_keys;
 
         auto index_array = index.cast<py::list>();
@@ -216,7 +216,7 @@ public:
             index_keys.push_back(key);
         }
 
-        std::unordered_map<std::string, int> column_map;
+        robin_hood::unordered_map<std::string, int> column_map;
         std::vector<std::string> column_keys;
         for (py::ssize_t i = 0; i < columns_array.size(); ++i) {
             std::string key = py::cast<std::string>(columns_array[i]);
@@ -391,12 +391,12 @@ PYBIND11_MODULE(sloth, m) {
     py::class_<Index_, std::shared_ptr<Index_>>(m, "Index_");
 
     py::class_<ObjectIndex, Index_, std::shared_ptr<ObjectIndex>>(m, "ObjectIndex")
-        .def(py::init<std::unordered_map<std::string, int>, std::vector<std::string>>())
+        .def(py::init<robin_hood::unordered_map<std::string, int>, std::vector<std::string>>())
         .def("keys", &ObjectIndex::keys)
         .def("get_mask", &ObjectIndex::get_mask);
 
     py::class_<ColumnIndex, ObjectIndex, std::shared_ptr<ColumnIndex>>(m, "ColumnIndex")
-        .def(py::init<std::unordered_map<std::string, int>, std::vector<std::string>>());
+        .def(py::init<robin_hood::unordered_map<std::string, int>, std::vector<std::string>>());
 
     py::class_<DataFrame, std::shared_ptr<DataFrame>>(m, "DataFrame")
         .def(py::init<MatrixXdRowMajor, ObjectIndex, ColumnIndex>())

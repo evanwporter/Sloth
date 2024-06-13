@@ -19,7 +19,7 @@ ext_modules = [
         ['sloth.cpp'],
         include_dirs=[
             # Path to local Eigen directory
-            './Eigen',
+            './lib/Eigen',
             # Path to pybind11 headers
             get_pybind_include(),
             get_pybind_include(user=True)

@@ -11,7 +11,7 @@ columns_np = np.array(['col1', 'col2', 'col3'])
 # Create the DataFrame using numpy arrays
 df = DataFrame(values_np, index_np, columns_np)
 print("DataFrame with numpy arrays:")
-print(df.repr())
+print(df)
 
 # Create the DataFrame using Python lists (list of lists)
 values_list = [[1.0, 2.0, 3.0],
@@ -22,6 +22,6 @@ columns_list = ['col1', 'col2', 'col3']
 
 df_list = DataFrame(values_list, index_list, columns_list)
 print("DataFrame with Python lists:")
-print(df_list.repr())
+print(df_list)
 
 print(df.sum(1))
