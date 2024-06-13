@@ -24,4 +24,11 @@ df_list = DataFrame(values_list, index_list, columns_list)
 print("DataFrame with Python lists:")
 print(df_list)
 
+print(dir(slice(1,5)))
+print(slice(1,5).indices(1))
+d = df.iloc[1:]
+print(d.values)
+
+print(d.mask)
+
 print(df.sum(1))

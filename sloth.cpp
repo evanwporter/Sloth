@@ -1,6 +1,36 @@
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⡶⢶⣦⣤⣀⠀⠀⠀⠀⣠⣶⣾⠿⠷⣶⣦⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣯⠀⠀⢻⣯⠙⢷⣄⢠⣾⡿⠋⠁⠀⠀⠈⢻⡍⠙⢷⣦⡀⠀⠀⠀⢀⣴⣿⡿⠛⠙⢿⣷⣦⡀⣠⡾⠋⢹⣿⡿⠿⢶⣦⠀⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⡿⠁⢻⣧⠀⢸⣿⡀⠈⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⣿⣧⡀⠻⣷⡀⠀⢰⣿⠟⠁⠀⠀⠀⠀⠹⣿⠻⣿⡁⢠⡿⠏⠀⢀⣼⣿⣧⡀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡿⠁⠀⠈⣿⣇⣸⣿⠀⣸⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⣿⡌⢻⣦⣹⣇⢠⣿⡏⠀⠀⠀⠀⠀⠀⠀⢿⣆⠘⣿⣿⠃⣠⡾⠋⠁⠈⣿⣧⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⠇⠀⠀⠀⢸⣿⣿⣇⣰⣿⠿⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⢻⣶⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢸⡛⣷⢺⡇⣰⠏⠀⠀⠀⠀⠘⣿⣧⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡿⠀⠀⠀⠀⠈⠉⠙⢻⡟⠁⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⡄⠙⠿⠃⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⢸⡿⠿⣿⡿⠃⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⣿⡀⠀⠀⠀⠀⠀⠀⠀⢹⡇⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠸⣧⠀⢻⣧⠀⠀⠀⠀⠀⠀⠀⠈⣿⡆⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠃⠀⠀⠀⠀⠀⠀⠀⢸⣷⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠘⣷⠀⠀⠀⠈⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡄⠘⣿⡀⠀⠀⠀⠀⠀⠀⠀⢹⣿⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣧⠀⠀⠀⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣇⢠⣿⡇⠀⠀⠀⠀⠀⠀⠀⠸⣿⡆
+// ⠀⠀⠀⠀⠀⢀⣠⣴⣶⣾⣿⣿⡿⣿⣷⣶⣄⣀⠀⠀⠀⠘⣧⠀⠘⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠀⠀⢹⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣾⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇
+// ⠀⠀⠀⣠⣶⣿⡿⠛⠛⣽⠋⠀⠀⠀⠀⣩⡿⢿⣷⣄⠀⠀⠹⡇⠀⢻⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡆⠀⠈⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇
+// ⠀⢀⣼⡿⢋⡵⠞⠉⠉⠁⠀⠀⠀⢰⣿⣿⡆⠀⠙⣿⣧⡀⠀⢻⡄⠘⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡄⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿
+// ⢠⣿⣟⡴⠋⠀⠀⠀⠀⠀⠀⠀⣀⠈⠛⠿⠷⠶⠛⠛⢻⣿⣿⡿⠧⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣷⠀⠀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣧⠀⠀⠀⠀⠀⠀⠀⣿⣿
+// ⣸⣿⠟⠁⠀⠀⠀⠀⠀⣰⣾⣿⣿⠆⣰⣶⠀⠀⠀⠀⠀⣿⣿⣿⣦⡀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡀⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣧⠀⠀⠀⠀⠀⠀⣿⣿
+// ⣿⡏⢀⣴⣶⣿⣷⠀⠀⠙⠛⠋⣁⣴⡿⠃⠀⠀⠀⠀⢸⠇⠈⠙⢿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡀⢹⣷⠾⠟⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⢀⣿⣿
+// ⣿⣇⡏⠀⠙⠿⢿⠀⠶⠶⠶⠿⠛⠋⠀⠀⠀⠀⠀⣠⠏⠀⠀⢀⣼⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣷⣤⣷⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣇⠀⠀⠀⢸⣿⡇
+// ⢹⣿⠀⠀⠀⢀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⣀⣀⣴⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀⣶⣆⠀⢸⡇⠈⠁⠀⠀⣸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡀⠀⠀⣸⣿⡇
+// ⠘⣿⣧⠀⣠⠟⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⠛⠁⠀⠘⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣈⣿⣿⣆⣸⡇⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⢠⣿⣿⠁
+// ⠀⠘⣿⣷⣯⣀⠀⠀⠀⠀⣀⣤⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠻⠿⣿⡿⠁⠀⠀⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⠃⠀
+// ⠀⠀⠹⣿⣷⡉⠉⠛⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡟⠀⠀
+// ⠀⠀⠀⠘⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡿⠀⠀⠀
+// ⠀⠀⠀⠀⠘⢿⣿⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡿⠁⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠈⠻⣿⣿⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⡿⠁⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠈⠿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⡟⠀⠀⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣿⣿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⣿⣿⣶⣦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣶⣾⠿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⠿⣿⣿⣿⣷⣶⣤⣄⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣤⣴⣶⣿⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⡛⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⢛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
+
 #include <memory>
 #include <vector>
 #include <string>
@@ -9,6 +39,7 @@
 
 #include <Eigen/Dense>
 #include "lib/robinhood.h"
+
 
 namespace py = pybind11;
 
@@ -43,6 +74,12 @@ struct slice {
     T get_start() const { return start; }
     T get_stop() const { return stop; }
     int get_step() const { return step; }
+
+    std::string repr() const {
+        std::ostringstream oss;
+        oss << "sloth.slice(" << start << ", " << stop << ", " << step << ")";
+        return oss.str();
+    }
 };
 
 slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, Eigen::Index length_mask) {
@@ -319,9 +356,9 @@ public:
         return mask_;
     }
 
-    int mask_start() const { return mask_->get_start(); }
-    int mask_stop() const { return mask_->get_stop(); }
-    int mask_step() const { return mask_->get_step(); }
+    // int mask_start() const { return mask_->get_start(); }
+    // int mask_stop() const { return mask_->get_stop(); }
+    // int mask_step() const { return mask_->get_step(); }
 };
 
 // Define Location class
@@ -353,6 +390,22 @@ public:
         auto combined_slice = combine_slices(*frame_->mask_, new_arg, frame_->values_.rows());
         return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
     }
+
+    std::shared_ptr<DataFrame> get(const py::slice& pySlice) const {
+        // Extract attributes from py::slice
+        py::object py_start = pySlice.attr("start");
+        py::object py_stop = pySlice.attr("stop");
+        py::object py_step = pySlice.attr("step");
+
+        // Parse attributes to std::string and int
+        std::string start = py::isinstance<py::none>(py_start) ? "" : py::cast<std::string>(py_start);
+        std::string stop = py::isinstance<py::none>(py_stop) ? "" : py::cast<std::string>(py_stop);
+        int step = py::isinstance<py::none>(py_step) ? 1 : py::cast<int>(py_step);
+
+        // Create slice<std::string>
+        slice<std::string> arg(start, stop, step);
+        return get(arg);
+    }
 };
 
 // Define IntegerLocation class
@@ -374,6 +427,16 @@ public:
         auto combined_slice = combine_slices(*frame_->mask_, arg, values_.rows());
         return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
     }
+
+    std::shared_ptr<DataFrame> get(const py::slice& pySlice) const {
+        py::ssize_t start, stop, step, slicelength;
+        if (!pySlice.compute(frame_->values_.rows(), &start, &stop, &step, &slicelength)) {
+            throw py::error_already_set();
+        }
+
+        slice<int> arg(static_cast<int>(start), static_cast<int>(stop), static_cast<int>(step));
+        return get(arg);
+    }
 };
 
 PYBIND11_MODULE(sloth, m) {
@@ -381,12 +444,10 @@ PYBIND11_MODULE(sloth, m) {
         .def(py::init<int, int, int>())
         .def("normalize", &slice<int>::normalize)
         .def("length", &slice<int>::length)
-        .def_readwrite("start", &slice<int>::start)
-        .def_readwrite("stop", &slice<int>::stop)
-        .def_readwrite("step", &slice<int>::step)
-        .def("get_start", &slice<int>::get_start)
-        .def("get_stop", &slice<int>::get_stop)
-        .def("get_step", &slice<int>::get_step);
+        .def_property_readonly("start", &slice<int>::get_start)
+        .def_property_readonly("stop", &slice<int>::get_stop)
+        .def_property_readonly("step", &slice<int>::get_step)
+        .def("__repr__", &slice<int>::repr);
 
     py::class_<Index_, std::shared_ptr<Index_>>(m, "Index_");
 
@@ -402,14 +463,11 @@ PYBIND11_MODULE(sloth, m) {
         .def(py::init<MatrixXdRowMajor, ObjectIndex, ColumnIndex>())
         .def(py::init<py::list, py::list, py::list>()) // Updated to use py::list
         .def(py::init<py::array_t<double>, py::array, py::array>()) // Updated for py::array
-        .def("__repr__", &DataFrame::repr)
+        .def("repr", &DataFrame::repr)
         .def_property_readonly("shape", &DataFrame::shape)
         .def("__getitem__", &DataFrame::get_col)
         .def_property_readonly("values", &DataFrame::values)
-        .def("get_mask", &DataFrame::get_mask)
-        .def("mask_start", &DataFrame::mask_start)
-        .def("mask_stop", &DataFrame::mask_stop)
-        .def("mask_step", &DataFrame::mask_step)
+        .def_property_readonly("mask", &DataFrame::get_mask)
         .def_property_readonly("loc", [](const DataFrame& df) { return df.loc_.get(); })
         .def_property_readonly("iloc", [](const DataFrame& df) { return df.iloc_.get(); })
         .def("sum", &DataFrame::sum);
@@ -417,10 +475,12 @@ PYBIND11_MODULE(sloth, m) {
     py::class_<IntegerLocation>(m, "IntegerLocation")
         .def(py::init<DataFrame*>())
         .def("__getitem__", (py::array_t<double> (IntegerLocation::*)(int) const) &IntegerLocation::get)
-        .def("__getitem__", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const slice<int>&) const) &IntegerLocation::get);
+        .def("__getitem__", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const slice<int>&) const) &IntegerLocation::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const py::slice&) const) &IntegerLocation::get);
 
     py::class_<Location>(m, "Location")
         .def(py::init<DataFrame*>())
         .def("__getitem__", (py::array_t<double> (Location::*)(const std::string&) const) &Location::get)
-        .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get);
+        .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const py::slice&) const) &Location::get);
 }
