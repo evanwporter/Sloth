@@ -377,10 +377,10 @@ PYBIND11_MODULE(sloth, m) {
         .def(py::init<std::vector<std::vector<double>>, py::list, py::list>()) // Updated to use py::list
         .def(py::init<std::vector<std::vector<double>>, py::array, py::array>()) // Added for py::array
         .def("repr", &DataFrame::repr)
-        .def("shape", &DataFrame::shape)
+        .def_property_readonly("shape", &DataFrame::shape)
         .def("__getitem__", &DataFrame::get_col)
         .def_property_readonly("values", &DataFrame::values)
-        .def("fast_init", &DataFrame::fast_init)
+        // .def("fast_init", &DataFrame::fast_init)
         .def("get_mask", &DataFrame::get_mask)
         .def("mask_start", &DataFrame::mask_start)
         .def("mask_stop", &DataFrame::mask_stop)

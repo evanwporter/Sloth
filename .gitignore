@@ -4,3 +4,4 @@ latex/
 xml/
 
 *.pyd
+.ipynb_checkpoints/

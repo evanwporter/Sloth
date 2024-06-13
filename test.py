@@ -97,3 +97,20 @@ def test_dataframe():
     print(df_np.sum(1))
 
 test_dataframe()
+
+class DF(DataFrame):
+    def do_(self):
+        print(dir(self))
+
+values = [
+    [1.0, 2.0, 3.0],
+    [4.0, 5.0, 6.0],
+    [7.0, 8.0, 9.0]
+]
+
+index_np = np.array(["row1", "row2", "row3"])
+columns_np = np.array(["col1", "col2", "col3"])
+
+df = DF(values, index_np, columns_np)
+
+df.do_()
