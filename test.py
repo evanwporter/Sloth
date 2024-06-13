@@ -30,7 +30,9 @@ def test_dataframe():
 
     slice_ = sl.slice(0, 1, 1)
 
-    print(type(dataframe.values()))
+    # print(df.get_mask().get_step())
+
+    print(df.loc["row1"])
 
 if __name__ == "__main__":
     test_dataframe()

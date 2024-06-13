@@ -58,7 +58,8 @@ slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, int
     return slice<int>(start, stop, step);
 }
 
-class DataFrame;  // Forward declaration
+// Forward declaration for DataFrame
+class DataFrame;
 
 class Index_ {
 public:
@@ -98,18 +99,56 @@ public:
     using ObjectIndex::ObjectIndex;
 };
 
+// Define DataFrame class
 class DataFrame : public std::enable_shared_from_this<DataFrame> {
 public:
     std::shared_ptr<std::vector<std::vector<double>>> values_;
     std::shared_ptr<ObjectIndex> index_;
     std::shared_ptr<ColumnIndex> columns_;
     std::shared_ptr<slice<int>> mask_;
+    std::unique_ptr<class Location> loc_;
+    std::unique_ptr<class IntegerLocation> iloc_;
+
+    // Delete copy constructor and copy assignment operator
+    DataFrame(const DataFrame&) = delete;
+    DataFrame& operator=(const DataFrame&) = delete;
+
+    // Define move constructor
+    DataFrame(DataFrame&& other) noexcept
+        : values_(std::move(other.values_)),
+          index_(std::move(other.index_)),
+          columns_(std::move(other.columns_)),
+          mask_(std::move(other.mask_)),
+          loc_(std::move(other.loc_)),
+          iloc_(std::move(other.iloc_)) {}
+
+    // Define move assignment operator
+    DataFrame& operator=(DataFrame&& other) noexcept {
+        if (this != &other) {
+            values_ = std::move(other.values_);
+            index_ = std::move(other.index_);
+            columns_ = std::move(other.columns_);
+            mask_ = std::move(other.mask_);
+            loc_ = std::move(other.loc_);
+            iloc_ = std::move(other.iloc_);
+        }
+        return *this;
+    }
+
+    DataFrame(std::vector<std::vector<double>> values, std::shared_ptr<ObjectIndex> index, std::shared_ptr<ColumnIndex> columns, std::shared_ptr<slice<int>> mask)
+        : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
+          index_(std::move(index)),
+          columns_(std::move(columns)),
+          mask_(std::move(mask)) {
+        loc_ = std::make_unique<Location>(this);
+        iloc_ = std::make_unique<IntegerLocation>(this);
+    }
 
     DataFrame(std::vector<std::vector<double>> values, ObjectIndex index, ColumnIndex columns)
-        : values_(std::make_shared<std::vector<std::vector<double>>>(values)),
-          index_(std::make_shared<ObjectIndex>(index)),
-          columns_(std::make_shared<ColumnIndex>(columns)),
-          mask_(std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {}
+        : DataFrame(std::move(values),
+                    std::make_shared<ObjectIndex>(std::move(index)),
+                    std::make_shared<ColumnIndex>(std::move(columns)),
+                    std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {}
 
     std::string repr() const {
         std::ostringstream oss;
@@ -133,8 +172,10 @@ public:
         }
 
         int col_index = columns_->index_.at(col);
+
         py::array_t<double> column(mask_->length());
         auto buf = column.request();
+
         double *ptr = static_cast<double *>(buf.ptr);
         
         for (int i = mask_->start, idx = 0; i < mask_->stop; i += mask_->step, ++idx) {
@@ -145,7 +186,7 @@ public:
     }
 
     py::array_t<double> values() const {
-        // Calculate the number of rows based on the mask
+        // Calculate shape of values based on mask
         int num_rows = mask_->length();
         int num_cols = static_cast<int>(values_->at(0).size());  // Access directly through the pointer
 
@@ -162,12 +203,8 @@ public:
         return result;
     }
 
-
     std::shared_ptr<DataFrame> fast_init(std::shared_ptr<slice<int>> mask) const {
-        auto frame = std::make_shared<DataFrame>(*this);
-        frame->index_ = index_->fast_init(mask);
-        frame->mask_ = mask;
-        return frame;
+        return std::make_shared<DataFrame>(*values_, index_->fast_init(mask), columns_, mask);
     }
 
     std::shared_ptr<slice<int>> get_mask() const {
@@ -179,31 +216,12 @@ public:
     int mask_step() const { return mask_->get_step(); }
 };
 
-class IntegerLocation {
-public:
-    std::shared_ptr<DataFrame> frame_;
-
-    IntegerLocation(std::shared_ptr<DataFrame> frame)
-        : frame_(frame) {}
-
-    py::array_t<double> get(int arg) const {
-        auto values_ = frame_->values_;
-        arg = combine_slices(*frame_->mask_, slice<int>(arg, arg + 1, 1), static_cast<int>(values_->size())).start;
-        return py::array_t<double>((*values_)[arg].size(), (*values_)[arg].data());
-    }
-
-    std::shared_ptr<DataFrame> get(const slice<int>& arg) const {
-        auto values_ = frame_->values_;
-        auto combined_slice = combine_slices(*frame_->mask_, arg, static_cast<int>(values_->size()));
-        return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
-    }
-};
-
+// Define Location class
 class Location {
 public:
-    std::shared_ptr<DataFrame> frame_;
+    DataFrame* frame_;
 
-    Location(std::shared_ptr<DataFrame> frame)
+    Location(DataFrame* frame)
         : frame_(frame) {}
 
     py::array_t<double> get(const std::string& arg) const {
@@ -219,6 +237,27 @@ public:
         auto stop = index_->index_.at(arg.stop);
         auto new_arg = slice<int>(start, stop, arg.step);
         auto combined_slice = combine_slices(*frame_->mask_, new_arg, static_cast<int>(frame_->values_->size()));
+        return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
+    }
+};
+
+// Define IntegerLocation class
+class IntegerLocation {
+public:
+    DataFrame* frame_;
+
+    IntegerLocation(DataFrame* frame)
+        : frame_(frame) {}
+
+    py::array_t<double> get(int arg) const {
+        auto values_ = frame_->values_;
+        arg = combine_slices(*frame_->mask_, slice<int>(arg, arg + 1, 1), static_cast<int>(values_->size())).start;
+        return py::array_t<double>((*values_)[arg].size(), (*values_)[arg].data());
+    }
+
+    std::shared_ptr<DataFrame> get(const slice<int>& arg) const {
+        auto values_ = frame_->values_;
+        auto combined_slice = combine_slices(*frame_->mask_, arg, static_cast<int>(values_->size()));
         return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
     }
 };
@@ -249,21 +288,23 @@ PYBIND11_MODULE(dataframe, m) {
         .def(py::init<std::vector<std::vector<double>>, ObjectIndex, ColumnIndex>())
         .def("repr", &DataFrame::repr)
         .def("shape", &DataFrame::shape)
-        .def("get_col", &DataFrame::get_col)
-        .def("values", &DataFrame::values)
+        .def("__getitem__", &DataFrame::get_col)
+        .def_property_readonly("values", &DataFrame::values)
         .def("fast_init", &DataFrame::fast_init)
         .def("get_mask", &DataFrame::get_mask)
         .def("mask_start", &DataFrame::mask_start)
         .def("mask_stop", &DataFrame::mask_stop)
-        .def("mask_step", &DataFrame::mask_step);
+        .def("mask_step", &DataFrame::mask_step)
+        .def_property_readonly("loc", [](const DataFrame& df) { return df.loc_.get(); })
+        .def_property_readonly("iloc", [](const DataFrame& df) { return df.iloc_.get(); });
 
     py::class_<IntegerLocation>(m, "IntegerLocation")
-        .def(py::init<std::shared_ptr<DataFrame>>())
-        .def("get", (py::array_t<double> (IntegerLocation::*)(int) const) &IntegerLocation::get)
-        .def("get", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const slice<int>&) const) &IntegerLocation::get);
+        .def(py::init<DataFrame*>())
+        .def("__getitem__", (py::array_t<double> (IntegerLocation::*)(int) const) &IntegerLocation::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (IntegerLocation::*)(const slice<int>&) const) &IntegerLocation::get);
 
     py::class_<Location>(m, "Location")
-        .def(py::init<std::shared_ptr<DataFrame>>())
-        .def("get", (py::array_t<double> (Location::*)(const std::string&) const) &Location::get)
-        .def("get", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get);
+        .def(py::init<DataFrame*>())
+        .def("__getitem__", (py::array_t<double> (Location::*)(const std::string&) const) &Location::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get);
 }
