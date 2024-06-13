@@ -3,12 +3,17 @@
 #include <pybind11/stl.h>
 #include <memory>
 #include <vector>
-#include <unordered_map>
 #include <string>
 #include <sstream>
 #include <stdexcept>
 
+#include <Eigen/Dense>
+#include "lib/robinhood.h"
+
 namespace py = pybind11;
+
+// Using Eigen::RowMajor for easier conversion to NumPy
+using MatrixXdRowMajor = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
 
 template <typename T>
 struct slice {
@@ -18,7 +23,7 @@ struct slice {
 
     slice(T start_, T stop_, int step_) : start(start_), stop(stop_), step(step_) {}
 
-    void normalize(int length = 0) {
+    void normalize(Eigen::Index length = 0) {
         if (start < 0) start += length;
         if (stop < 0) stop += length;
         if (step == 0) throw std::invalid_argument("Step cannot be zero");
@@ -27,7 +32,7 @@ struct slice {
         if (stop > length) stop = length;
     }
 
-    int length() const {
+    Eigen::Index length() const {
         if (step > 0) {
             return (stop - start + step - 1) / step;
         } else {
@@ -40,12 +45,12 @@ struct slice {
     int get_step() const { return step; }
 };
 
-slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, int length_mask) {
+slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, Eigen::Index length_mask) {
     int mask_start = mask.start;
     int mask_stop = mask.stop;
     int mask_step = mask.step;
 
-    int length_overlay = (mask_stop - mask_start + (mask_step - 1)) / mask_step;
+    Eigen::Index length_overlay = (mask_stop - mask_start + (mask_step - 1)) / mask_step;
 
     int overlay_start = overlay.start;
     int overlay_stop = overlay.stop;
@@ -102,7 +107,7 @@ public:
 // Define DataFrame class
 class DataFrame : public std::enable_shared_from_this<DataFrame> {
 public:
-    std::shared_ptr<std::vector<std::vector<double>>> values_;
+    MatrixXdRowMajor values_;
     std::shared_ptr<ObjectIndex> index_;
     std::shared_ptr<ColumnIndex> columns_;
     std::shared_ptr<slice<int>> mask_;
@@ -136,8 +141,8 @@ public:
     }
 
     // Constructor for C++ types
-    DataFrame(std::vector<std::vector<double>> values, std::shared_ptr<ObjectIndex> index, std::shared_ptr<ColumnIndex> columns, std::shared_ptr<slice<int>> mask)
-        : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
+    DataFrame(MatrixXdRowMajor values, std::shared_ptr<ObjectIndex> index, std::shared_ptr<ColumnIndex> columns, std::shared_ptr<slice<int>> mask)
+        : values_(std::move(values)),
           index_(std::move(index)),
           columns_(std::move(columns)),
           mask_(std::move(mask)) {
@@ -145,10 +150,21 @@ public:
         iloc_ = std::make_unique<IntegerLocation>(this);
     }
 
-    // Constructor for Python Lists
-    DataFrame(std::vector<std::vector<double>> values, py::list index, py::list columns)
-        : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
-          mask_(std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {
+    // Constructor for Python Lists (list[list[float]])
+    DataFrame(py::list values, py::list index, py::list columns)
+        : mask_(std::make_shared<slice<int>>(0, static_cast<Eigen::Index>(values.size()), 1)) {
+        // Convert list of list to Eigen::MatrixXd
+        Eigen::Index rows = static_cast<Eigen::Index>(values.size());
+        Eigen::Index cols = static_cast<Eigen::Index>(py::len(values[0]));
+        values_ = MatrixXdRowMajor(rows, cols);
+
+        for (Eigen::Index i = 0; i < rows; ++i) {
+            auto row = py::cast<py::list>(values[i]);
+            for (Eigen::Index j = 0; j < cols; ++j) {
+                values_(i, j) = py::cast<double>(row[j]);
+            }
+        }
+
         std::unordered_map<std::string, int> index_map;
         std::vector<std::string> index_keys;
         for (py::ssize_t i = 0; i < index.size(); ++i) {
@@ -172,9 +188,22 @@ public:
     }
 
     // Constructor for Numpy Array
-    DataFrame(std::vector<std::vector<double>> values, py::array index, py::array columns)
-        : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
-          mask_(std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {
+    DataFrame(py::array_t<double> values, py::array index, py::array columns)
+        : mask_(std::make_shared<slice<int>>(0, static_cast<Eigen::Index>(values.shape(0)), 1)) {
+        auto buf = values.unchecked<2>(); // Use py::array_t::unchecked<2> for direct access
+
+        Eigen::Index rows = static_cast<Eigen::Index>(buf.shape(0));
+        Eigen::Index cols = static_cast<Eigen::Index>(buf.shape(1));
+
+        values_ = MatrixXdRowMajor(rows, cols);
+
+        // Map the numpy array to the Eigen matrix
+        for (Eigen::Index i = 0; i < rows; ++i) {
+            for (Eigen::Index j = 0; j < cols; ++j) {
+                values_(i, j) = buf(i, j);
+            }
+        }
+
         std::unordered_map<std::string, int> index_map;
         std::vector<std::string> index_keys;
 
@@ -202,50 +231,46 @@ public:
     }
 
     // Constructor for Index Objects
-    DataFrame(std::vector<std::vector<double>> values, ObjectIndex index, ColumnIndex columns)
+    DataFrame(MatrixXdRowMajor values, ObjectIndex index, ColumnIndex columns)
         : DataFrame(std::move(values),
                     std::make_shared<ObjectIndex>(std::move(index)),
                     std::make_shared<ColumnIndex>(std::move(columns)),
-                    std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {}
+                    std::make_shared<slice<int>>(0, values_.rows(), 1)) {
+        loc_ = std::make_unique<Location>(this);
+        iloc_ = std::make_unique<IntegerLocation>(this);
+    }
 
-    // Sum function
+    // Sum function using Eigen's colwise and rowwise sum
     std::vector<double> sum(int axis) const {
         std::vector<double> result;
         if (axis == 0) {
             // Sum along rows
-            for (const auto& row : *values_) {
-                double rowSum = std::accumulate(row.begin(), row.end(), 0.0);
-                result.push_back(rowSum);
-            }
+            Eigen::VectorXd rowSum = values_.rowwise().sum();
+            result.assign(rowSum.data(), rowSum.data() + rowSum.size());
         } else if (axis == 1) {
             // Sum along columns
-            int num_cols = static_cast<int>(values_->at(0).size());
-            result.resize(num_cols, 0);
-            for (const auto& row : *values_) {
-                for (int col = 0; col < num_cols; ++col) {
-                    result[col] += row[col];
-                }
-            }
+            Eigen::VectorXd colSum = values_.colwise().sum();
+            result.assign(colSum.data(), colSum.data() + colSum.size());
         } else {
-            throw std::invalid_argument("Invalid axis value. Use 0 for columns and 1 for rows.");
+            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
         }
         return result;
     }
 
     std::string repr() const {
         std::ostringstream oss;
-        oss << "Columns: " << columns_->keys().size() << ", Rows: " << values_->size() << "\nValues:\n";
-        for (const auto& row : *values_) {
-            for (const auto& val : row) {
-                oss << val << " ";
+        oss << "Columns: " << columns_->keys().size() << ", Rows: " << values_.rows() << "\nValues:\n";
+        for (Eigen::Index i = 0; i < values_.rows(); ++i) {
+            for (Eigen::Index j = 0; j < values_.cols(); ++j) {
+                oss << values_(i, j) << " ";
             }
             oss << "\n";
         }
         return oss.str();
     }
 
-    std::pair<int, int> shape() const {
-        return {static_cast<int>(values_->size()), static_cast<int>((*values_)[0].size())};
+    std::pair<Eigen::Index, Eigen::Index> shape() const {
+        return {values_.rows(), values_.cols()};
     }
 
     py::array_t<double> get_col(const std::string& col) const {
@@ -260,8 +285,8 @@ public:
 
         double *ptr = static_cast<double *>(buf.ptr);
         
-        for (int i = mask_->start, idx = 0; i < mask_->stop; i += mask_->step, ++idx) {
-            ptr[idx] = (*values_)[i][col_index];
+        for (Eigen::Index i = mask_->start, idx = 0; i < mask_->stop; i += mask_->step, ++idx) {
+            ptr[idx] = values_(i, col_index);
         }
 
         return column;
@@ -269,8 +294,8 @@ public:
 
     py::array_t<double> values() const {
         // Calculate shape of values based on mask
-        int num_rows = mask_->length();
-        int num_cols = static_cast<int>(values_->at(0).size());  // Access directly through the pointer
+        Eigen::Index num_rows = mask_->length();
+        Eigen::Index num_cols = values_.cols();  
 
         // Create a 2D NumPy array with the appropriate shape
         py::array_t<double> result({num_rows, num_cols});
@@ -278,15 +303,16 @@ public:
         double* ptr = static_cast<double*>(buf.ptr);
 
         // Fill the NumPy array with values from the masked DataFrame
-        for (int i = 0, mask_row = mask_->start; i < num_rows; ++i, mask_row += mask_->step) {
-            std::copy(values_->at(mask_row).begin(), values_->at(mask_row).end(), ptr + i * num_cols);
+        for (Eigen::Index i = 0, mask_row = mask_->start; i < num_rows; ++i, mask_row += mask_->step) {
+            Eigen::VectorXd row = values_.row(mask_row);
+            std::copy(row.data(), row.data() + num_cols, ptr + i * num_cols);
         }
 
         return result;
     }
 
     std::shared_ptr<DataFrame> fast_init(std::shared_ptr<slice<int>> mask) const {
-        return std::make_shared<DataFrame>(*values_, index_->fast_init(mask), columns_, mask);
+        return std::make_shared<DataFrame>(values_, index_->fast_init(mask), columns_, mask);
     }
 
     std::shared_ptr<slice<int>> get_mask() const {
@@ -307,7 +333,7 @@ public:
         : frame_(frame) {}
 
     py::array_t<double> get(const std::string& arg) const {
-        auto values_ = frame_->values_;
+        auto& values_ = frame_->values_;
         auto index_ = frame_->index_;
 
         // Check if the key exists in the index
@@ -315,8 +341,8 @@ public:
             throw std::out_of_range("Key '" + arg + "' not found in the DataFrame index.");
         }
 
-        int row = combine_slices(*frame_->mask_, slice<int>(index_->index_.at(arg), index_->index_.at(arg) + 1, 1), static_cast<int>(values_->size())).start;
-        return py::array_t<double>((*values_)[row].size(), (*values_)[row].data());
+        Eigen::Index row = combine_slices(*frame_->mask_, slice<int>(index_->index_.at(arg), index_->index_.at(arg) + 1, 1), values_.rows()).start;
+        return py::array_t<double>(values_.cols(), values_.row(row).data());
     }
 
     std::shared_ptr<DataFrame> get(const slice<std::string>& arg) const {
@@ -324,7 +350,7 @@ public:
         auto start = index_->index_.at(arg.start);
         auto stop = index_->index_.at(arg.stop);
         auto new_arg = slice<int>(start, stop, arg.step);
-        auto combined_slice = combine_slices(*frame_->mask_, new_arg, static_cast<int>(frame_->values_->size()));
+        auto combined_slice = combine_slices(*frame_->mask_, new_arg, frame_->values_.rows());
         return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
     }
 };
@@ -338,14 +364,14 @@ public:
         : frame_(frame) {}
 
     py::array_t<double> get(int arg) const {
-        auto values_ = frame_->values_;
-        arg = combine_slices(*frame_->mask_, slice<int>(arg, arg + 1, 1), static_cast<int>(values_->size())).start;
-        return py::array_t<double>((*values_)[arg].size(), (*values_)[arg].data());
+        auto& values_ = frame_->values_;
+        arg = combine_slices(*frame_->mask_, slice<int>(arg, arg + 1, 1), values_.rows()).start;
+        return py::array_t<double>(values_.cols(), values_.row(arg).data());
     }
 
     std::shared_ptr<DataFrame> get(const slice<int>& arg) const {
-        auto values_ = frame_->values_;
-        auto combined_slice = combine_slices(*frame_->mask_, arg, static_cast<int>(values_->size()));
+        auto& values_ = frame_->values_;
+        auto combined_slice = combine_slices(*frame_->mask_, arg, values_.rows());
         return frame_->fast_init(std::make_shared<slice<int>>(combined_slice));
     }
 };
@@ -373,14 +399,13 @@ PYBIND11_MODULE(sloth, m) {
         .def(py::init<std::unordered_map<std::string, int>, std::vector<std::string>>());
 
     py::class_<DataFrame, std::shared_ptr<DataFrame>>(m, "DataFrame")
-        .def(py::init<std::vector<std::vector<double>>, ObjectIndex, ColumnIndex>())
-        .def(py::init<std::vector<std::vector<double>>, py::list, py::list>()) // Updated to use py::list
-        .def(py::init<std::vector<std::vector<double>>, py::array, py::array>()) // Added for py::array
-        .def("repr", &DataFrame::repr)
+        .def(py::init<MatrixXdRowMajor, ObjectIndex, ColumnIndex>())
+        .def(py::init<py::list, py::list, py::list>()) // Updated to use py::list
+        .def(py::init<py::array_t<double>, py::array, py::array>()) // Updated for py::array
+        .def("__repr__", &DataFrame::repr)
         .def_property_readonly("shape", &DataFrame::shape)
         .def("__getitem__", &DataFrame::get_col)
         .def_property_readonly("values", &DataFrame::values)
-        // .def("fast_init", &DataFrame::fast_init)
         .def("get_mask", &DataFrame::get_mask)
         .def("mask_start", &DataFrame::mask_start)
         .def("mask_stop", &DataFrame::mask_stop)
