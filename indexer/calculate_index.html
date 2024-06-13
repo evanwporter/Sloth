@@ -191,7 +191,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -316,7 +316,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -324,6 +324,28 @@
         <article role="main" id="furo-main-content">
           <section id="calculate-index">
 <h1>calculate_index<a class="headerlink" href="#calculate-index" title="Link to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="Sloth.indexer.Indexer.calculate_index">
+<span class="sig-prename descclassname"><span class="pre">Indexer.</span></span><span class="sig-name descname"><span class="pre">calculate_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Sloth.indexer.Indexer.calculate_index" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the final index for a single value.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>mask<span class="classifier">slice</span></dt><dd><p>The mask slice.</p>
+</dd>
+<dt>overlay<span class="classifier">int</span></dt><dd><p>The overlay value.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>int</dt><dd><p>The calculated index.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </section>
 
         </article>
@@ -369,8 +391,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">calculate_index</a><ul>
+<li><a class="reference internal" href="#Sloth.indexer.Indexer.calculate_index"><code class="docutils literal notranslate"><span class="pre">Indexer.calculate_index()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

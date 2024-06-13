@@ -324,6 +324,50 @@
         <article role="main" id="furo-main-content">
           <section id="resampler">
 <h1>Resampler<a class="headerlink" href="#resampler" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Sloth.resample.Resampler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Sloth.resample.</span></span><span class="sig-name descname"><span class="pre">Resampler</span></span><a class="headerlink" href="#Sloth.resample.Resampler" title="Link to this definition">¶</a></dt>
+<dd><p>A class to resample a DataFrame or Series to a different frequency.</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>frame<span class="classifier">Frame</span></dt><dd><p>The frame to be resampled.</p>
+</dd>
+<dt>freq<span class="classifier">str</span></dt><dd><p>The frequency to resample the data to (e.g., ‘5T’ for 5 minutes).</p>
+</dd>
+</dl>
+</section>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>frame<span class="classifier">Frame</span></dt><dd><p>The frame to be resampled.</p>
+</dd>
+<dt>index<span class="classifier">np.ndarray[datetime64]</span></dt><dd><p>The resampled index.</p>
+</dd>
+<dt>split_data<span class="classifier">list of np.ndarray</span></dt><dd><p>Data split according to the new frequency.</p>
+</dd>
+</dl>
+</section>
+<section id="raises">
+<h2>Raises<a class="headerlink" href="#raises" title="Link to this heading">¶</a></h2>
+<dl class="simple">
+<dt>ValueError</dt><dd><p>If the frequency string is not correctly formatted.</p>
+</dd>
+</dl>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resampler</span> <span class="o">=</span> <span class="n">Resampler</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="s1">&#39;5T&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">resampler</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mean_resampled</span> <span class="o">=</span> <span class="n">resampler</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sum_resampled</span> <span class="o">=</span> <span class="n">resampler</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
 <section id="methods">
 <h2>Methods<a class="headerlink" href="#methods" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -391,6 +435,7 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Resampler</a><ul>
+<li><a class="reference internal" href="#Sloth.resample.Resampler"><code class="docutils literal notranslate"><span class="pre">Resampler</span></code></a></li>
 <li><a class="reference internal" href="#methods">Methods</a></li>
 </ul>
 </li>
