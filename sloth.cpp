@@ -58,7 +58,7 @@ slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, int
     return slice<int>(start, stop, step);
 }
 
-// Forward declaration for DataFrame
+// Forward declarations
 class DataFrame;
 
 class Index_ {
@@ -135,6 +135,7 @@ public:
         return *this;
     }
 
+    // Constructor for C++ types
     DataFrame(std::vector<std::vector<double>> values, std::shared_ptr<ObjectIndex> index, std::shared_ptr<ColumnIndex> columns, std::shared_ptr<slice<int>> mask)
         : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
           index_(std::move(index)),
@@ -144,6 +145,63 @@ public:
         iloc_ = std::make_unique<IntegerLocation>(this);
     }
 
+    // Constructor for Python Lists
+    DataFrame(std::vector<std::vector<double>> values, py::list index, py::list columns)
+        : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
+          mask_(std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {
+        std::unordered_map<std::string, int> index_map;
+        std::vector<std::string> index_keys;
+        for (py::ssize_t i = 0; i < index.size(); ++i) {
+            std::string key = py::cast<std::string>(index[i]);
+            index_map[key] = static_cast<int>(i);
+            index_keys.push_back(key);
+        }
+
+        std::unordered_map<std::string, int> column_map;
+        std::vector<std::string> column_keys;
+        for (py::ssize_t i = 0; i < columns.size(); ++i) {
+            std::string key = py::cast<std::string>(columns[i]);
+            column_map[key] = static_cast<int>(i);
+            column_keys.push_back(key);
+        }
+
+        index_ = std::make_shared<ObjectIndex>(std::move(index_map), std::move(index_keys));
+        columns_ = std::make_shared<ColumnIndex>(std::move(column_map), std::move(column_keys));
+        loc_ = std::make_unique<Location>(this);
+        iloc_ = std::make_unique<IntegerLocation>(this);
+    }
+
+    // Constructor for Numpy Array
+    DataFrame(std::vector<std::vector<double>> values, py::array index, py::array columns)
+        : values_(std::make_shared<std::vector<std::vector<double>>>(std::move(values))),
+          mask_(std::make_shared<slice<int>>(0, static_cast<int>(values.size()), 1)) {
+        std::unordered_map<std::string, int> index_map;
+        std::vector<std::string> index_keys;
+
+        auto index_array = index.cast<py::list>();
+        auto columns_array = columns.cast<py::list>();
+
+        for (py::ssize_t i = 0; i < index_array.size(); ++i) {
+            std::string key = py::cast<std::string>(index_array[i]);
+            index_map[key] = static_cast<int>(i);
+            index_keys.push_back(key);
+        }
+
+        std::unordered_map<std::string, int> column_map;
+        std::vector<std::string> column_keys;
+        for (py::ssize_t i = 0; i < columns_array.size(); ++i) {
+            std::string key = py::cast<std::string>(columns_array[i]);
+            column_map[key] = static_cast<int>(i);
+            column_keys.push_back(key);
+        }
+
+        index_ = std::make_shared<ObjectIndex>(std::move(index_map), std::move(index_keys));
+        columns_ = std::make_shared<ColumnIndex>(std::move(column_map), std::move(column_keys));
+        loc_ = std::make_unique<Location>(this);
+        iloc_ = std::make_unique<IntegerLocation>(this);
+    }
+
+    // Constructor for Index Objects
     DataFrame(std::vector<std::vector<double>> values, ObjectIndex index, ColumnIndex columns)
         : DataFrame(std::move(values),
                     std::make_shared<ObjectIndex>(std::move(index)),
@@ -227,6 +285,12 @@ public:
     py::array_t<double> get(const std::string& arg) const {
         auto values_ = frame_->values_;
         auto index_ = frame_->index_;
+
+        // Check if the key exists in the index
+        if (index_->index_.find(arg) == index_->index_.end()) {
+            throw std::out_of_range("Key '" + arg + "' not found in the DataFrame index.");
+        }
+
         int row = combine_slices(*frame_->mask_, slice<int>(index_->index_.at(arg), index_->index_.at(arg) + 1, 1), static_cast<int>(values_->size())).start;
         return py::array_t<double>((*values_)[row].size(), (*values_)[row].data());
     }
@@ -286,6 +350,8 @@ PYBIND11_MODULE(sloth, m) {
 
     py::class_<DataFrame, std::shared_ptr<DataFrame>>(m, "DataFrame")
         .def(py::init<std::vector<std::vector<double>>, ObjectIndex, ColumnIndex>())
+        .def(py::init<std::vector<std::vector<double>>, py::list, py::list>()) // Updated to use py::list
+        .def(py::init<std::vector<std::vector<double>>, py::array, py::array>()) // Added for py::array
         .def("repr", &DataFrame::repr)
         .def("shape", &DataFrame::shape)
         .def("__getitem__", &DataFrame::get_col)
