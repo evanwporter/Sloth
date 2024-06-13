@@ -36,10 +36,11 @@
 #include <string>
 #include <sstream>
 #include <stdexcept>
+#include <numeric>
+#include <algorithm>
 
 #include <Eigen/Dense>
 #include "lib/robinhood.h"
-
 
 namespace py = pybind11;
 
@@ -294,6 +295,57 @@ public:
         return result;
     }
 
+    // Mean function using Eigen's colwise and rowwise mean
+    std::vector<double> mean(int axis) const {
+        std::vector<double> result;
+        if (axis == 0) {
+            // Mean along rows
+            Eigen::VectorXd rowMean = values_.rowwise().mean();
+            result.assign(rowMean.data(), rowMean.data() + rowMean.size());
+        } else if (axis == 1) {
+            // Mean along columns
+            Eigen::VectorXd colMean = values_.colwise().mean();
+            result.assign(colMean.data(), colMean.data() + colMean.size());
+        } else {
+            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+        }
+        return result;
+    }
+
+    // Min function using Eigen's colwise and rowwise min
+    std::vector<double> min(int axis) const {
+        std::vector<double> result;
+        if (axis == 0) {
+            // Min along rows
+            Eigen::VectorXd rowMin = values_.rowwise().minCoeff();
+            result.assign(rowMin.data(), rowMin.data() + rowMin.size());
+        } else if (axis == 1) {
+            // Min along columns
+            Eigen::VectorXd colMin = values_.colwise().minCoeff();
+            result.assign(colMin.data(), colMin.data() + colMin.size());
+        } else {
+            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+        }
+        return result;
+    }
+
+    // Max function using Eigen's colwise and rowwise max
+    std::vector<double> max(int axis) const {
+        std::vector<double> result;
+        if (axis == 0) {
+            // Max along rows
+            Eigen::VectorXd rowMax = values_.rowwise().maxCoeff();
+            result.assign(rowMax.data(), rowMax.data() + rowMax.size());
+        } else if (axis == 1) {
+            // Max along columns
+            Eigen::VectorXd colMax = values_.colwise().maxCoeff();
+            result.assign(colMax.data(), colMax.data() + colMax.size());
+        } else {
+            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+        }
+        return result;
+    }
+
     std::string repr() const {
         std::ostringstream oss;
         oss << "Columns: " << columns_->keys().size() << ", Rows: " << values_.rows() << "\nValues:\n";
@@ -470,7 +522,10 @@ PYBIND11_MODULE(sloth, m) {
         .def_property_readonly("mask", &DataFrame::get_mask)
         .def_property_readonly("loc", [](const DataFrame& df) { return df.loc_.get(); })
         .def_property_readonly("iloc", [](const DataFrame& df) { return df.iloc_.get(); })
-        .def("sum", &DataFrame::sum);
+        .def("sum", &DataFrame::sum)
+        .def("mean", &DataFrame::mean)
+        .def("min", &DataFrame::min)
+        .def("max", &DataFrame::max);
 
     py::class_<IntegerLocation>(m, "IntegerLocation")
         .def(py::init<DataFrame*>())
@@ -484,3 +539,4 @@ PYBIND11_MODULE(sloth, m) {
         .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get)
         .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const py::slice&) const) &Location::get);
 }
+
