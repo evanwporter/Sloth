@@ -3,13 +3,13 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 
 ext_modules = [
     Pybind11Extension(
-        "dataframe",
-        ["dataframe.cpp"],
+        "sloth",
+        ["sloth.cpp"],
     ),
 ]
 
 setup(
-    name="dataframe",
+    name="sloth",
     version="0.0.1",
     description="DataFrame Python-C++ bindings",
     ext_modules=ext_modules,

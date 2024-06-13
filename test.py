@@ -1,4 +1,4 @@
-import dataframe as sl
+import sloth as sl
 
 def test_dataframe():
     # Create an ObjectIndex and ColumnIndex

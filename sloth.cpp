@@ -262,7 +262,7 @@ public:
     }
 };
 
-PYBIND11_MODULE(dataframe, m) {
+PYBIND11_MODULE(sloth, m) {
     py::class_<slice<int>>(m, "slice")
         .def(py::init<int, int, int>())
         .def("normalize", &slice<int>::normalize)
