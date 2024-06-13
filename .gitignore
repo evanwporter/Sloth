@@ -2,6 +2,7 @@ build/
 html/
 latex/
 xml/
+.vscode/
 
 *.pyd
 .ipynb_checkpoints/
