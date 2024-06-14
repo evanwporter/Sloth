@@ -78,7 +78,7 @@ struct slice {
 
     std::string repr() const {
         std::ostringstream oss;
-        oss << "sloth.slice(" << start << ", " << stop << ", " << step << ")";
+        oss << "slice(" << start << ", " << stop << ", " << step << ")";
         return oss.str();
     }
 };
@@ -103,6 +103,7 @@ slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, Eig
 
 // Forward declarations
 class DataFrame;
+class Series;
 
 class Index_ {
 public:
@@ -140,6 +141,123 @@ public:
 class ColumnIndex : public ObjectIndex {
 public:
     using ObjectIndex::ObjectIndex;
+};
+
+class Series {
+public:
+    Eigen::VectorXd values_;
+    std::shared_ptr<ObjectIndex> index_;
+    std::shared_ptr<slice<int>> mask_;
+
+    // Constructor
+    Series(Eigen::VectorXd values, std::shared_ptr<ObjectIndex> index) : 
+        values_(std::move(values)), 
+        index_(std::move(index)), 
+        mask_(std::make_shared<slice<int>>(0, values_.size(), 1)) {}
+
+    // Constructor for a simple 1D array
+    Series(py::array_t<double> values, py::array index) {
+        // Convert numpy array to Eigen::VectorXd
+        auto buf = values.unchecked<1>(); // Use 1D unchecked access for 1D data
+        values_.resize(buf.shape(0));
+        for (std::ptrdiff_t i = 0; i < buf.shape(0); ++i) {
+            values_(i) = buf(i);
+        }
+
+        // Build index from python array to std map
+        std::vector<std::string> keys = py::cast<std::vector<std::string>>(index);
+        robin_hood::unordered_map<std::string, int> index_map;
+        for (size_t i = 0; i < keys.size(); ++i) {
+            index_map[keys[i]] = i;
+        }
+        index_ = std::make_shared<ObjectIndex>(std::move(index_map), keys);
+    }
+
+    class LocProxy {
+    private:
+        Series& parent_;
+
+    public:
+        LocProxy(Series& parent) : parent_(parent) {}
+
+        // Integer indexing directly in Series
+        double operator[](int idx) const {
+            if (idx < 0 || idx >= parent_.values_.size()) {
+                throw std::out_of_range("Index out of range");
+            }
+            return parent_.values_(idx);
+        }
+    };
+
+    LocProxy loc() {
+        return LocProxy(*this);
+    }
+
+    class IlocProxy {
+    private:
+        Series& parent_;
+
+    public:
+        IlocProxy(Series& parent) : parent_(parent) {}
+
+        // Integer indexing directly in Series
+        double operator[](int idx) const {
+            if (idx < 0 || idx >= parent_.values_.size()) {
+                throw std::out_of_range("Index out of range");
+            }
+            return parent_.values_(idx);
+        }
+    };
+
+    IlocProxy iloc() {
+        return IlocProxy(*this);
+    }
+
+    // Sum function
+    double sum() const {
+        return values_.sum();
+    }
+
+    // Mean function
+    double mean() const {
+        return values_.mean();
+    }
+
+    // Min function
+    double min() const {
+        return values_.minCoeff();
+    }
+
+    // Max function
+    double max() const {
+        return values_.maxCoeff();
+    }
+
+    // Override the repr function
+    std::string repr() const {
+        std::ostringstream oss;
+        oss << "Series, Length: " << values_.size() << "\nValues:\n";
+        for (Eigen::Index i = 0; i < values_.size(); ++i) {
+            oss << values_(i) << "\n";
+        }
+        return oss.str();
+    }
+
+    // // iloc and loc functionality
+    // double iloc(int idx) const {
+    //     if (idx < 0 || idx >= values_.size()) {
+    //         throw std::out_of_range("Index out of range");
+    //     }
+    //     return values_(idx);
+    // }
+
+    // double loc(const std::string& key) const {
+    //     auto it = index_->index_.find(key);
+    //     if (it == index_->index_.end()) {
+    //         throw std::out_of_range("Key not found");
+    //     }
+    //     return values_(it->second);
+    // }
 };
 
 // Define DataFrame class
@@ -538,5 +656,25 @@ PYBIND11_MODULE(sloth, m) {
         .def("__getitem__", (py::array_t<double> (Location::*)(const std::string&) const) &Location::get)
         .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const slice<std::string>&) const) &Location::get)
         .def("__getitem__", (std::shared_ptr<DataFrame> (Location::*)(const py::slice&) const) &Location::get);
+
+    // py::class_<Frame, std::shared_ptr<Frame>>(m, "Frame")
+    // .def("repr", &Frame::repr);
+
+    py::class_<Series, std::shared_ptr<Series>>(m, "Series")
+        .def(py::init<Eigen::VectorXd, std::shared_ptr<ObjectIndex>>())
+        .def(py::init<py::array_t<double>, py::array>())
+        .def("sum", &Series::sum)
+        .def("mean", &Series::mean)
+        .def("min", &Series::min)
+        .def("max", &Series::max)
+        // .def("iloc", &Series::iloc)
+        // .def("loc", &Series::loc)
+        .def("__repr__", &Series::repr)
+        // .def("__getitem__", (double (Series::*)(int) const) &Series::operator[])
+        .def_property_readonly("iloc", &Series::iloc);
+    
+    py::class_<Series::IlocProxy>(m, "IlocProxy")
+        .def("__getitem__", &Series::IlocProxy::operator[], py::is_operator());
+
 }
 
