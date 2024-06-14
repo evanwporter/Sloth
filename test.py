@@ -1,5 +1,5 @@
 import numpy as np
-from sloth import DataFrame
+from sloth import DataFrame, Series
 
 # Define numpy arrays for values, index, and columns
 values_np = np.array([[1.0, 2.0, 3.0],
@@ -29,6 +29,10 @@ print(slice(1,5).indices(1))
 d = df.iloc[1:]
 print(d.values)
 
-print(d.mask)
+# print(d.mask)
 
-print(df.sum(1))
+print(df.sum(0))
+
+s = Series(np.array([1., 2., 3.]), index_np)
+print(s)
+print(s.iloc[2])
