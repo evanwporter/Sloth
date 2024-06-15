@@ -1,32 +1,3 @@
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣶⡶⢶⣦⣤⣀⠀⠀⠀⠀⣠⣶⣾⠿⠷⣶⣦⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣯⠀⠀⢻⣯⠙⢷⣄⢠⣾⡿⠋⠁⠀⠀⠈⢻⡍⠙⢷⣦⡀⠀⠀⠀⢀⣴⣿⡿⠛⠙⢿⣷⣦⡀⣠⡾⠋⢹⣿⡿⠿⢶⣦⠀⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣿⡿⠁⢻⣧⠀⢸⣿⡀⠈⣿⣿⣿⠁⠀⠀⠀⠀⠀⠀⣿⣧⡀⠻⣷⡀⠀⢰⣿⠟⠁⠀⠀⠀⠀⠹⣿⠻⣿⡁⢠⡿⠏⠀⢀⣼⣿⣧⡀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡿⠁⠀⠈⣿⣇⣸⣿⠀⣸⣿⣿⠇⠀⠀⠀⠀⠀⠀⠀⣿⡌⢻⣦⣹⣇⢠⣿⡏⠀⠀⠀⠀⠀⠀⠀⢿⣆⠘⣿⣿⠃⣠⡾⠋⠁⠈⣿⣧⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⠇⠀⠀⠀⢸⣿⣿⣇⣰⣿⠿⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⢻⣶⣿⣿⣿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⢸⡛⣷⢺⡇⣰⠏⠀⠀⠀⠀⠘⣿⣧⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡿⠀⠀⠀⠀⠈⠉⠙⢻⡟⠁⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣿⡄⠙⠿⠃⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⢸⡿⠿⣿⡿⠃⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⣿⡀⠀⠀⠀⠀⠀⠀⠀⢹⡇⠀⠀⠀⢸⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠸⣧⠀⢻⣧⠀⠀⠀⠀⠀⠀⠀⠈⣿⡆⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠃⠀⠀⠀⠀⠀⠀⠀⢸⣷⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠘⣷⠀⠀⠀⠈⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡄⠘⣿⡀⠀⠀⠀⠀⠀⠀⠀⢹⣿⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⢹⣧⠀⠀⠀⣿⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣇⢠⣿⡇⠀⠀⠀⠀⠀⠀⠀⠸⣿⡆
-// ⠀⠀⠀⠀⠀⢀⣠⣴⣶⣾⣿⣿⡿⣿⣷⣶⣄⣀⠀⠀⠀⠘⣧⠀⠘⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⠀⠀⢹⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣾⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇
-// ⠀⠀⠀⣠⣶⣿⡿⠛⠛⣽⠋⠀⠀⠀⠀⣩⡿⢿⣷⣄⠀⠀⠹⡇⠀⢻⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡆⠀⠈⣿⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⣿⡇
-// ⠀⢀⣼⡿⢋⡵⠞⠉⠉⠁⠀⠀⠀⢰⣿⣿⡆⠀⠙⣿⣧⡀⠀⢻⡄⠘⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⡄⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿
-// ⢠⣿⣟⡴⠋⠀⠀⠀⠀⠀⠀⠀⣀⠈⠛⠿⠷⠶⠛⠛⢻⣿⣿⡿⠧⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⢹⣷⠀⠀⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣧⠀⠀⠀⠀⠀⠀⠀⣿⣿
-// ⣸⣿⠟⠁⠀⠀⠀⠀⠀⣰⣾⣿⣿⠆⣰⣶⠀⠀⠀⠀⠀⣿⣿⣿⣦⡀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⡀⠀⢸⣿⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣧⠀⠀⠀⠀⠀⠀⣿⣿
-// ⣿⡏⢀⣴⣶⣿⣷⠀⠀⠙⠛⠋⣁⣴⡿⠃⠀⠀⠀⠀⢸⠇⠈⠙⢿⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⡀⢹⣷⠾⠟⣿⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣧⠀⠀⠀⠀⢀⣿⣿
-// ⣿⣇⡏⠀⠙⠿⢿⠀⠶⠶⠶⠿⠛⠋⠀⠀⠀⠀⠀⣠⠏⠀⠀⢀⣼⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⣷⣤⣷⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢻⣇⠀⠀⠀⢸⣿⡇
-// ⢹⣿⠀⠀⠀⢀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⠞⠁⣀⣀⣴⠿⠋⠀⠀⠀⠀⠀⠀⠀⠀⣶⣆⠀⢸⡇⠈⠁⠀⠀⣸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡀⠀⠀⣸⣿⡇
-// ⠘⣿⣧⠀⣠⠟⠀⠀⠀⠀⠀⠀⠀⠀⣠⠴⠛⠁⠀⠘⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣈⣿⣿⣆⣸⡇⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⢠⣿⣿⠁
-// ⠀⠘⣿⣷⣯⣀⠀⠀⠀⠀⣀⣤⠴⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠛⠻⠿⣿⡿⠁⠀⠀⠀⣼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⠃⠀
-// ⠀⠀⠹⣿⣷⡉⠉⠛⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡟⠀⠀
-// ⠀⠀⠀⠘⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡿⠀⠀⠀
-// ⠀⠀⠀⠀⠘⢿⣿⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⡿⠁⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠈⠻⣿⣿⣦⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⡿⠁⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠈⠿⣿⣿⣷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⡟⠀⠀⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣿⣿⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⣿⣿⣶⣦⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣶⣾⠿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⠿⣿⣿⣿⣷⣶⣤⣄⣀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣤⣴⣶⣿⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-// ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⡛⠛⠿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⢛⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <pybind11/stl.h>
@@ -180,12 +151,12 @@ public:
     public:
         LocProxy(Series& parent) : parent_(parent) {}
 
-        // Integer indexing directly in Series
-        double operator[](int idx) const {
-            if (idx < 0 || idx >= parent_.values_.size()) {
+        double operator[](std::string idx) const {
+            auto it = parent_.index_->index_.find(idx);
+            if (it == parent_.index_->index_.end()) {
                 throw std::out_of_range("Index out of range");
             }
-            return parent_.values_(idx);
+            return parent_.values_(it->second);
         }
     };
 
@@ -494,11 +465,11 @@ public:
         return mask_;
     }
 
-    class Location {
+    class LocProxy {
     public:
         DataFrame* frame_;
 
-        Location(DataFrame* frame)
+        LocProxy(DataFrame* frame)
             : frame_(frame) {}
 
         py::array_t<double> get(const std::string& arg) const {
@@ -540,11 +511,11 @@ public:
         }
     };
 
-    class IntegerLocation {
+    class IlocProxy {
     public:
         DataFrame* frame_;
 
-        IntegerLocation(DataFrame* frame)
+        IlocProxy(DataFrame* frame)
             : frame_(frame) {}
 
         py::array_t<double> get(int arg) const {
@@ -571,12 +542,12 @@ public:
     };
 
     // Property access for loc and iloc
-    std::unique_ptr<Location> loc() {
-        return std::make_unique<Location>(this);
+    LocProxy loc() {
+        return LocProxy(this);
     }
 
-    std::unique_ptr<IntegerLocation> iloc() {
-        return std::make_unique<IntegerLocation>(this);
+    IlocProxy iloc() {
+        return IlocProxy(this);
     }
 };
 
@@ -609,24 +580,25 @@ PYBIND11_MODULE(sloth, m) {
         .def("__getitem__", &DataFrame::get_col)
         .def_property_readonly("values", &DataFrame::values)
         .def_property_readonly("mask", &DataFrame::get_mask)
-        .def_property_readonly("loc", [](DataFrame& df) { return df.loc(); })
-        .def_property_readonly("iloc", [](DataFrame& df) { return df.iloc(); })
+        .def_property_readonly("loc", &DataFrame::loc)
+        .def_property_readonly("iloc", &DataFrame::iloc)
         .def("sum", &DataFrame::sum)
         .def("mean", &DataFrame::mean)
         .def("min", &DataFrame::min)
         .def("max", &DataFrame::max);
 
-    py::class_<DataFrame::IntegerLocation>(m, "IntegerLocation")
+    // Create a Python submodule to nest the IlocProxy and LocProxy classes
+    py::class_<DataFrame::IlocProxy>(m, "DataFrameIlocProxy")
         .def(py::init<DataFrame*>())
-        .def("__getitem__", (py::array_t<double> (DataFrame::IntegerLocation::*)(int) const) &DataFrame::IntegerLocation::get)
-        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::IntegerLocation::*)(const slice<int>&) const) &DataFrame::IntegerLocation::get)
-        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::IntegerLocation::*)(const py::slice&) const) &DataFrame::IntegerLocation::get);
+        .def("__getitem__", (py::array_t<double> (DataFrame::IlocProxy::*)(int) const) &DataFrame::IlocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::IlocProxy::*)(const slice<int>&) const) &DataFrame::IlocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::IlocProxy::*)(const py::slice&) const) &DataFrame::IlocProxy::get);
 
-    py::class_<DataFrame::Location>(m, "Location")
+    py::class_<DataFrame::LocProxy>(m, "DataFrameLocProxy")
         .def(py::init<DataFrame*>())
-        .def("__getitem__", (py::array_t<double> (DataFrame::Location::*)(const std::string&) const) &DataFrame::Location::get)
-        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::Location::*)(const slice<std::string>&) const) &DataFrame::Location::get)
-        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::Location::*)(const py::slice&) const) &DataFrame::Location::get);
+        .def("__getitem__", (py::array_t<double> (DataFrame::LocProxy::*)(const std::string&) const) &DataFrame::LocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::LocProxy::*)(const slice<std::string>&) const) &DataFrame::LocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrame> (DataFrame::LocProxy::*)(const py::slice&) const) &DataFrame::LocProxy::get);
 
     py::class_<Series, std::shared_ptr<Series>>(m, "Series")
         .def(py::init<Eigen::VectorXd, std::shared_ptr<ObjectIndex>>())
@@ -637,8 +609,7 @@ PYBIND11_MODULE(sloth, m) {
         .def("max", &Series::max)
         .def("__repr__", &Series::repr)
         .def_property_readonly("iloc", &Series::iloc);
-    
-    py::class_<Series::IlocProxy>(m, "IlocProxy")
+
+    py::class_<Series::IlocProxy>(m, "SeriesIlocProxy")
         .def("__getitem__", &Series::IlocProxy::operator[], py::is_operator());
 }
-
