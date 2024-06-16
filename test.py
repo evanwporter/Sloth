@@ -38,6 +38,7 @@ print("df.iloc[0]", df.iloc[0])
 print(df.sum(0))
 
 print("df.loc[row1]", df.loc["row1"].index)
+print(type(df.loc["row1"]))
 
 print("THE DF", df)
 

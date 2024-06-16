@@ -466,16 +466,20 @@ public:
         LocProxy(DataFrameView& parent) : parent_(parent) {}
 
         std::shared_ptr<Series> get(const std::string& idx) const {
-            // DataFrameView::LocProxy returns the exact locations, so combining slices is unneccesary
-            if (parent_.index_->index_.find(idx) == parent_.index_->index_.end()) {
-                throw std::out_of_range("Index out of range");
-            }
-            int row = parent_.index_->index_.at(idx);
-            Eigen::VectorXd row_values = parent_.values_.row(row);
-            
-            auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx, 0}}, std::vector<std::string>{idx});
+            auto& values_ = parent_.values_;
+            auto index_ = parent_.index_;
+            auto columns_ = parent_.columns_;
 
-            return std::make_shared<Series>(std::move(row_values), std::move(new_index));
+            if (index_->index_.find(idx) == index_->index_.end()) {
+                throw std::out_of_range("Key '" + idx + "' not found in the DataFrameView index.");
+            }
+
+            int actual_row = index_->index_.at(idx);
+
+            Eigen::VectorXd row_values = values_.row(actual_row);
+            auto series_index = std::make_shared<ColumnIndex>(*columns_);
+
+            return std::make_shared<Series>(std::move(row_values), std::move(series_index));
         }
 
         std::shared_ptr<DataFrameView> get(const slice<std::string>& arg) const {
@@ -515,7 +519,7 @@ public:
 
     std::shared_ptr<Series> get(int arg) const {
         auto& values_ = parent_.values_;
-        auto& columns_ = parent_.columns_;  // Access the columns from DataFrameView
+        auto& columns_ = parent_.columns_;
 
         if (arg < 0 || arg >= parent_.mask_->length()) {
             throw std::out_of_range("Index out of range");
@@ -739,23 +743,22 @@ public:
 
         std::shared_ptr<Series> get(const std::string& idx) const {
             auto& values_ = frame_->values_;
-            auto index_ = frame_->index_;
-            
+            auto index_ = frame_->index_;  // Access the index from DataFrameView
+            auto columns_ = frame_->columns_;  // Access the columns from DataFrameView
+
             if (index_->index_.find(idx) == index_->index_.end()) {
-                throw std::out_of_range("Key '" + idx + "' not found in the DataFrame index.");
+                throw std::out_of_range("Key '" + idx + "' not found in the DataFrameView index.");
             }
 
             Eigen::Index row = index_->index_.at(idx);
             Eigen::VectorXd row_values = values_.row(row);
 
-            // Create an ObjectIndex for a single Series
-            auto new_index = std::make_shared<ObjectIndex>(
-                robin_hood::unordered_map<std::string, int>{{idx, 0}}, 
-                std::vector<std::string>{idx}
-            );
+            // Use the existing ColumnIndex from DataFrameView for the new Series
+            auto series_index = std::make_shared<ColumnIndex>(*columns_);
 
-            return std::make_shared<Series>(std::move(row_values), std::move(new_index));
-        }
+            // Return Series with row values and columns as index
+            return std::make_shared<Series>(std::move(row_values), std::move(series_index));
+    }
 
         std::shared_ptr<DataFrameView> get(const slice<std::string>& arg) const {
             auto index_ = frame_->index_;
