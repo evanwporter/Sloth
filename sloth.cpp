@@ -37,7 +37,6 @@
 #include <sstream>
 #include <stdexcept>
 #include <numeric>
-#include <algorithm>
 #include <Eigen/Dense>
 #include "lib/robinhood.h"
 
@@ -46,27 +45,24 @@ using MatrixXdRowMajor = Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, E
 
 template <typename T>
 struct slice {
-    T start;
-    T stop;
+    T start, stop;
     int step;
 
-    slice(T start_, T stop_, int step_) : start(start_), stop(stop_), step(step_) {}
+    slice(T start_, T stop_, int step_) : start(start_), stop(stop_), step(step_) {
+        if (step == 0) throw std::invalid_argument("Step cannot be zero");
+    }
 
-    void normalize(Eigen::Index length = 0) {
+    void normalize(Eigen::Index length) {
         if (start < 0) start += length;
         if (stop < 0) stop += length;
-        if (step == 0) throw std::invalid_argument("Step cannot be zero");
         if (start < 0) start = 0;
         if (stop > length) stop = length;
     }
 
     Eigen::Index length() const {
-        if (step > 0) {
-            return (stop - start + step - 1) / step;
-        } else {
-            return (start - stop + (-step) - 1) / (-step);
-        }
+        return (step > 0) ? (stop - start + step - 1) / step : (start - stop - step + 1) / (-step);
     }
+    
 
     T get_start() const { return start; }
     T get_stop() const { return stop; }
@@ -80,17 +76,27 @@ struct slice {
 };
 
 slice<int> combine_slices(const slice<int>& mask, const slice<int>& overlay, Eigen::Index length_mask) {
-    int mask_start = mask.start;
-    int mask_stop = mask.stop;
-    int mask_step = mask.step;
-    Eigen::Index length_overlay = (mask_stop - mask_start + (mask_step - 1)) / mask_step;
-    int overlay_start = overlay.start;
-    int overlay_stop = overlay.stop;
-    int overlay_step = overlay.step;
-    int start = mask_start + (overlay_start * mask_step);
-    int stop = mask_start + (overlay_stop * mask_step);
-    int step = mask_step * overlay_step;
+    int start = mask.start + (overlay.start * mask.step);
+    int stop = mask.start + (overlay.stop * mask.step);
+    int step = mask.step * overlay.step;
     return slice<int>(start, stop, step);
+}
+
+// Helper function to convert std::vector<T> to py::array
+template <typename T>
+py::array vector_to_numpy(const std::vector<T>& vec) {
+    // Create a buffer info for the vector
+    auto buf_info = py::buffer_info(
+        (void*)vec.data(),                  // Pointer to buffer
+        sizeof(T),                          // Size of one scalar
+        py::format_descriptor<T>::format(), // Python struct-style format descriptor
+        1,                                  // Number of dimensions
+        { vec.size() },                     // Buffer dimensions
+        { sizeof(T) }                       // Strides (in bytes) for each index
+    );
+
+    // Create a py::array using the buffer info
+    return py::array(buf_info);
 }
 
 class DataFrame;
@@ -129,10 +135,7 @@ public:
     }
 };
 
-class ColumnIndex : public ObjectIndex {
-public:
-    using ObjectIndex::ObjectIndex;
-};
+typedef ObjectIndex ColumnIndex;
 
 class SeriesView {
 public:
@@ -194,14 +197,13 @@ public:
         // Apply mask to values_
         Eigen::Index num_values = mask_->length();
         Eigen::VectorXd filtered_values(num_values);
-
         for (Eigen::Index i = 0, mask_idx = mask_->start; i < num_values; ++i, mask_idx += mask_->step) {
             filtered_values(i) = values_(mask_idx);
         }
 
         // Apply mask to index_
         std::vector<std::string> filtered_keys;
-        filtered_keys.reserve(num_values); // Preallocate for efficiency
+        filtered_keys.reserve(num_values);
         for (Eigen::Index i = mask_->start; i < mask_->stop; i += mask_->step) {
             filtered_keys.push_back(index_->keys_[i]);
         }
@@ -217,6 +219,25 @@ public:
         return std::make_shared<Series>(std::move(filtered_values), std::move(filtered_index));
     }
 
+    double get_row(const std::string& arg) const {
+        if (index_->index_.find(arg) == index_->index_.end()) {
+            throw std::out_of_range("Key '" + arg + "' not found in the SeriesView index.");
+        }
+        int idx = index_->index_.at(arg);
+        if (idx < mask_->start || idx >= mask_->stop || (idx - mask_->start) % mask_->step != 0) {
+            throw std::out_of_range("Key '" + arg + "' not accessible due to current slicing.");
+        }
+        return values_(idx);
+    }
+
+    std::vector<std::string> get_index() const {
+        std::vector<std::string> result;
+        for (Eigen::Index i = mask_->start; i < mask_->stop; i += mask_->step) {
+            result.push_back(index_->keys_[i]);
+        }
+        return result;
+    }
+
     class IlocProxy {
     private:
         SeriesView& parent_;
@@ -226,12 +247,12 @@ public:
 
         std::shared_ptr<SeriesView> operator[](Eigen::Index idx) const {
             auto combined_slice = combine_slices(*parent_.mask_, slice<int>(idx, idx + 1, 1), parent_.values_.size());
-            return parent_.create_view(std::make_shared<slice<int>>(combined_slice)); // Correct type
+            return parent_.create_view(std::make_shared<slice<int>>(combined_slice));
         }
 
         std::shared_ptr<SeriesView> operator[](const slice<int>& arg) const {
             auto combined_slice = combine_slices(*parent_.mask_, arg, parent_.values_.size());
-            return parent_.create_view(std::make_shared<slice<int>>(combined_slice)); // Correct type
+            return parent_.create_view(std::make_shared<slice<int>>(combined_slice));
         }
         std::shared_ptr<SeriesView> operator[](const py::slice& pySlice) const {
             py::ssize_t start, stop, step, slicelength;
@@ -252,11 +273,11 @@ public:
     }
 };
 
-
 class Series {
 public:
     Eigen::VectorXd values_;
     std::shared_ptr<ObjectIndex> index_;
+    std::string name_;
 
     Series(Eigen::VectorXd values, std::shared_ptr<ObjectIndex> index)
         : values_(std::move(values)), index_(std::move(index)) {}
@@ -300,6 +321,18 @@ public:
         return values_.maxCoeff();
     }
 
+    double get_row(const std::string& arg) const {
+        if (index_->index_.find(arg) == index_->index_.end()) {
+            throw std::out_of_range("Key '" + arg + "' not found in the Series index.");
+        }
+        int idx = index_->index_.at(arg);
+        return values_(idx);
+    }
+
+    std::vector<std::string> get_index() const {
+        return index_->keys();
+    }
+
     class IlocProxy {
     private:
         Series& parent_;
@@ -319,7 +352,6 @@ public:
         return IlocProxy(*this);
     }
 };
-
 
 class DataFrameView {
 public:
@@ -367,6 +399,14 @@ public:
         return column;
     }
 
+    std::vector<std::string> get_index() const {
+        std::vector<std::string> row_indices;
+        for (Eigen::Index i = mask_->start; i < mask_->stop; i += mask_->step) {
+            row_indices.push_back(index_->keys_[i]);
+        }
+        return row_indices;
+    }
+
     py::array_t<double> values() const {
         Eigen::Index num_rows = mask_->length();
         Eigen::Index num_cols = values_.cols();
@@ -384,14 +424,12 @@ public:
     }
 
     std::shared_ptr<DataFrame> to_dataframe() const {
-
-        // Apply mask to values_
+        // Apply mask to values
         Eigen::Index num_rows = mask_->length();
         Eigen::Index num_cols = values_.cols();
 
         // Create a matrix to hold the filtered rows
         MatrixXdRowMajor filtered_values(num_rows, num_cols);
-
         Eigen::Index current_row = 0;
         for (Eigen::Index i = mask_->start; i < mask_->stop; i += mask_->step) {
             filtered_values.row(current_row++) = values_.row(i);
@@ -416,6 +454,9 @@ public:
         
     }
 
+    // DataFrameView::Proxy classes have to take into account the mask, while 
+    //   DataFrame::Proxy classes do not
+    // This is the main difference between the two.
 
     class LocProxy {
     private:
@@ -425,13 +466,13 @@ public:
         LocProxy(DataFrameView& parent) : parent_(parent) {}
 
         std::shared_ptr<Series> get(const std::string& idx) const {
+            // DataFrameView::LocProxy returns the exact locations, so combining slices is unneccesary
             if (parent_.index_->index_.find(idx) == parent_.index_->index_.end()) {
                 throw std::out_of_range("Index out of range");
             }
             int row = parent_.index_->index_.at(idx);
             Eigen::VectorXd row_values = parent_.values_.row(row);
             
-            // Create an ObjectIndex for a single Series
             auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx, 0}}, std::vector<std::string>{idx});
 
             return std::make_shared<Series>(std::move(row_values), std::move(new_index));
@@ -441,7 +482,11 @@ public:
             int start = parent_.index_->index_.at(arg.start);
             int stop = parent_.index_->index_.at(arg.stop);
             auto new_arg = slice<int>(start, stop, arg.step);
+
+            // Adjust for step
             auto combined_slice = combine_slices(*parent_.mask_, new_arg, parent_.values_.rows());
+
+            // Return new DataFrameView with combined slice
             return parent_.create_view(std::make_shared<slice<int>>(combined_slice));
         }
 
@@ -455,6 +500,8 @@ public:
             int step = py::isinstance<py::none>(py_step) ? 1 : py::cast<int>(py_step);
 
             slice<std::string> arg(start, stop, step);
+
+            // Call DataFrameView::LocProxy.get(slice<std::string>)
             return get(arg);
         }
     };
@@ -466,15 +513,14 @@ public:
     public:
         IlocProxy(DataFrameView& parent) : parent_(parent) {}
 
-        std::shared_ptr<Series> get(int idx) const {
-            auto combined_slice = combine_slices(*parent_.mask_, slice<int>(idx, idx + 1, 1), parent_.values_.rows());
+        std::shared_ptr<Series> get(int arg) const {
+            auto combined_slice = combine_slices(*parent_.mask_, slice<int>(arg, arg + 1, 1), parent_.values_.rows());
             int row = combined_slice.start;
             Eigen::VectorXd row_values = parent_.values_.row(row);
-            std::string idx_str = std::to_string(idx);
+            std::string idx_str = std::to_string(arg);
 
             // Create an ObjectIndex for a single Series
             auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx_str, 0}}, std::vector<std::string>{idx_str});
-
             return std::make_shared<Series>(std::move(row_values), std::move(new_index));
         }
 
@@ -546,6 +592,7 @@ public:
     }
 
     DataFrame(py::array_t<double> values, py::array index, py::array columns) {
+        
         auto buf = values.unchecked<2>();
         Eigen::Index rows = static_cast<Eigen::Index>(buf.shape(0));
         Eigen::Index cols = static_cast<Eigen::Index>(buf.shape(1));
@@ -612,6 +659,10 @@ public:
         return column;
     }
 
+    std::vector<std::string> get_index() const {
+        return index_->keys();
+    }
+
     py::array_t<double> values() const {
         Eigen::Index num_rows = values_.rows();
         Eigen::Index num_cols = values_.cols();
@@ -629,59 +680,51 @@ public:
     }
 
     std::vector<double> sum(int axis) const {
-        std::vector<double> result;
         if (axis == 0) {
-            Eigen::VectorXd rowSum = values_.rowwise().sum();
-            result.assign(rowSum.data(), rowSum.data() + rowSum.size());
-        } else if (axis == 1) {
             Eigen::VectorXd colSum = values_.colwise().sum();
-            result.assign(colSum.data(), colSum.data() + colSum.size());
+            return std::vector<double>(colSum.data(), colSum.data() + colSum.size());
+        } else if (axis == 1) {
+            Eigen::VectorXd rowSum = values_.rowwise().sum();
+            return std::vector<double>(rowSum.data(), rowSum.data() + rowSum.size());
         } else {
-            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+            throw std::invalid_argument("Invalid axis value. Use 0 for columns and 1 for rows.");
         }
-        return result;
     }
 
     std::vector<double> mean(int axis) const {
-        std::vector<double> result;
         if (axis == 0) {
-            Eigen::VectorXd rowMean = values_.rowwise().mean();
-            result.assign(rowMean.data(), rowMean.data() + rowMean.size());
-        } else if (axis == 1) {
             Eigen::VectorXd colMean = values_.colwise().mean();
-            result.assign(colMean.data(), colMean.data() + colMean.size());
+            return std::vector<double>(colMean.data(), colMean.data() + colMean.size());
+        } else if (axis == 1) {
+            Eigen::VectorXd rowMean = values_.rowwise().mean();
+            return std::vector<double>(rowMean.data(), rowMean.data() + rowMean.size());
         } else {
-            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+            throw std::invalid_argument("Invalid axis value. Use 0 for columns and 1 for rows.");
         }
-        return result;
     }
 
     std::vector<double> min(int axis) const {
-        std::vector<double> result;
         if (axis == 0) {
-            Eigen::VectorXd rowMin = values_.rowwise().minCoeff();
-            result.assign(rowMin.data(), rowMin.data() + rowMin.size());
-        } else if (axis == 1) {
             Eigen::VectorXd colMin = values_.colwise().minCoeff();
-            result.assign(colMin.data(), colMin.data() + colMin.size());
+            return std::vector<double>(colMin.data(), colMin.data() + colMin.size());
+        } else if (axis == 1) {
+            Eigen::VectorXd rowMin = values_.rowwise().minCoeff();
+            return std::vector<double>(rowMin.data(), rowMin.data() + rowMin.size());
         } else {
-            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+            throw std::invalid_argument("Invalid axis value. Use 0 for columns and 1 for rows.");
         }
-        return result;
     }
 
     std::vector<double> max(int axis) const {
-        std::vector<double> result;
         if (axis == 0) {
-            Eigen::VectorXd rowMax = values_.rowwise().maxCoeff();
-            result.assign(rowMax.data(), rowMax.data() + rowMax.size());
-        } else if (axis == 1) {
             Eigen::VectorXd colMax = values_.colwise().maxCoeff();
-            result.assign(colMax.data(), colMax.data() + colMax.size());
+            return std::vector<double>(colMax.data(), colMax.data() + colMax.size());
+        } else if (axis == 1) {
+            Eigen::VectorXd rowMax = values_.rowwise().maxCoeff();
+            return std::vector<double>(rowMax.data(), rowMax.data() + rowMax.size());
         } else {
-            throw std::invalid_argument("Invalid axis value. Use 0 for rows and 1 for columns.");
+            throw std::invalid_argument("Invalid axis value. Use 0 for columns and 1 for rows.");
         }
-        return result;
     }
 
     class LocProxy {
@@ -693,7 +736,7 @@ public:
         std::shared_ptr<Series> get(const std::string& idx) const {
             auto& values_ = frame_->values_;
             auto index_ = frame_->index_;
-
+            
             if (index_->index_.find(idx) == index_->index_.end()) {
                 throw std::out_of_range("Key '" + idx + "' not found in the DataFrame index.");
             }
@@ -702,7 +745,10 @@ public:
             Eigen::VectorXd row_values = values_.row(row);
 
             // Create an ObjectIndex for a single Series
-            auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx, 0}}, std::vector<std::string>{idx});
+            auto new_index = std::make_shared<ObjectIndex>(
+                robin_hood::unordered_map<std::string, int>{{idx, 0}}, 
+                std::vector<std::string>{idx}
+            );
 
             return std::make_shared<Series>(std::move(row_values), std::move(new_index));
         }
@@ -712,7 +758,10 @@ public:
             auto start = index_->index_.at(arg.start);
             auto stop = index_->index_.at(arg.stop);
             auto new_arg = slice<int>(start, stop, arg.step);
-            auto combined_slice = combine_slices(slice<int>(0, frame_->values_.rows(), 1), new_arg, frame_->values_.rows());
+            auto combined_slice = combine_slices(
+                slice<int>(0, frame_->values_.rows(), 1), 
+                new_arg, frame_->values_.rows()
+            );
             return frame_->create_view(std::make_shared<slice<int>>(combined_slice));
         }
 
@@ -780,11 +829,11 @@ PYBIND11_MODULE(sloth, m) {
     py::class_<slice<int>>(m, "slice")
         .def(py::init<int, int, int>())
         .def("normalize", &slice<int>::normalize)
-        .def("length", &slice<int>::length)
-        .def_property_readonly("start", &slice<int>::get_start)
-        .def_property_readonly("stop", &slice<int>::get_stop)
-        .def_property_readonly("step", &slice<int>::get_step)
-        .def("__repr__", &slice<int>::repr);
+        .def("length", &slice<int>::length);
+        // .def_property_readonly("start", &slice<int>::get_start)
+        // .def_property_readonly("stop", &slice<int>::get_stop)
+        // .def_property_readonly("step", &slice<int>::get_step)
+        // .def("__repr__", &slice<int>::repr);
 
     py::class_<Index_, std::shared_ptr<Index_>>(m, "Index_");
 
@@ -792,10 +841,7 @@ PYBIND11_MODULE(sloth, m) {
         .def(py::init<robin_hood::unordered_map<std::string, int>, std::vector<std::string>>())
         .def("keys", &ObjectIndex::keys)
         .def("get_mask", &ObjectIndex::get_mask);
-
-    py::class_<ColumnIndex, ObjectIndex, std::shared_ptr<ColumnIndex>>(m, "ColumnIndex")
-        .def(py::init<robin_hood::unordered_map<std::string, int>, std::vector<std::string>>());
-
+        
     py::class_<DataFrame, std::shared_ptr<DataFrame>>(m, "DataFrame")
         .def(py::init<MatrixXdRowMajor, std::shared_ptr<ObjectIndex>, std::shared_ptr<ColumnIndex>>())
         .def(py::init<py::list, py::list, py::list>())
@@ -809,7 +855,8 @@ PYBIND11_MODULE(sloth, m) {
         .def("sum", &DataFrame::sum)
         .def("mean", &DataFrame::mean)
         .def("min", &DataFrame::min)
-        .def("max", &DataFrame::max);
+        .def("max", &DataFrame::max)
+        .def_property_readonly("index", &DataFrame::get_index);
 
     py::class_<DataFrame::LocProxy>(m, "DataFrameLocProxy")
         .def(py::init<DataFrame*>())
@@ -819,6 +866,7 @@ PYBIND11_MODULE(sloth, m) {
 
     py::class_<DataFrame::IlocProxy>(m, "DataFrameIlocProxy")
         .def(py::init<DataFrame*>())
+        .def("__getitem__", (std::shared_ptr<Series> (DataFrame::IlocProxy::*)(int) const) &DataFrame::IlocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::IlocProxy::*)(const slice<int>&) const) &DataFrame::IlocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::IlocProxy::*)(const py::slice&) const) &DataFrame::IlocProxy::get);
 
@@ -829,9 +877,10 @@ PYBIND11_MODULE(sloth, m) {
         .def_property_readonly("values", &DataFrameView::values)
         .def("to_dataframe", &DataFrameView::to_dataframe)
         .def_property_readonly("loc", &DataFrameView::loc)
-        .def_property_readonly("iloc", &DataFrameView::iloc);
+        .def_property_readonly("iloc", &DataFrameView::iloc)
+        .def_property_readonly("index", &DataFrameView::get_index);
 
-        py::class_<DataFrameView::LocProxy>(m, "DataFrameViewLocProxy")
+    py::class_<DataFrameView::LocProxy>(m, "DataFrameViewLocProxy")
         .def("__getitem__", (std::shared_ptr<Series> (DataFrameView::LocProxy::*)(const std::string&) const) &DataFrameView::LocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::LocProxy::*)(const slice<std::string>&) const) &DataFrameView::LocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::LocProxy::*)(const py::slice&) const) &DataFrameView::LocProxy::get);
@@ -849,17 +898,23 @@ PYBIND11_MODULE(sloth, m) {
         .def("min", &Series::min)
         .def("max", &Series::max)
         .def("__repr__", &Series::repr)
-        .def_property_readonly("iloc", &Series::iloc);
+        .def_property_readonly("iloc", &Series::iloc)
+        .def("__getitem__", &Series::get_row)
+        .def_property_readonly("index", &Series::get_index);
+
 
     py::class_<Series::IlocProxy>(m, "SeriesIlocProxy")
         .def("__getitem__", &Series::IlocProxy::operator[], py::is_operator());
 
     py::class_<SeriesView, std::shared_ptr<SeriesView>>(m, "SeriesView")
-        .def("repr", &SeriesView::repr)
+        .def("__repr__", &SeriesView::repr)
         .def_property_readonly("size", &SeriesView::size)
         .def("sum", &SeriesView::sum)
         .def("mean", &SeriesView::mean)
         .def("min", &SeriesView::min)
         .def("max", &SeriesView::max)
-        .def_property_readonly("iloc", &SeriesView::iloc);
+        .def_property_readonly("iloc", &SeriesView::iloc)
+        .def("__getitem__", &SeriesView::get_row)
+        .def_property_readonly("index", &SeriesView::get_index);
+
 }
