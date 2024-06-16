@@ -27,7 +27,7 @@ print(df_list)
 print(dir(slice(1,5)))
 print(slice(1,5).indices(1))
 d = df.iloc[1:]
-print(d.values)
+print("D\n", d.to_dataframe())
 
 # print(d.mask)
 
