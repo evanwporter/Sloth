@@ -26,8 +26,10 @@ print(df_list)
 
 print(dir(slice(1,5)))
 print(slice(1,5).indices(1))
-d = df.iloc[1:]
-print("D\n", d.to_dataframe())
+d = df.iloc[1:].iloc[0].repr()
+# print("D\n", d.to_dataframe())
+
+print(d)
 
 # print(d.mask)
 

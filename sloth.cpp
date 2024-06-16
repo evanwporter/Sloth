@@ -424,7 +424,7 @@ public:
     public:
         LocProxy(DataFrameView& parent) : parent_(parent) {}
 
-        std::shared_ptr<DataFrameView> operator[](const std::string& idx) const {
+        std::shared_ptr<DataFrameView> get(const std::string& idx) const {
             if (parent_.index_->index_.find(idx) == parent_.index_->index_.end()) {
                 throw std::out_of_range("Index out of range");
             }
@@ -432,7 +432,7 @@ public:
             return parent_.create_view(std::make_shared<slice<int>>(row, row + 1, 1));
         }
 
-        std::shared_ptr<DataFrameView> operator[](const slice<std::string>& arg) const {
+        std::shared_ptr<DataFrameView> get(const slice<std::string>& arg) const {
             int start = parent_.index_->index_.at(arg.start);
             int stop = parent_.index_->index_.at(arg.stop);
             auto new_arg = slice<int>(start, stop, arg.step);
@@ -440,7 +440,7 @@ public:
             return parent_.create_view(std::make_shared<slice<int>>(combined_slice));
         }
 
-        std::shared_ptr<DataFrameView> operator[](const py::slice& pySlice) const {
+        std::shared_ptr<DataFrameView> get(const py::slice& pySlice) const {
             py::object py_start = pySlice.attr("start");
             py::object py_stop = pySlice.attr("stop");
             py::object py_step = pySlice.attr("step");
@@ -450,7 +450,7 @@ public:
             int step = py::isinstance<py::none>(py_step) ? 1 : py::cast<int>(py_step);
 
             slice<std::string> arg(start, stop, step);
-            return (*this)[arg];
+            return get(arg);
         }
     };
 
@@ -461,23 +461,23 @@ public:
     public:
         IlocProxy(DataFrameView& parent) : parent_(parent) {}
 
-        std::shared_ptr<DataFrameView> operator[](int idx) const {
+        std::shared_ptr<DataFrameView> get(int idx) const {
             auto combined_slice = combine_slices(*parent_.mask_, slice<int>(idx, idx + 1, 1), parent_.values_.rows());
             return parent_.create_view(std::make_shared<slice<int>>(combined_slice));
         }
 
-        std::shared_ptr<DataFrameView> operator[](const slice<int>& arg) const {
+        std::shared_ptr<DataFrameView> get(const slice<int>& arg) const {
             auto combined_slice = combine_slices(*parent_.mask_, arg, parent_.values_.rows());
             return parent_.create_view(std::make_shared<slice<int>>(combined_slice));
         }
 
-        std::shared_ptr<DataFrameView> operator[](const py::slice& pySlice) const {
+        std::shared_ptr<DataFrameView> get(const py::slice& pySlice) const {
             py::ssize_t start, stop, step, slicelength;
             if (!pySlice.compute(parent_.values_.rows(), &start, &stop, &step, &slicelength)) {
                 throw py::error_already_set();
             }
             slice<int> arg(static_cast<int>(start), static_cast<int>(stop), static_cast<int>(step));
-            return (*this)[arg];
+            return get(arg);
         }
     };
 
@@ -799,13 +799,23 @@ PYBIND11_MODULE(sloth, m) {
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::IlocProxy::*)(const py::slice&) const) &DataFrame::IlocProxy::get);
 
     py::class_<DataFrameView, std::shared_ptr<DataFrameView>>(m, "DataFrameView")
-        .def("repr", &DataFrameView::repr)
+        .def("__repr__", &DataFrameView::repr)
         .def_property_readonly("shape", &DataFrameView::shape)
         .def("__getitem__", &DataFrameView::get_col)
         .def_property_readonly("values", &DataFrameView::values)
         .def("to_dataframe", &DataFrameView::to_dataframe)
         .def_property_readonly("loc", &DataFrameView::loc)
         .def_property_readonly("iloc", &DataFrameView::iloc);
+
+    py::class_<DataFrameView::LocProxy>(m, "DataFrameViewLocProxy")
+        .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::LocProxy::*)(const std::string&) const) &DataFrameView::LocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::LocProxy::*)(const slice<std::string>&) const) &DataFrameView::LocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::LocProxy::*)(const py::slice&) const) &DataFrameView::LocProxy::get);
+
+    py::class_<DataFrameView::IlocProxy>(m, "DataFrameViewIlocProxy")
+        .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::IlocProxy::*)(int) const) &DataFrameView::IlocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::IlocProxy::*)(const slice<int>&) const) &DataFrameView::IlocProxy::get)
+        .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrameView::IlocProxy::*)(const py::slice&) const) &DataFrameView::IlocProxy::get);
 
     py::class_<Series, std::shared_ptr<Series>>(m, "Series")
         .def(py::init<Eigen::VectorXd, std::shared_ptr<ObjectIndex>>())
