@@ -513,16 +513,20 @@ public:
     public:
         IlocProxy(DataFrameView& parent) : parent_(parent) {}
 
-        std::shared_ptr<Series> get(int arg) const {
-            auto combined_slice = combine_slices(*parent_.mask_, slice<int>(arg, arg + 1, 1), parent_.values_.rows());
-            int row = combined_slice.start;
-            Eigen::VectorXd row_values = parent_.values_.row(row);
-            std::string idx_str = std::to_string(arg);
+    std::shared_ptr<Series> get(int arg) const {
+        auto& values_ = parent_.values_;
+        auto& columns_ = parent_.columns_;  // Access the columns from DataFrameView
 
-            // Create an ObjectIndex for a single Series
-            auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx_str, 0}}, std::vector<std::string>{idx_str});
-            return std::make_shared<Series>(std::move(row_values), std::move(new_index));
+        if (arg < 0 || arg >= parent_.mask_->length()) {
+            throw std::out_of_range("Index out of range");
         }
+
+        int actual_row = parent_.mask_->start + arg * parent_.mask_->step;
+        Eigen::VectorXd row_values = values_.row(actual_row);
+
+        auto series_index = std::make_shared<ColumnIndex>(*columns_);
+        return std::make_shared<Series>(std::move(row_values), std::move(series_index));
+    }
 
 
         std::shared_ptr<DataFrameView> get(const slice<int>& arg) const {
@@ -803,15 +807,19 @@ public:
 
         std::shared_ptr<Series> get(int arg) const {
             auto& values_ = frame_->values_;
+            auto& columns_ = frame_->columns_;
+
             if (arg < 0 || arg >= values_.rows()) {
                 throw std::out_of_range("Index out of range");
             }
             Eigen::VectorXd row_values = values_.row(arg);
             std::string idx_str = std::to_string(arg);
 
-            auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx_str, 0}}, std::vector<std::string>{idx_str});
+            // Use the existing ObjectIndex/ColumnsIndex for columns
+            auto series_index = std::make_shared<ObjectIndex>(*frame_->columns_);
 
-            return std::make_shared<Series>(std::move(row_values), std::move(new_index));
+            // Return Series with row values and columns as index
+            return std::make_shared<Series>(std::move(row_values), std::move(series_index));
         }
     };
 
@@ -841,7 +849,7 @@ PYBIND11_MODULE(sloth, m) {
         .def(py::init<robin_hood::unordered_map<std::string, int>, std::vector<std::string>>())
         .def("keys", &ObjectIndex::keys)
         .def("get_mask", &ObjectIndex::get_mask);
-        
+
     py::class_<DataFrame, std::shared_ptr<DataFrame>>(m, "DataFrame")
         .def(py::init<MatrixXdRowMajor, std::shared_ptr<ObjectIndex>, std::shared_ptr<ColumnIndex>>())
         .def(py::init<py::list, py::list, py::list>())
