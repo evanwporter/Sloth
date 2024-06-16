@@ -37,7 +37,7 @@ print("df.iloc[0]", df.iloc[0])
 
 print(df.sum(0))
 
-print("df.loc[row1]", df.loc["row1"])
+print("df.loc[row1]", df.loc["row1"].loc["col2"])
 
 s = Series(np.array([1., 2., 3.]), index_np)
 print(s)
