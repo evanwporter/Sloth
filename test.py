@@ -26,14 +26,18 @@ print(df_list)
 
 print(dir(slice(1,5)))
 print(slice(1,5).indices(1))
-d = df.iloc[1:].iloc[0].repr()
+d = df.iloc[1:].iloc[0]
 # print("D\n", d.to_dataframe())
 
 print(d)
 
+print("df.iloc[0]", df.iloc[0])
+
 # print(d.mask)
 
 print(df.sum(0))
+
+print("df.loc[row1]", df.loc["row1"])
 
 s = Series(np.array([1., 2., 3.]), index_np)
 print(s)

@@ -677,16 +677,34 @@ public:
 
         LocProxy(DataFrame* frame) : frame_(frame) {}
 
-        py::array_t<double> get(const std::string& arg) const {
+        // py::array_t<double> get(const std::string& arg) const {
+        //     auto& values_ = frame_->values_;
+        //     auto index_ = frame_->index_;
+
+        //     if (index_->index_.find(arg) == index_->index_.end()) {
+        //         throw std::out_of_range("Key '" + arg + "' not found in the DataFrame index.");
+        //     }
+
+        //     Eigen::Index row = index_->index_.at(arg);
+        //     return py::array_t<double>(values_.cols(), values_.row(row).data());
+        // }
+
+
+        std::shared_ptr<Series> get(const std::string& idx) const {
             auto& values_ = frame_->values_;
             auto index_ = frame_->index_;
 
-            if (index_->index_.find(arg) == index_->index_.end()) {
-                throw std::out_of_range("Key '" + arg + "' not found in the DataFrame index.");
+            if (index_->index_.find(idx) == index_->index_.end()) {
+                throw std::out_of_range("Key '" + idx + "' not found in the DataFrame index.");
             }
 
-            Eigen::Index row = index_->index_.at(arg);
-            return py::array_t<double>(values_.cols(), values_.row(row).data());
+            Eigen::Index row = index_->index_.at(idx);
+            Eigen::VectorXd row_values = values_.row(row);
+
+            // Create an ObjectIndex for a single Series
+            auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx, 0}}, std::vector<std::string>{idx});
+
+            return std::make_shared<Series>(std::move(row_values), std::move(new_index));
         }
 
         std::shared_ptr<DataFrameView> get(const slice<std::string>& arg) const {
@@ -718,11 +736,11 @@ public:
 
         IlocProxy(DataFrame* frame) : frame_(frame) {}
 
-        py::array_t<double> get(int arg) const {
-            auto& values_ = frame_->values_;
-            arg = combine_slices(slice<int>(0, values_.rows(), 1), slice<int>(arg, arg + 1, 1), values_.rows()).start;
-            return py::array_t<double>(values_.cols(), values_.row(arg).data());
-        }
+        // py::array_t<double> get(int arg) const {
+        //     auto& values_ = frame_->values_;
+        //     arg = combine_slices(slice<int>(0, values_.rows(), 1), slice<int>(arg, arg + 1, 1), values_.rows()).start;
+        //     return py::array_t<double>(values_.cols(), values_.row(arg).data());
+        // }
 
         std::shared_ptr<DataFrameView> get(const slice<int>& arg) const {
             auto& values_ = frame_->values_;
@@ -738,6 +756,19 @@ public:
 
             slice<int> arg(static_cast<int>(start), static_cast<int>(stop), static_cast<int>(step));
             return get(arg);
+        }
+
+        std::shared_ptr<Series> get(int arg) const {
+            auto& values_ = frame_->values_;
+            if (arg < 0 || arg >= values_.rows()) {
+                throw std::out_of_range("Index out of range");
+            }
+            Eigen::VectorXd row_values = values_.row(arg);
+            std::string idx_str = std::to_string(arg);
+
+            auto new_index = std::make_shared<ObjectIndex>(robin_hood::unordered_map<std::string, int>{{idx_str, 0}}, std::vector<std::string>{idx_str});
+
+            return std::make_shared<Series>(std::move(row_values), std::move(new_index));
         }
     };
 
@@ -788,13 +819,15 @@ PYBIND11_MODULE(sloth, m) {
 
     py::class_<DataFrame::LocProxy>(m, "DataFrameLocProxy")
         .def(py::init<DataFrame*>())
-        .def("__getitem__", (py::array_t<double> (DataFrame::LocProxy::*)(const std::string&) const) &DataFrame::LocProxy::get)
+        // .def("__getitem__", (py::array_t<double> (DataFrame::LocProxy::*)(const std::string&) const) &DataFrame::LocProxy::get)
+        .def("__getitem__", (std::shared_ptr<Series> (DataFrame::LocProxy::*)(const std::string&) const) &DataFrame::LocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::LocProxy::*)(const slice<std::string>&) const) &DataFrame::LocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::LocProxy::*)(const py::slice&) const) &DataFrame::LocProxy::get);
 
     py::class_<DataFrame::IlocProxy>(m, "DataFrameIlocProxy")
         .def(py::init<DataFrame*>())
-        .def("__getitem__", (py::array_t<double> (DataFrame::IlocProxy::*)(int) const) &DataFrame::IlocProxy::get)
+        // .def("__getitem__", (py::array_t<double> (DataFrame::IlocProxy::*)(int) const) &DataFrame::IlocProxy::get)
+        .def("__getitem__", (std::shared_ptr<Series> (DataFrame::IlocProxy::*)(int) const) &DataFrame::IlocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::IlocProxy::*)(const slice<int>&) const) &DataFrame::IlocProxy::get)
         .def("__getitem__", (std::shared_ptr<DataFrameView> (DataFrame::IlocProxy::*)(const py::slice&) const) &DataFrame::IlocProxy::get);
 
