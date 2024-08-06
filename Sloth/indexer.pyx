@@ -232,7 +232,9 @@ cdef class iAT(Indexer):
         >>> Sloth.DataFrame.iat[3, 5]
         42
         """
-        if len(arg) != 2 or isinstance(arg, int):
+        if isinstance(arg, int):
+            raise ValueError("Must pass two values.")
+        elif len(arg) != 2:
             raise ValueError("Must pass two values.")
 
         return self.frame.values[arg[0], arg[1]]

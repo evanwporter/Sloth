@@ -707,6 +707,35 @@ cdef class Series(Frame):
         """
         return self._quick_init(self.values <= other)
 
+    def all(self):
+        """
+        The all() method checks if all elements in the Series are True 
+        or if the elements are considered True in a boolean context. It 
+        returns a single boolean value: True if all elements are True, 
+        and False otherwise.
+
+
+        Returns
+        -------
+        bool
+            Returns True if all elements are True or if the array is empty. 
+            Otherwise, it returns False.
+        """
+        return self.values.all()
+        
+    def any(self):
+        """
+        The any() method checks if any of the elements in the Series are True 
+        or if they evaluate to True in a boolean context. It returns True if 
+        at least one element is True, and False if all elements are False.
+
+        Returns
+        -------
+        bool
+            Returns True if at least one element is True. If all elements are 
+            False or the array is empty, it returns False.
+        """
+        return self.values.any()
 
 
 cdef class DataFrame(Frame):
